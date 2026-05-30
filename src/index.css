@@ -1,0 +1,342 @@
+@import "tailwindcss";
+
+/* ── Material Design 3 — Dark Baseline Theme ─────────────────────────────── */
+@theme {
+  /* Primary */
+  --color-md-primary:               #D0BCFF;
+  --color-md-on-primary:            #381E72;
+  --color-md-primary-container:     #4F378B;
+  --color-md-on-primary-container:  #EADDFF;
+  /* Secondary */
+  --color-md-secondary:             #CCC2DC;
+  --color-md-on-secondary:          #332D41;
+  --color-md-secondary-container:   #4A4458;
+  --color-md-on-secondary-container:#E8DEF8;
+  /* Tertiary */
+  --color-md-tertiary:              #EFB8C8;
+  --color-md-on-tertiary:           #492532;
+  /* Error */
+  --color-md-error:                 #F2B8B5;
+  --color-md-on-error:              #601410;
+  --color-md-error-container:       #8C1D18;
+  --color-md-on-error-container:    #F9DEDC;
+  /* Surface */
+  --color-md-surface:               #141218;
+  --color-md-surface-dim:           #141218;
+  --color-md-surface-bright:        #3B383E;
+  --color-md-surface-container-lowest:  #0F0D13;
+  --color-md-surface-container-low:     #1D1B20;
+  --color-md-surface-container:         #211F26;
+  --color-md-surface-container-high:    #2B2930;
+  --color-md-surface-container-highest: #36343B;
+  --color-md-on-surface:            #E6E1E5;
+  --color-md-on-surface-variant:    #CAC4D0;
+  --color-md-inverse-surface:       #E6E1E5;
+  --color-md-inverse-on-surface:    #313033;
+  /* Outline */
+  --color-md-outline:               #938F99;
+  --color-md-outline-variant:       #49454F;
+  /* Font */
+  --font-sans: 'Roboto', system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+/* ── MD3 Light Theme overrides ───────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-md-primary:               #6750A4;
+  --color-md-on-primary:            #FFFFFF;
+  --color-md-primary-container:     #EADDFF;
+  --color-md-on-primary-container:  #21005D;
+  --color-md-secondary:             #625B71;
+  --color-md-on-secondary:          #FFFFFF;
+  --color-md-secondary-container:   #E8DEF8;
+  --color-md-on-secondary-container:#1D192B;
+  --color-md-tertiary:              #7D5260;
+  --color-md-on-tertiary:           #FFFFFF;
+  --color-md-error:                 #B3261E;
+  --color-md-on-error:              #FFFFFF;
+  --color-md-error-container:       #F9DEDC;
+  --color-md-on-error-container:    #410E0B;
+  --color-md-surface:               #FFFBFE;
+  --color-md-surface-dim:           #DED8E1;
+  --color-md-surface-bright:        #FFFBFE;
+  --color-md-surface-container-lowest:  #FFFFFF;
+  --color-md-surface-container-low:     #F7F2FA;
+  --color-md-surface-container:         #F3EDF7;
+  --color-md-surface-container-high:    #ECE6F0;
+  --color-md-surface-container-highest: #E6E0E9;
+  --color-md-on-surface:            #1C1B1F;
+  --color-md-on-surface-variant:    #49454F;
+  --color-md-inverse-surface:       #313033;
+  --color-md-inverse-on-surface:    #F4EFF4;
+  --color-md-outline:               #79747E;
+  --color-md-outline-variant:       #CAC4D0;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Roboto', system-ui, sans-serif;
+  background-color: var(--color-md-surface, #141218);
+  color: var(--color-md-on-surface, #E6E1E5);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, inherit);
+}
+
+/* ── MD3 Motion System ─────────────────────────────────────────────────── */
+:root {
+  --md-sys-motion-duration-short1:  50ms;
+  --md-sys-motion-duration-short2:  100ms;
+  --md-sys-motion-duration-short3:  150ms;
+  --md-sys-motion-duration-short4:  200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1:   450ms;
+  --md-sys-motion-duration-long2:   500ms;
+  --md-sys-motion-duration-long3:   550ms;
+  --md-sys-motion-duration-long4:   600ms;
+  --md-sys-motion-easing-standard:           cubic-bezier(0.4, 0.0, 0.2, 1);
+  --md-sys-motion-easing-decelerate:         cubic-bezier(0.0, 0.0, 0.2, 1);
+  --md-sys-motion-easing-accelerate:         cubic-bezier(0.4, 0.0, 1,   1);
+  --md-sys-motion-easing-emphasized:         cubic-bezier(0.2, 0.0, 0.0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+}
+
+@keyframes md3-fade-up {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes md3-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes md3-slide-in-right {
+  from { transform: translateX(30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes md3-press-ripple {
+  0%   { transform: scale(0);   opacity: 0.25; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.md3-settings-enter {
+  animation: md3-slide-in-right var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-decelerate) forwards;
+}
+
+/* Screen cross-fade transition — AnimatePresence-style stack */
+.md3-screen-enter {
+  animation: md3-screen-enter 500ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+  will-change: transform, opacity;
+}
+.md3-screen-exit {
+  animation: md3-screen-exit 300ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+@keyframes md3-screen-enter {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  60%  { opacity: 1; transform: translateY(0) scale(1.005); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes md3-screen-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-16px) scale(0.98); }
+}
+
+/* Page content entrance — subtle fade-up for all screens */
+@keyframes page-content-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.page-content-enter {
+  animation: page-content-enter 350ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 100ms both;
+}
+
+/* Print Preview receipt entrance */
+@keyframes preview-receipt-enter {
+  0%   { opacity: 0; transform: scale(0.96) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.preview-receipt-enter {
+  animation: preview-receipt-enter 300ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Standby subtle animations */
+@keyframes standby-icon-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.03); }
+}
+@keyframes standby-title-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+@keyframes standby-cta-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); }
+}
+.standby-icon-float {
+  animation: standby-icon-float 4s ease-in-out infinite;
+}
+.standby-title-glow {
+  animation: standby-title-glow 5s ease-in-out infinite;
+}
+.standby-cta-pulse {
+  animation: standby-cta-pulse 3s ease-in-out infinite;
+}
+
+/* Get Ready overlay */
+@keyframes get-ready-enter {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes get-ready-text {
+  0%   { opacity: 0; transform: scale(0.7) translateY(12px); }
+  20%  { opacity: 1; transform: scale(1.05) translateY(-2px); }
+  35%  { opacity: 1; transform: scale(1) translateY(0); }
+  80%  { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.9) translateY(-8px); }
+}
+.get-ready-overlay {
+  animation: get-ready-enter 1.2s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+.get-ready-text {
+  animation: get-ready-text 1.2s cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Flash overlay animation */
+@keyframes flash-capture {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.capture-flash {
+  animation: flash-capture 0.5s ease-in-out forwards;
+}
+
+/* Countdown pulse */
+@keyframes countdown-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
+
+.countdown-pulse {
+  animation: countdown-pulse 1s ease-in-out infinite;
+}
+
+/* Badge pop-in */
+@keyframes badge-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop {
+  animation: badge-pop 250ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Overlay fade-in */
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.overlay-fade-in {
+  animation: overlay-fade-in 200ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+/* Status content entrance */
+@keyframes status-enter {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.status-enter {
+  animation: status-enter 300ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Thumbnail image entrance */
+@keyframes thumb-enter {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.thumb-enter {
+  animation: thumb-enter 300ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Thumbnail slot pop on capture */
+@keyframes thumb-slot-pop {
+  0%   { opacity: 0; transform: scale(0.85); box-shadow: 0 0 0 0px var(--color-md-primary, #6750A4); }
+  40%  { opacity: 1; transform: scale(1.06); box-shadow: 0 0 0 4px var(--color-md-primary, #6750A4); }
+  100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0px transparent; }
+}
+.thumb-slot-pop {
+  animation: thumb-slot-pop 400ms cubic-bezier(0.05, 0.7, 0.1, 1.0) forwards;
+}
+
+/* Settings sheet exit */
+@keyframes md3-slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(30px); opacity: 0; }
+}
+.md3-settings-exit {
+  animation: md3-slide-out-right 200ms cubic-bezier(0.4, 0.0, 1, 1) forwards;
+}
+
+/* Tab content cross-fade */
+@keyframes tab-fade-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.tab-fade-in {
+  animation: tab-fade-in 200ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+/* Message text fade */
+@keyframes message-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.message-fade {
+  animation: message-fade 300ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+/* Composing screen animations */
+@keyframes composing-photo-in {
+  0%   { opacity: 0; transform: translateY(30px) scale(0.85) rotate(-2deg); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.03) rotate(0deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+.composing-photo {
+  animation: composing-photo-in 500ms cubic-bezier(0.05, 0.7, 0.1, 1.0) both;
+}
+
+@keyframes composing-text-in {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.composing-text {
+  animation: composing-text-in 400ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 600ms both;
+}
+
+@keyframes composing-particle-float {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scale(1); }
+  50%      { opacity: 0.6; transform: translateY(-12px) scale(1.2); }
+}
+.composing-particle {
+  animation: composing-particle-float 3s ease-in-out infinite;
+}
