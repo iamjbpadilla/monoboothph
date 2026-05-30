@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Camera } from '@capacitor/camera';
+import { Filesystem } from '@capacitor/filesystem';
 import { playClick } from '../hooks/useSound.js';
 
 export default function PermissionModal({ onPermissionGranted, onPermissionDenied }) {
   const [status, setStatus] = useState('checking'); // checking | requesting | granted | denied
 
   useEffect(() => {
-    checkPermission();
+    checkPermissions();
   }, []);
 
-  async function checkPermission() {
+  async function checkPermissions() {
     try {
-      const result = await Camera.checkPermissions();
-      if (result.camera === 'granted') {
+      const cameraResult = await Camera.checkPermissions();
+      const storageResult = await Filesystem.checkPermissions();
+
+      if (cameraResult.camera === 'granted' && storageResult.publicStorage === 'granted') {
         setStatus('granted');
         onPermissionGranted();
       } else {
@@ -27,8 +30,10 @@ export default function PermissionModal({ onPermissionGranted, onPermissionDenie
   async function handleAllow() {
     playClick();
     try {
-      const result = await Camera.requestPermissions({ permissions: ['camera'] });
-      if (result.camera === 'granted') {
+      const cameraResult = await Camera.requestPermissions({ permissions: ['camera'] });
+      const storageResult = await Filesystem.requestPermissions({ permissions: ['publicStorage'] });
+
+      if (cameraResult.camera === 'granted' && storageResult.publicStorage === 'granted') {
         setStatus('granted');
         onPermissionGranted();
       } else {
@@ -62,9 +67,9 @@ export default function PermissionModal({ onPermissionGranted, onPermissionDenie
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-semibold text-md-on-surface mb-2">Camera Permission Required</h2>
+          <h2 className="text-2xl font-semibold text-md-on-surface mb-2">Permissions Required</h2>
           <p className="text-md-on-surface-variant">
-            Snap&Roll needs access to your camera to capture photos. This permission is required for the app to function.
+            Snap&Roll needs access to your camera and storage to capture and save photos. These permissions are required for the app to function.
           </p>
         </div>
         <div className="flex gap-3">

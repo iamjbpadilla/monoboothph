@@ -105,6 +105,7 @@ export default function Capture({ templateKey, onComplete, onBack }) {
 
     if (newFrames.length >= totalShots) {
       // All shots done — quick flash-only hand-off to Composing.
+      setVideoReady(false);
       setTimeout(() => {
         stopCamera();
         onComplete(newFrames);
