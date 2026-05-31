@@ -5,9 +5,11 @@ import { Preferences } from '@capacitor/preferences';
 import { Camera } from '@capacitor/camera';
 import { applyAccent, resolveFontPair } from './lib/theme.js';
 import { playTransition } from './hooks/useSound.js';
+import { useDeviceHeartbeat } from './hooks/useDeviceHeartbeat.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import PermissionModal from './components/PermissionModal.jsx';
 import IntroModal from './components/IntroModal.jsx';
+import PairingModal from './components/PairingModal.jsx';
 import Standby from './screens/Standby.jsx';
 import TemplateSelect from './screens/TemplateSelect.jsx';
 import Capture from './screens/Capture.jsx';
@@ -160,6 +162,11 @@ function PhotoboothApp() {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [introCompleted, setIntroCompleted] = useState(false);
   const [appReady, setAppReady] = useState(false);
+  const [isPaired, setIsPaired] = useState(false);
+  const [pairingExpiry, setPairingExpiry] = useState(null);
+
+  // Start device heartbeat when paired
+  useDeviceHeartbeat();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -175,13 +182,14 @@ function PhotoboothApp() {
     applyAccent(settings.general.accent || 'purple');
   }, [settings.general.accent]);
 
-  // Check permissions synchronously on mount to prevent modal flash
+  // Check permissions and pairing status on mount
   useEffect(() => {
     async function checkPermissions() {
       try {
-        const [introValue, permValue] = await Promise.all([
+        const [introValue, permValue, pairingValue] = await Promise.all([
           Preferences.get({ key: 'snaproll_intro_completed' }),
           Preferences.get({ key: 'snaproll-camera-granted' }),
+          Preferences.get({ key: 'snaproll_pairing' }),
         ]);
 
         const introDone = introValue.value === 'true';
@@ -199,6 +207,22 @@ function PhotoboothApp() {
           }
         }
 
+        // Check pairing status
+        if (pairingValue.value) {
+          const pairing = JSON.parse(pairingValue.value);
+          const expiryTime = new Date(pairing.expiresAt).getTime();
+          const now = Date.now();
+          
+          if (now < expiryTime) {
+            setIsPaired(true);
+            setPairingExpiry(pairing.expiresAt);
+          } else {
+            // Pairing expired, clear it
+            await Preferences.remove({ key: 'snaproll_pairing' });
+            setIsPaired(false);
+          }
+        }
+
         setAppReady(true);
       } catch (err) {
         console.error('Permission check failed:', err);
@@ -207,6 +231,34 @@ function PhotoboothApp() {
     }
     checkPermissions();
   }, []);
+
+  // Check pairing expiry periodically
+  useEffect(() => {
+    if (!isPaired || !pairingExpiry) return;
+    
+    const checkExpiry = () => {
+      const now = Date.now();
+      const expiry = new Date(pairingExpiry).getTime();
+      
+      if (now >= expiry) {
+        setIsPaired(false);
+        setPairingExpiry(null);
+        Preferences.remove({ key: 'snaproll_pairing' });
+      }
+    };
+    
+    const interval = setInterval(checkExpiry, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [isPaired, pairingExpiry]);
+
+  async function handlePaired() {
+    const pairingValue = await Preferences.get({ key: 'snaproll_pairing' });
+    if (pairingValue.value) {
+      const pairing = JSON.parse(pairingValue.value);
+      setIsPaired(true);
+      setPairingExpiry(pairing.expiresAt);
+    }
+  }
 
   function goStandby() {
     setSelectedTemplate(null);
@@ -313,6 +365,9 @@ function PhotoboothApp() {
           onPermissionGranted={() => setPermissionGranted(true)}
           onPermissionDenied={() => setPermissionGranted(false)}
         />
+      )}
+      {introCompleted && permissionGranted && !isPaired && (
+        <PairingModal onPaired={handlePaired} />
       )}
     </div>
   );

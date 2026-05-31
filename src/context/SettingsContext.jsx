@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Preferences } from '@capacitor/preferences';
+import { useSupabaseSync } from '../hooks/useSupabaseSync';
 
 // Font size guide (203 DPI): 20px ≈ 2.5mm, 28px ≈ 3.5mm, 40px ≈ 5mm
 function defaultBlocks() {
@@ -120,13 +121,20 @@ export function SettingsProvider({ children }) {
   const [isDirty, setIsDirty] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
+  const { pullSettings, pushSettings } = useSupabaseSync(settings, (newSettings) => {
+    setSavedSettings(newSettings);
+    setSettings(newSettings);
+  });
+
   useEffect(() => {
     loadSettings().then(loadedSettings => {
       setSavedSettings(loadedSettings);
       setSettings(loadedSettings);
       setLoaded(true);
+      // Pull settings from Supabase after loading local settings
+      pullSettings();
     });
-  }, []);
+  }, [pullSettings]);
 
   const updateSettings = useCallback((path, value) => {
     setSettings(prev => {
@@ -144,7 +152,9 @@ export function SettingsProvider({ children }) {
     await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(settings) });
     setSavedSettings(structuredClone(settings));
     setIsDirty(false);
-  }, [settings]);
+    // Push settings to Supabase
+    pushSettings(settings);
+  }, [settings, pushSettings]);
 
   const discardSettings = useCallback(() => {
     setSettings(structuredClone(savedSettings));

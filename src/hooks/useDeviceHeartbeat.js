@@ -1,0 +1,68 @@
+import { useEffect, useRef } from 'react';
+import { Preferences } from '@capacitor/preferences';
+import { supabase } from '../lib/supabase';
+
+const HEARTBEAT_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+export function useDeviceHeartbeat() {
+  const intervalRef = useRef(null);
+  const isOnline = useRef(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      isOnline.current = true;
+      updateDeviceStatus('online');
+    };
+
+    const handleOffline = () => {
+      isOnline.current = false;
+      updateDeviceStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Initial heartbeat
+    updateDeviceStatus('online');
+
+    // Set up periodic heartbeat
+    intervalRef.current = setInterval(() => {
+      if (isOnline.current) {
+        updateDeviceStatus('online');
+      }
+    }, HEARTBEAT_INTERVAL);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      // Set to offline when unmounting
+      updateDeviceStatus('offline');
+    };
+  }, []);
+}
+
+async function updateDeviceStatus(status) {
+  try {
+    const pairingValue = await Preferences.get({ key: 'snaproll_pairing' });
+    if (!pairingValue.value) return;
+
+    const pairing = JSON.parse(pairingValue.value);
+
+    const { error } = await supabase
+      .from('devices')
+      .update({
+        status,
+        last_sync: new Date().toISOString(),
+      })
+      .eq('id', pairing.deviceId);
+
+    if (error) {
+      console.error('Failed to update device status:', error);
+    }
+  } catch (err) {
+    console.error('Device heartbeat error:', err);
+  }
+}

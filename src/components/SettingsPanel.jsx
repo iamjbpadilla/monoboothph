@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, Link, Clock, LogOut } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
+import { Preferences } from '@capacitor/preferences';
 import GeneralSettings from './settings/GeneralSettings.jsx';
 import CameraSettings from './settings/CameraSettings.jsx';
 import PrinterSettings from './settings/PrinterSettings.jsx';
@@ -13,6 +14,7 @@ import ConfirmDialog from './ConfirmDialog.jsx';
 
 const TABS = [
   { key: 'general',      label: 'General',      icon: Sliders },
+  { key: 'pairing',      label: 'Pairing',      icon: Link },
   { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
   { key: 'templates',    label: 'Templates',    icon: Layout },
   { key: 'camera',       label: 'Camera',       icon: Camera },
@@ -21,7 +23,7 @@ const TABS = [
 ];
 
 const TAB_MAP = {
-  general: GeneralSettings, advertising: AdvertisingSettings, camera: CameraSettings,
+  general: GeneralSettings, pairing: PairingSettings, advertising: AdvertisingSettings, camera: CameraSettings,
   printer: PrinterSettings, templates: TemplateSettings, about: AboutSettings,
 };
 

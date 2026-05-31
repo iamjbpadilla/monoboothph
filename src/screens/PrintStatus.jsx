@@ -4,18 +4,19 @@ import QRCode from 'qrcode';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { usePrinter } from '../hooks/usePrinter.js';
 import { playSuccess, playError, playClick } from '../hooks/useSound.js';
+import { uploadPhotoToSupabase, generateSessionId } from '../hooks/usePhotoUpload.js';
 
-function ReceiptQR({ size = 200, eventName }) {
+function ReceiptQR({ size = 200, sessionId, portalUrl }) {
   const [dataUrl, setDataUrl] = useState(null);
 
   useEffect(() => {
-    const url = `https://snaproll.app/gallery/${encodeURIComponent(eventName || 'event')}`;
+    const url = `${portalUrl}/download/${sessionId}`;
     QRCode.toDataURL(url, {
       width: size,
       margin: 2,
       color: { dark: '#1C1B1F', light: '#FFFFFF' },
     }).then(setDataUrl).catch(() => setDataUrl(null));
-  }, [size, eventName]);
+  }, [size, sessionId, portalUrl]);
 
   if (!dataUrl) {
     return (
@@ -42,10 +43,26 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
   const isDark = settings.general.theme === 'dark';
   const { print, status, statusMessage, error, reset } = usePrinter();
   const [countdown, setCountdown] = useState(20);
+  const [sessionId] = useState(() => generateSessionId());
+  const [uploadStatus, setUploadStatus] = useState('idle');
+  const portalUrl = import.meta.env.VITE_PORTAL_URL || 'https://snaproll.app';
 
   useEffect(() => {
     print(imageDataUrl, settings.printer);
+    // Upload photo to Supabase in background
+    uploadPhoto();
   }, []);
+
+  async function uploadPhoto() {
+    setUploadStatus('uploading');
+    try {
+      await uploadPhotoToSupabase(imageDataUrl, sessionId);
+      setUploadStatus('success');
+    } catch (err) {
+      console.error('Photo upload failed:', err);
+      setUploadStatus('error');
+    }
+  }
 
   // Play success/error sounds
   useEffect(() => {
@@ -137,9 +154,18 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
       {status === 'success' && (
         <div className="flex flex-col items-center gap-2">
           <div className="rounded-2xl overflow-hidden shadow-md border border-md-outline-variant p-1 bg-white">
-            <ReceiptQR size={200} eventName={settings.general.eventName} />
+            <ReceiptQR size={200} sessionId={sessionId} portalUrl={portalUrl} />
           </div>
           <p className="text-[10px] text-md-outline tracking-widest uppercase">Scan for digital copy</p>
+          {uploadStatus === 'uploading' && (
+            <p className="text-xs text-md-on-surface-variant">Uploading to cloud...</p>
+          )}
+          {uploadStatus === 'success' && (
+            <p className="text-xs text-green-600">Photo uploaded!</p>
+          )}
+          {uploadStatus === 'error' && (
+            <p className="text-xs text-red-600">Upload failed (saved locally)</p>
+          )}
         </div>
       )}
 
