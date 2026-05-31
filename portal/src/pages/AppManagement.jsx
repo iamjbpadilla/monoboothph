@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AppManagement() {
   const navigate = useNavigate();
   const [apps, setApps] = useState([]);
+  const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newAppName, setNewAppName] = useState('');
@@ -13,6 +14,7 @@ export default function AppManagement() {
 
   useEffect(() => {
     fetchApps();
+    fetchDevices();
   }, []);
 
   async function fetchApps() {
@@ -28,6 +30,20 @@ export default function AppManagement() {
       console.error('Error fetching apps:', err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchDevices() {
+    try {
+      const { data, error } = await supabase
+        .from('devices')
+        .select('*')
+        .order('last_sync', { ascending: false });
+
+      if (error) throw error;
+      setDevices(data || []);
+    } catch (err) {
+      console.error('Error fetching devices:', err);
     }
   }
 
@@ -54,7 +70,7 @@ export default function AppManagement() {
       setShowCreateModal(false);
     } catch (err) {
       console.error('Error creating app:', err);
-      alert('Failed to create app');
+      alert(`Failed to create app: ${err.message || err.details || 'Unknown error'}`);
     } finally {
       setCreating(false);
     }
@@ -157,45 +173,73 @@ export default function AppManagement() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">App Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pairing Code</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Devices</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {apps.map((app) => (
-                  <tr key={app.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <code className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">{app.pairing_code}</code>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(app.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <button
-                        onClick={() => copyToClipboard(app.pairing_code)}
-                        className="text-gray-600 hover:text-gray-900 mr-3"
-                        title="Copy code"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => regeneratePairingCode(app.id)}
-                        className="text-gray-600 hover:text-gray-900 mr-3"
-                        title="Regenerate code"
-                      >
-                        <RefreshCw className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => deleteApp(app.id)}
-                        className="text-red-600 hover:text-red-700"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {apps.map((app) => {
+                  const appDevices = devices.filter(d => d.app_id === app.id);
+                  return (
+                    <tr key={app.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <code className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">{app.pairing_code}</code>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {appDevices.length > 0 ? (
+                          <div className="space-y-1">
+                            {appDevices.map(device => (
+                              <div key={device.id} className="flex items-center gap-2 text-xs">
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                                  device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                                }`}>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                                  {device.status}
+                                </span>
+                                <span className="text-gray-600">{device.device_name || device.device_id}</span>
+                                {device.last_sync && (
+                                  <span className="text-gray-400">
+                                    ({new Date(device.last_sync).toLocaleString()})
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-gray-400">No devices</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(app.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                        <button
+                          onClick={() => copyToClipboard(app.pairing_code)}
+                          className="text-gray-600 hover:text-gray-900 mr-3"
+                          title="Copy code"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => regeneratePairingCode(app.id)}
+                          className="text-gray-600 hover:text-gray-900 mr-3"
+                          title="Regenerate code"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => deleteApp(app.id)}
+                          className="text-red-600 hover:text-red-700"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
