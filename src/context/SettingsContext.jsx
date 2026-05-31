@@ -6,27 +6,31 @@ function defaultBlocks() {
   return {
     header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true },
     photos:     { enabled: true,  borderStyle: 'thin', borderColor: '#000000', gap: 8 },
-    divider:    { enabled: true,  style: 'solid', thickness: 2, color: '#aaaaaa' },
+    divider:    { enabled: true,  style: 'dashed', thickness: 2, color: '#000000' },
     elementSpacing: 16,
     datetime:   { enabled: true,  format: 'MMM DD, YYYY  HH:mm' },
-    customText: { enabled: true,  content: '#SnapAndRoll',           fontSize: 28, alignment: 'center' },
-    barcode:    { enabled: true,  value: 'SNAPROLL001', type: 'CODE128', showText: true },
+    customText: { enabled: false, content: '#SnapAndRoll',           fontSize: 28, alignment: 'center' },
+    receiptItems: { enabled: false, items: [], fontSize: 20, showTotal: true, showQty: true, randomize: false },
+    barcode:    { enabled: true,  value: 'SNAPROLL001', type: 'CODE128', showText: false },
     footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center' },
     backgroundColor: '#ffffff',
-    blockOrder: ['header', 'dividerBefore', 'photos', 'dividerAfter', 'datetime', 'customText', 'barcode', 'footer'],
+    blockOrder: ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'barcode', 'footer'],
   };
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 7, // bump to force preferences refresh when defaults change
+  _version: 9, // bump to force preferences refresh when defaults change
   general: {
-    boothName: 'Snap & Roll',
+    boothName: 'MONO STUDIO PH',
     eventName: 'Receipt Photobooth',
     logoBase64: null,
-    theme: 'dark',
+    theme: 'light',
     accent: 'purple',
     fontPair: 'modern',
     brandingIcon: null,
+    standbyBackground: 'plain',
+    showAdvertising: true,
+    adDuration: 5,
   },
   camera: {
     deviceId: '',

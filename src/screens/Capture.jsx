@@ -184,16 +184,6 @@ export default function Capture({ templateKey, onComplete, onBack }) {
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden bg-md-surface">
-      {/* MD3 Top App Bar */}
-      <div className="flex items-center h-16 px-2 flex-shrink-0 z-10 bg-md-surface">
-        <button
-          onClick={handleBack}
-          className="w-12 h-12 flex items-center justify-center rounded-full text-md-on-surface hover:bg-md-surface-container-highest hover:scale-110 hover:shadow-md active:scale-95 transition-all duration-150"
-        >
-          <ChevronLeft size={24} />
-        </button>
-      </div>
-
       {/* Camera preview area — measured by ResizeObserver */}
       <div ref={cameraAreaRef} className="flex-1 flex items-center justify-center p-4 min-h-0 page-content-enter">
         {frameSize.w > 0 && (

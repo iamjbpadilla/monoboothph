@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 import { Device } from '@capacitor/device';
 
 const DEPENDENCIES = [
@@ -45,6 +45,66 @@ const CHANGELOG_DATA = [
     version: 'Unreleased',
     date: new Date().toLocaleDateString(),
     changes: [
+      { type: 'Changed', text: 'Advertising screen now displays MONO STUDIO PH marketing content with camera icon, branding, and Facebook link' },
+      { type: 'Changed', text: 'Advertising screen now has functional countdown timer (shows seconds remaining)' },
+      { type: 'Added', text: 'Advertising/marketing screen shown after print success (configurable duration: 3, 5, or 10 seconds)' },
+      { type: 'Added', text: 'Settings entry for advertising page (enable/disable toggle and duration selector)' },
+      { type: 'Changed', text: 'Expanded test text generation in Settings > Identity with 36 titles and 36 subtitles for more variety' },
+      { type: 'Changed', text: 'Removed return button from template selection screen' },
+      { type: 'Added', text: '20-second auto-return timer on template selection if start button not pressed' },
+      { type: 'Changed', text: 'Standby background options now display in single line with horizontal scroll' },
+      { type: 'Changed', text: 'Updated accent colors to more vibrant Material Design colors (Purple, Pink, Red, Orange, Amber, Yellow, Lime, Green, Teal, Cyan, Blue, Indigo, Violet, Rose, Deep Purple)' },
+      { type: 'Changed', text: 'Removed navigation bar and back button from camera capture mode for larger preview area' },
+      { type: 'Fixed', text: 'Persistent fullscreen mode - updated MainActivity to use modern WindowInsetsController API for Android 11+' },
+      { type: 'Changed', text: 'Camera now queries and uses actual supported resolutions from track capabilities' },
+      { type: 'Changed', text: 'Front camera set as default (facingMode: user)' },
+      { type: 'Changed', text: 'App now runs in fullscreen mode (status bar and navigation bar hidden)' },
+      { type: 'Fixed', text: 'Mirror toggle button in Camera settings - now matches template toggle styling exactly' },
+      { type: 'Added', text: 'Reset button for camera device and options in Camera settings' },
+      { type: 'Changed', text: 'Default theme changed from Dark to Light' },
+      { type: 'Added', text: '6 new accent colors: Cyan, Lime, Violet, Brown, Slate, Olive' },
+      { type: 'Changed', text: 'Mirror button on print preview now has fixed width (w-32)' },
+      { type: 'Changed', text: 'Removed download button from print preview' },
+      { type: 'Fixed', text: 'Mirror toggle button visual bug in Camera settings - fixed styling and positioning' },
+      { type: 'Changed', text: 'Removed 4K resolution option from Camera settings (kept HD and Full HD only)' },
+      { type: 'Changed', text: 'Settings icon now only shows on standby screen' },
+      { type: 'Changed', text: 'Barcode resized to match full content width (same as images)' },
+      { type: 'Changed', text: 'All receipt template texts changed to solid black (#000000)' },
+      { type: 'Changed', text: 'Default divider thickness changed from 6 to 2' },
+      { type: 'Changed', text: 'Default template: moved timestamp to top of block order' },
+      { type: 'Changed', text: 'Default template: disabled custom text by default' },
+      { type: 'Changed', text: 'Default template: divider set to black, dashed, 2 thickness' },
+      { type: 'Added', text: 'Receipt items: randomize every print option to generate witty items' },
+      { type: 'Added', text: 'Template settings: added up/down buttons to all blocks for reordering' },
+      { type: 'Changed', text: 'Reordered About page sections: About Mono Studio, Developer, Connect, Changelog, How to Use, Device Info, Web APIs, Dependencies' },
+      { type: 'Changed', text: 'Removed email and phone number from Connect section in About settings' },
+      { type: 'Added', text: 'Option to hide Qty column on receipt items block' },
+      { type: 'Changed', text: 'Camera shutter sound updated to DSLR-like mechanical sound with click and mirror slap' },
+      { type: 'Fixed', text: 'Triple template supporting text not visible - increased card height from 280px to 320px' },
+      { type: 'Fixed', text: 'Chosen branding icon not appearing on standby screen - added missing icons to ICON_MAP' },
+      { type: 'Changed', text: 'Removed unused standby background patterns (kept only plain, grid, dots, lines)' },
+      { type: 'Fixed', text: 'Mirror button glitch on print preview - replaced icon with text label' },
+      { type: 'Fixed', text: 'Print status footer mismatched with standby screen - standardized footer text' },
+      { type: 'Added', text: 'Mirror button on print preview to horizontally flip images before printing' },
+      { type: 'Changed', text: 'Print status auto-return timer increased from 10 to 20 seconds' },
+      { type: 'Changed', text: 'QR code size increased from 148px to 200px for better scannability' },
+      { type: 'Added', text: 'Mock receipt purchased items block with customizable item name, quantity, and price' },
+      { type: 'Added', text: 'Witty random items auto-populate feature (Good Vibes, Bad Decisions, Y2K Energy, etc.)' },
+      { type: 'Added', text: 'Receipt items table rendering with ITEM, QTY, PRICE columns and total calculation' },
+      { type: 'Added', text: '5 new standby background patterns: wave, geometric, marble, noise, gradient' },
+      { type: 'Added', text: '24 new branding icons: celebration, confetti, balloon, champagne, pizza, burger, and more' },
+      { type: 'Added', text: 'Social media links section in About settings (Instagram, Facebook)' },
+      { type: 'Added', text: 'Contact information section in About settings (email, phone)' },
+      { type: 'Added', text: 'How to Use quick guide in About settings with 4-step instructions' },
+      { type: 'Changed', text: 'Template cards now have uniform height (280px) for consistent layout' },
+      { type: 'Changed', text: 'Standby background previews now use theme-aware CSS for dark/light visibility' },
+      { type: 'Changed', text: 'Footer branding standardized across all waiting screens (Standby, Cleaning, Composing, PrintStatus)' },
+      { type: 'Changed', text: 'Rebranded from Snap & Roll to MONO STUDIO PH throughout the app' },
+      { type: 'Changed', text: 'Package name updated to com.momostudioph.receipt' },
+      { type: 'Changed', text: 'Added tagline and location to footer: No proof without @monoboothph, Kabankalan City & Beyond' },
+      { type: 'Fixed', text: 'Settings panel not displaying contents - converted inline styles to CSS classes' },
+      { type: 'Fixed', text: 'Print preview stuttering on high-resolution cameras - downsampling to max 1200px width' },
+      { type: 'Fixed', text: 'Animation glitch - bumped settings version to clear stale state' },
       { type: 'Added', text: 'Security hardening: Enabled R8/ProGuard for native code obfuscation in release builds' },
       { type: 'Added', text: 'Security hardening: Replaced localStorage with Capacitor Preferences for encrypted storage using Android Keystore' },
       { type: 'Added', text: 'Guided intro modal for first app launch with 3-step onboarding flow' },
@@ -130,10 +190,10 @@ export default function AboutSettings() {
 
   return (
     <div className="space-y-6">
-      {/* Hero */}
+      {/* About Mono Studio */}
       <div className="rounded-[20px] bg-md-primary-container px-5 py-5 space-y-1">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-md-on-primary-container">Snap &amp; Roll</h2>
+          <h2 className="text-lg font-semibold text-md-on-primary-container">MONO STUDIO PH</h2>
           <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-md-on-primary-container/10 text-md-on-primary-container/70">
             v0.1.0-mvp
           </span>
@@ -142,10 +202,52 @@ export default function AboutSettings() {
           Receipt Photobooth — print memories, one strip at a time.
         </p>
         <p className="text-xs text-md-on-primary-container/60 leading-relaxed pt-1">
-          A Progressive Web App kiosk for event photobooths. Captures photos with a live
-          camera feed, composites them onto a thermal-receipt-style strip, and sends the
-          result to a connected ESC/POS printer.
+          No proof without @monoboothph — show 'em the receipts! 🧾✨
         </p>
+        <p className="text-xs text-md-on-primary-container/60 leading-relaxed">
+          📍 Kabankalan City & Beyond
+        </p>
+      </div>
+
+      {/* Developer */}
+      <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
+        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Developer</p>
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full bg-md-secondary-container flex items-center justify-center text-md-on-secondary-container font-semibold text-base select-none">
+            JP
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-md-on-surface">Jubet M. Padilla</div>
+            <div className="text-xs text-md-on-surface-variant">Designer &amp; Developer</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Connect */}
+      <div className="rounded-[16px] bg-md-surface-container p-4 space-y-3">
+        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Connect</p>
+        <div className="grid grid-cols-2 gap-2">
+          <a
+            href="https://instagram.com/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-md-surface-container-high hover:bg-md-surface-container-highest transition-colors"
+          >
+            <span className="text-lg">�</span>
+            <span className="text-sm text-md-on-surface">@monoboothph</span>
+            <ExternalLink size={12} className="text-md-outline ml-auto" />
+          </a>
+          <a
+            href="https://facebook.com/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-md-surface-container-high hover:bg-md-surface-container-highest transition-colors"
+          >
+            <span className="text-lg">📘</span>
+            <span className="text-sm text-md-on-surface">MONO STUDIO PH</span>
+            <ExternalLink size={12} className="text-md-outline ml-auto" />
+          </a>
+        </div>
       </div>
 
       {/* Changelog */}
@@ -181,16 +283,25 @@ export default function AboutSettings() {
         )}
       </div>
 
-      {/* Developer */}
-      <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
-        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Developer</p>
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-full bg-md-secondary-container flex items-center justify-center text-md-on-secondary-container font-semibold text-base select-none">
-            JP
+      {/* How to Use */}
+      <div className="rounded-[16px] bg-md-surface-container p-4 space-y-3">
+        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">How to Use</p>
+        <div className="space-y-2 text-xs text-md-on-surface-variant leading-relaxed">
+          <div className="flex gap-2">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">1</span>
+            <span>Tap the screen to start</span>
           </div>
-          <div>
-            <div className="text-sm font-semibold text-md-on-surface">Jubet M. Padilla</div>
-            <div className="text-xs text-md-on-surface-variant">Designer &amp; Developer</div>
+          <div className="flex gap-2">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">2</span>
+            <span>Choose your template (Solo, Double, Triple, or Quad)</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">3</span>
+            <span>Strike a pose for each photo</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">4</span>
+            <span>Preview and print your receipt</span>
           </div>
         </div>
       </div>

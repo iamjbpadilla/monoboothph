@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { playClick } from '../hooks/useSound.js';
@@ -60,23 +60,67 @@ export default function TemplateSelect({ onSelect, onBack }) {
   const { settings } = useSettings();
   const isDark = settings.general.theme === 'dark';
   const [selected, setSelected] = useState(null);
+  const timerRef = useRef(null);
+  const [timeLeft, setTimeLeft] = useState(20);
 
   const selectedTemplate = TEMPLATES.find(t => t.key === selected);
 
+  // Auto-return timer - 20 seconds if no interaction
+  useEffect(() => {
+    const resetTimer = () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      setTimeLeft(20);
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            onBack();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    };
+
+    resetTimer();
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [onBack]);
+
+  // Reset timer on any interaction
+  const handleInteraction = () => {
+    setTimeLeft(20);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            onBack();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-col bg-md-surface">
-      {/* MD3 Center-Aligned Top App Bar — right spacer w-16 clears FAB */}
+      {/* MD3 Center-Aligned Top App Bar — no back button */}
       <div className="relative z-10 flex items-center px-2 h-16 flex-shrink-0 bg-md-surface">
-        <button
-          onClick={() => { playClick(); onBack(); }}
-          className="w-12 h-12 flex items-center justify-center rounded-full text-md-on-surface hover:bg-md-surface-container-highest hover:scale-110 hover:shadow-md active:scale-95 transition-all duration-150"
-        >
-          <ChevronLeft size={24} />
-        </button>
         <div className="flex-1 text-center">
           <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Choose Template</h2>
         </div>
-        <div className="w-16" />
+        <div className="w-12 flex items-center justify-center text-md-outline text-sm font-medium">
+          {timeLeft}s
+        </div>
       </div>
 
       {/* MD3 Cards grid */}
@@ -87,8 +131,8 @@ export default function TemplateSelect({ onSelect, onBack }) {
             return (
               <button
                 key={key}
-                onClick={() => { playClick(); setSelected(key); }}
-                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative ${
+                onClick={() => { playClick(); handleInteraction(); setSelected(key); }}
+                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative h-[320px] ${
                   isSelected
                     ? 'bg-md-primary-container ring-2 ring-md-primary scale-[1.02] shadow-lg'
                     : 'bg-md-surface-container-high hover:bg-md-surface-container-highest hover:scale-[1.03] hover:shadow-xl'
@@ -129,7 +173,7 @@ export default function TemplateSelect({ onSelect, onBack }) {
       {/* MD3 Bottom action — Extended FAB style */}
       <div className="flex-shrink-0 px-4 py-4 bg-md-surface">
         <button
-          onClick={() => { if (selected) { playClick(); onSelect(selected); } }}
+          onClick={() => { if (selected) { playClick(); handleInteraction(); onSelect(selected); } }}
           disabled={!selected}
           className={`w-full flex items-center justify-center gap-3 min-h-[56px] rounded-[16px] font-semibold text-base tracking-wide transition-all duration-150 ${
             selected

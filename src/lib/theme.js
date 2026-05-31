@@ -24,54 +24,79 @@ export const FONT_OPTIONS = FONT_PAIRS.map(p => ({ name: p.heading, category: p.
 // Only primary family is swapped; secondary/tertiary remain at CSS defaults
 export const ACCENT_PALETTES = {
   purple: {
-    label: 'Purple', swatch: '#6750A4',
-    dark:  { primary: '#D0BCFF', onPrimary: '#381E72', primaryContainer: '#4F378B', onPrimaryContainer: '#EADDFF' },
-    light: { primary: '#6750A4', onPrimary: '#FFFFFF', primaryContainer: '#EADDFF', onPrimaryContainer: '#21005D' },
-  },
-  blue: {
-    label: 'Blue', swatch: '#1B4EA5',
-    dark:  { primary: '#A8C7FA', onPrimary: '#0A2E69', primaryContainer: '#1B4EA5', onPrimaryContainer: '#D6E3FF' },
-    light: { primary: '#1B4EA5', onPrimary: '#FFFFFF', primaryContainer: '#D6E3FF', onPrimaryContainer: '#001440' },
-  },
-  teal: {
-    label: 'Teal', swatch: '#006B5E',
-    dark:  { primary: '#4FDACC', onPrimary: '#003733', primaryContainer: '#005048', onPrimaryContainer: '#70F7E9' },
-    light: { primary: '#006B5E', onPrimary: '#FFFFFF', primaryContainer: '#70F7E9', onPrimaryContainer: '#00201C' },
-  },
-  green: {
-    label: 'Green', swatch: '#006D32',
-    dark:  { primary: '#6DD58C', onPrimary: '#003919', primaryContainer: '#00522A', onPrimaryContainer: '#89F5A8' },
-    light: { primary: '#006D32', onPrimary: '#FFFFFF', primaryContainer: '#89F5A8', onPrimaryContainer: '#002110' },
-  },
-  orange: {
-    label: 'Orange', swatch: '#8C4A00',
-    dark:  { primary: '#FFB787', onPrimary: '#4A2800', primaryContainer: '#6B3B00', onPrimaryContainer: '#FFDCBE' },
-    light: { primary: '#8C4A00', onPrimary: '#FFFFFF', primaryContainer: '#FFDCBE', onPrimaryContainer: '#2D1400' },
+    label: 'Purple', swatch: '#9C27B0',
+    dark:  { primary: '#E040FB', onPrimary: '#4A0072', primaryContainer: '#6A1B9A', onPrimaryContainer: '#F3E5F5' },
+    light: { primary: '#9C27B0', onPrimary: '#FFFFFF', primaryContainer: '#F3E5F5', onPrimaryContainer: '#4A0072' },
   },
   pink: {
-    label: 'Pink', swatch: '#B0005A',
-    dark:  { primary: '#FFB0CE', onPrimary: '#64003D', primaryContainer: '#8E0057', onPrimaryContainer: '#FFD8E8' },
-    light: { primary: '#B0005A', onPrimary: '#FFFFFF', primaryContainer: '#FFD8E8', onPrimaryContainer: '#3E001C' },
+    label: 'Pink', swatch: '#E91E63',
+    dark:  { primary: '#FF4081', onPrimary: '#880E4F', primaryContainer: '#C2185B', onPrimaryContainer: '#FCE4EC' },
+    light: { primary: '#E91E63', onPrimary: '#FFFFFF', primaryContainer: '#FCE4EC', onPrimaryContainer: '#880E4F' },
   },
   red: {
-    label: 'Red', swatch: '#BA1A1A',
-    dark:  { primary: '#FFB3AD', onPrimary: '#680004', primaryContainer: '#93000D', onPrimaryContainer: '#FFDAD8' },
-    light: { primary: '#BA1A1A', onPrimary: '#FFFFFF', primaryContainer: '#FFDAD6', onPrimaryContainer: '#410002' },
+    label: 'Red', swatch: '#F44336',
+    dark:  { primary: '#FF5252', onPrimary: '#B71C1C', primaryContainer: '#D32F2F', onPrimaryContainer: '#FFEBEE' },
+    light: { primary: '#F44336', onPrimary: '#FFFFFF', primaryContainer: '#FFEBEE', onPrimaryContainer: '#B71C1C' },
   },
-  indigo: {
-    label: 'Indigo', swatch: '#383E92',
-    dark:  { primary: '#BBC2FF', onPrimary: '#1F2578', primaryContainer: '#383E92', onPrimaryContainer: '#DEE0FF' },
-    light: { primary: '#383E92', onPrimary: '#FFFFFF', primaryContainer: '#DEE0FF', onPrimaryContainer: '#070E64' },
+  orange: {
+    label: 'Orange', swatch: '#FF9800',
+    dark:  { primary: '#FFB74D', onPrimary: '#E65100', primaryContainer: '#F57C00', onPrimaryContainer: '#FFF3E0' },
+    light: { primary: '#FF9800', onPrimary: '#FFFFFF', primaryContainer: '#FFF3E0', onPrimaryContainer: '#E65100' },
   },
   amber: {
-    label: 'Amber', swatch: '#7A5900',
-    dark:  { primary: '#F6C843', onPrimary: '#3F2E00', primaryContainer: '#5A4300', onPrimaryContainer: '#FFDF9E' },
-    light: { primary: '#7A5900', onPrimary: '#FFFFFF', primaryContainer: '#FFDF9E', onPrimaryContainer: '#271900' },
+    label: 'Amber', swatch: '#FFC107',
+    dark:  { primary: '#FFD54F', onPrimary: '#FF6F00', primaryContainer: '#FFA000', onPrimaryContainer: '#FFF8E1' },
+    light: { primary: '#FFC107', onPrimary: '#000000', primaryContainer: '#FFF8E1', onPrimaryContainer: '#FF6F00' },
+  },
+  yellow: {
+    label: 'Yellow', swatch: '#FFEB3B',
+    dark:  { primary: '#FFFF00', onPrimary: '#F57F17', primaryContainer: '#FFD600', onPrimaryContainer: '#FFFDE7' },
+    light: { primary: '#FBC02D', onPrimary: '#000000', primaryContainer: '#FFFDE7', onPrimaryContainer: '#F57F17' },
+  },
+  lime: {
+    label: 'Lime', swatch: '#CDDC39',
+    dark:  { primary: '#EEFF41', onPrimary: '#827717', primaryContainer: '#C0CA33', onPrimaryContainer: '#F9FBE7' },
+    light: { primary: '#CDDC39', onPrimary: '#000000', primaryContainer: '#F9FBE7', onPrimaryContainer: '#827717' },
+  },
+  green: {
+    label: 'Green', swatch: '#4CAF50',
+    dark:  { primary: '#69F0AE', onPrimary: '#1B5E20', primaryContainer: '#388E3C', onPrimaryContainer: '#E8F5E9' },
+    light: { primary: '#4CAF50', onPrimary: '#FFFFFF', primaryContainer: '#E8F5E9', onPrimaryContainer: '#1B5E20' },
+  },
+  teal: {
+    label: 'Teal', swatch: '#009688',
+    dark:  { primary: '#64FFDA', onPrimary: '#004D40', primaryContainer: '#00796B', onPrimaryContainer: '#E0F2F1' },
+    light: { primary: '#009688', onPrimary: '#FFFFFF', primaryContainer: '#E0F2F1', onPrimaryContainer: '#004D40' },
+  },
+  cyan: {
+    label: 'Cyan', swatch: '#00BCD4',
+    dark:  { primary: '#18FFFF', onPrimary: '#006064', primaryContainer: '#0097A7', onPrimaryContainer: '#E0F7FA' },
+    light: { primary: '#00BCD4', onPrimary: '#FFFFFF', primaryContainer: '#E0F7FA', onPrimaryContainer: '#006064' },
+  },
+  blue: {
+    label: 'Blue', swatch: '#2196F3',
+    dark:  { primary: '#40C4FF', onPrimary: '#01579B', primaryContainer: '#0288D1', onPrimaryContainer: '#E1F5FE' },
+    light: { primary: '#2196F3', onPrimary: '#FFFFFF', primaryContainer: '#E1F5FE', onPrimaryContainer: '#01579B' },
+  },
+  indigo: {
+    label: 'Indigo', swatch: '#3F51B5',
+    dark:  { primary: '#536DFE', onPrimary: '#1A237E', primaryContainer: '#303F9F', onPrimaryContainer: '#E8EAF6' },
+    light: { primary: '#3F51B5', onPrimary: '#FFFFFF', primaryContainer: '#E8EAF6', onPrimaryContainer: '#1A237E' },
+  },
+  violet: {
+    label: 'Violet', swatch: '#673AB7',
+    dark:  { primary: '#7C4DFF', onPrimary: '#311B92', primaryContainer: '#512DA8', onPrimaryContainer: '#EDE7F6' },
+    light: { primary: '#673AB7', onPrimary: '#FFFFFF', primaryContainer: '#EDE7F6', onPrimaryContainer: '#311B92' },
   },
   rose: {
-    label: 'Rose', swatch: '#9C2040',
-    dark:  { primary: '#FFB1C1', onPrimary: '#5F1128', primaryContainer: '#7D2940', onPrimaryContainer: '#FFD9E2' },
-    light: { primary: '#9C2040', onPrimary: '#FFFFFF', primaryContainer: '#FFD9E2', onPrimaryContainer: '#3E0016' },
+    label: 'Rose', swatch: '#E91E63',
+    dark:  { primary: '#FF4081', onPrimary: '#880E4F', primaryContainer: '#C2185B', onPrimaryContainer: '#FCE4EC' },
+    light: { primary: '#E91E63', onPrimary: '#FFFFFF', primaryContainer: '#FCE4EC', onPrimaryContainer: '#880E4F' },
+  },
+  deepPurple: {
+    label: 'Deep Purple', swatch: '#673AB7',
+    dark:  { primary: '#9575CD', onPrimary: '#311B92', primaryContainer: '#512DA8', onPrimaryContainer: '#EDE7F6' },
+    light: { primary: '#673AB7', onPrimary: '#FFFFFF', primaryContainer: '#EDE7F6', onPrimaryContainer: '#311B92' },
   },
 };
 
@@ -107,3 +132,27 @@ export function applyAccent(accentKey) {
     }
   `;
 }
+
+/** Paperlike background patterns for standby screen */
+export const PAPERBACKGROUNDS = {
+  plain: {
+    id: 'plain',
+    label: 'Plain',
+    className: 'bg-paper-plain',
+  },
+  grid: {
+    id: 'grid',
+    label: 'Grid',
+    className: 'bg-paper-grid',
+  },
+  dots: {
+    id: 'dots',
+    label: 'Dots',
+    className: 'bg-paper-dots',
+  },
+  lines: {
+    id: 'lines',
+    label: 'Lines',
+    className: 'bg-paper-lines',
+  },
+};

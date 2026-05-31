@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { compositeReceipt } from '../lib/canvasCompositor.js';
 
-export default function ReceiptCanvas({ frames, templateKey, templateSettings, generalSettings, printerSettings, onCanvasReady }) {
+export default function ReceiptCanvas({ frames, templateKey, templateSettings, generalSettings, printerSettings, mirrorImages, onCanvasReady }) {
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ export default function ReceiptCanvas({ frames, templateKey, templateSettings, g
     setLoading(true);
     setError(null);
 
-    compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings)
+    compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, mirrorImages)
       .then(canvas => {
         if (cancelled) return;
         const container = containerRef.current;
@@ -31,7 +31,7 @@ export default function ReceiptCanvas({ frames, templateKey, templateSettings, g
       });
 
     return () => { cancelled = true; };
-  }, [frames, templateKey, templateSettings, generalSettings, printerSettings]);
+  }, [frames, templateKey, templateSettings, generalSettings, printerSettings, mirrorImages]);
 
   return (
     <div className="w-full">

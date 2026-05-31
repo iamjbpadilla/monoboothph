@@ -30,6 +30,8 @@ export function useCamera({ deviceId, resolution = 'hd', mirror = true } = {}) {
         streamRef.current.getTracks().forEach(t => t.stop());
       }
       const res = RESOLUTIONS[resolution] || RESOLUTIONS.hd;
+      
+      // Start with ideal values
       const constraints = {
         video: {
           ...(deviceId ? { deviceId: { exact: deviceId } } : { facingMode: 'user' }),
@@ -40,8 +42,41 @@ export function useCamera({ deviceId, resolution = 'hd', mirror = true } = {}) {
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
+      
+      // Try to apply actual supported resolution from track capabilities
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        try {
+          const capabilities = videoTrack.getCapabilities();
+          if (capabilities && capabilities.width && capabilities.height) {
+            // Find the best supported resolution that matches or is close to requested
+            const supportedWidth = capabilities.width;
+            const supportedHeight = capabilities.height;
+            
+            // If the camera supports the exact resolution, use it
+            if (supportedWidth.max >= res.width && supportedHeight.max >= res.height) {
+              // Apply constraints with exact values if supported
+              const exactConstraints = {
+                video: {
+                  ...(deviceId ? { deviceId: { exact: deviceId } } : { facingMode: 'user' }),
+                  width: { ideal: Math.min(res.width, supportedWidth.max) },
+                  height: { ideal: Math.min(res.height, supportedHeight.max) },
+                },
+                audio: false,
+              };
+              const newStream = await navigator.mediaDevices.getUserMedia(exactConstraints);
+              streamRef.current.getTracks().forEach(t => t.stop());
+              streamRef.current = newStream;
+            }
+          }
+        } catch (e) {
+          // If capabilities fail, continue with the stream we have
+          console.warn('Could not apply exact resolution constraints:', e);
+        }
+      }
+      
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+        videoRef.current.srcObject = streamRef.current;
         videoRef.current.style.transform = mirror ? 'scaleX(-1)' : 'none';
         // Force video to play immediately to prevent placeholder
         videoRef.current.play().catch(err => {
@@ -89,15 +124,25 @@ export function useCamera({ deviceId, resolution = 'hd', mirror = true } = {}) {
         sy = Math.round((vh - sh) / 2);
       }
 
+      // Downsample to max 1200px width for performance
+      const MAX_WIDTH = 1200;
+      let finalWidth = sw;
+      let finalHeight = sh;
+      
+      if (sw > MAX_WIDTH) {
+        finalWidth = MAX_WIDTH;
+        finalHeight = Math.round(MAX_WIDTH * (sh / sw));
+      }
+
       const canvas = document.createElement('canvas');
-      canvas.width = sw;
-      canvas.height = sh;
+      canvas.width = finalWidth;
+      canvas.height = finalHeight;
       const ctx = canvas.getContext('2d');
       if (mirror) {
-        ctx.translate(sw, 0);
+        ctx.translate(finalWidth, 0);
         ctx.scale(-1, 1);
       }
-      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, finalWidth, finalHeight);
       return canvas.toDataURL('image/jpeg', 0.92);
     } catch {
       return null;

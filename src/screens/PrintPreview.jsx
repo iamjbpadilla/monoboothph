@@ -12,6 +12,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
   const receiptAreaRef = useRef(null);
   const [maxW, setMaxW] = useState('100%');
   const [countdown, setCountdown] = useState(AUTO_PRINT_SECONDS);
+  const [mirrorImages, setMirrorImages] = useState(false);
   const autoFiredRef = useRef(false);
 
   function handleCanvasReady(canvas) {
@@ -118,6 +119,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
             templateSettings={settings.templates}
             generalSettings={settings.general}
             printerSettings={settings.printer}
+            mirrorImages={mirrorImages}
             onCanvasReady={handleCanvasReady}
           />
         </div>
@@ -133,18 +135,22 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
           Retake
         </button>
         <button
+          onClick={() => { playClick(); setMirrorImages(!mirrorImages); }}
+          className={`flex items-center justify-center gap-2 w-32 px-4 py-5 rounded-full font-medium text-base border transition-all duration-150 ${
+            mirrorImages
+              ? 'bg-md-primary text-md-on-primary border-md-primary hover:brightness-110 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] shadow'
+              : 'border-md-outline text-md-outline hover:bg-md-surface-container-high hover:scale-[1.03] active:scale-[0.97]'
+          }`}
+          title="Mirror images"
+        >
+          {mirrorImages ? 'Mirrored' : 'Mirror'}
+        </button>
+        <button
           onClick={() => { playClick(); handlePrint(); }}
           className="flex items-center justify-center gap-2 flex-1 py-5 rounded-full font-medium text-base bg-md-primary text-md-on-primary hover:brightness-110 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] transition-all duration-150 shadow"
         >
           <Printer size={20} />
           Print ({countdown})
-        </button>
-        <button
-          onClick={() => { playClick(); handleDownload(); }}
-          className="flex items-center justify-center gap-2 px-4 py-5 rounded-full font-medium text-base border border-md-outline text-md-outline hover:bg-md-surface-container-high hover:scale-[1.03] active:scale-[0.97] transition-all duration-150"
-          title="Download image (dev only)"
-        >
-          <Download size={20} />
         </button>
       </div>
     </div>

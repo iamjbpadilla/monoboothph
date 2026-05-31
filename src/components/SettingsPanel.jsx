@@ -22,7 +22,7 @@ const TAB_MAP = {
   printer: PrinterSettings, templates: TemplateSettings, about: AboutSettings,
 };
 
-export default function SettingsPanel() {
+export default function SettingsPanel({ currentScreen = 'standby' }) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
   const [pendingClose, setPendingClose] = useState(false);
@@ -76,18 +76,20 @@ export default function SettingsPanel() {
 
   return (
     <>
-      {/* FAB trigger — badge dot when dirty */}
-      <button
-        onClick={() => { playClick(); setOpen(true); }}
-        className="fixed top-4 right-4 z-40 w-12 h-12 flex items-center justify-center rounded-2xl bg-md-surface-container-highest text-md-on-surface hover:bg-md-surface-bright shadow-lg"
-        style={{ transition: 'background-color 150ms cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
-        aria-label="Settings"
-      >
-        <Settings size={20} />
-        {isDirty && (
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-md-primary border-2 border-md-surface-container-highest" />
-        )}
-      </button>
+      {/* FAB trigger — badge dot when dirty — only show on standby */}
+      {currentScreen === 'standby' && (
+        <button
+          onClick={() => { playClick(); setOpen(true); }}
+          className="fixed top-4 right-4 z-40 w-12 h-12 flex items-center justify-center rounded-2xl bg-md-surface-container-highest text-md-on-surface hover:bg-md-surface-bright shadow-lg"
+          style={{ transition: 'background-color 150ms cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
+          aria-label="Settings"
+        >
+          <Settings size={20} />
+          {isDirty && (
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-md-primary border-2 border-md-surface-container-highest" />
+          )}
+        </button>
+      )}
 
       {/* Fullscreen settings sheet */}
       {open && (

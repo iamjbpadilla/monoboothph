@@ -6,9 +6,12 @@ import {
   Flower2, TreePine, Cherry, Coffee, Wine, Beer,
   Bird, PawPrint, Rocket, Swords, Gamepad2, Dices,
   Globe, MapPin, Umbrella, Snowflake, Anchor, Bike,
+  Pizza, Sandwich, Drum, Guitar,
+  Mic, Headphones, Car, Plane, Train, Bus,
+  Compass, Sunrise, Sunset, Cloud, CloudRain,
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
-import { FONT_PAIRS, ACCENT_PALETTES } from '../../lib/theme.js';
+import { FONT_PAIRS, ACCENT_PALETTES, PAPERBACKGROUNDS } from '../../lib/theme.js';
 
 const BRANDING_ICONS = [
   { key: 'camera', Icon: Camera, label: 'Camera' },
@@ -45,6 +48,21 @@ const BRANDING_ICONS = [
   { key: 'snow', Icon: Snowflake, label: 'Winter' },
   { key: 'anchor', Icon: Anchor, label: 'Anchor' },
   { key: 'bike', Icon: Bike, label: 'Bike' },
+  { key: 'pizza', Icon: Pizza, label: 'Pizza' },
+  { key: 'sandwich', Icon: Sandwich, label: 'Sandwich' },
+  { key: 'drum', Icon: Drum, label: 'Drum' },
+  { key: 'guitar', Icon: Guitar, label: 'Guitar' },
+  { key: 'mic', Icon: Mic, label: 'Mic' },
+  { key: 'headphones', Icon: Headphones, label: 'Headphones' },
+  { key: 'car', Icon: Car, label: 'Car' },
+  { key: 'plane', Icon: Plane, label: 'Plane' },
+  { key: 'train', Icon: Train, label: 'Train' },
+  { key: 'bus', Icon: Bus, label: 'Bus' },
+  { key: 'compass', Icon: Compass, label: 'Compass' },
+  { key: 'sunrise', Icon: Sunrise, label: 'Sunrise' },
+  { key: 'sunset', Icon: Sunset, label: 'Sunset' },
+  { key: 'cloud', Icon: Cloud, label: 'Cloud' },
+  { key: 'rain', Icon: CloudRain, label: 'Rain' },
 ];
 
 function Section({ title, children }) {
@@ -141,12 +159,29 @@ export default function GeneralSettings() {
                 'Mia Turns 18', 'Miguel & Sofia', 'Lilibeth @ 80', 'Grad Night 2026',
                 'Barkada Reunion', 'Team Offsite', 'Holiday Party', 'Baby Reveal',
                 'Engagement Bash', 'New Year Countdown', 'Summer Luau', 'Retro Prom',
+                'Wedding of Sarah & John', '50th Anniversary', 'Corporate Gala',
+                'Birthday Bash', 'Sweet Sixteen', 'Quinceañera', 'Golden Jubilee',
+                'Family Reunion', 'Class of 2025', 'Christmas Party', 'Halloween Spooktacular',
+                'Valentine\'s Dance', 'Spring Fling', 'Beach Party', 'Winter Wonderland',
+                'Karaoke Night', 'Game Night', 'Movie Marathon', 'Potluck Dinner',
+                'Bridal Shower', 'Baby Shower', 'Bachelor Party', 'Bachelorette Party',
+                'Retirement Party', 'Prom Night', 'Homecoming', 'Farewell Party',
               ];
               const subtitles = [
                 'A celebration of life', 'Best day ever', 'Forever & always',
                 'Cheers to many more', 'Making memories', 'Strike a pose',
                 'Smile for the camera', 'Tonight we party', 'Love, laughter, photos',
                 'Capture the moment', 'One for the books', 'Say cheese!',
+                'Love is in the air', 'Together forever', 'Happily ever after',
+                'Picture perfect moments', 'Memories to last a lifetime', 'Smile big!',
+                'Snap, click, smile!', 'Freeze the moment', 'Time flies when having fun',
+                'Life is beautiful', 'Enjoy the little things', 'Cherish every moment',
+                'Laugh often, love much', 'Good times, great memories', 'Party like it\'s 1999',
+                'Dance like nobody\'s watching', 'Live, love, laugh', 'Making history',
+                'The best is yet to come', 'Adventure awaits', 'Dream big, smile often',
+                'Celebrate good times', 'Joy to the world', 'Peace, love, and happiness',
+                'Shine bright', 'Be your own kind of beautiful', 'You only live once',
+                'Carpe diem', 'Seize the day', 'Make it count', 'No regrets',
               ];
               updateSettings('general.boothName', titles[Math.floor(Math.random() * titles.length)]);
               updateSettings('general.eventName', subtitles[Math.floor(Math.random() * subtitles.length)]);
@@ -220,6 +255,74 @@ export default function GeneralSettings() {
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        {/* Standby Background */}
+        <div>
+          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Standby Background</label>
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {Object.values(PAPERBACKGROUNDS).map((bg) => {
+              const isActive = (general.standbyBackground ?? 'plain') === bg.id;
+              return (
+                <button
+                  key={bg.id}
+                  onClick={() => updateSettings('general.standbyBackground', bg.id)}
+                  title={bg.label}
+                  className={`relative flex-shrink-0 w-24 h-24 rounded-xl border-2 overflow-hidden transition-all duration-150 ${bg.className} ${
+                    isActive
+                      ? 'border-md-primary shadow-sm'
+                      : 'border-md-outline-variant bg-md-surface-container hover:bg-md-surface-container-high'
+                  }`}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center bg-md-surface/80">
+                    <span className={`text-xs font-semibold ${isActive ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>
+                      {bg.label}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </Section>
+
+      {/* ── Advertising ── */}
+      <Section title="Advertising">
+        <div className="space-y-4">
+          {/* Enable/Disable Toggle */}
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-medium text-md-on-surface-variant">Show Advertising After Print</label>
+            <button
+              role="switch"
+              aria-checked={general.showAdvertising ?? true}
+              onClick={() => updateSettings('general.showAdvertising', !(general.showAdvertising ?? true))}
+              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
+                (general.showAdvertising ?? true)
+                  ? 'bg-md-primary'
+                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
+              }`}
+            >
+              <span
+                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
+                  (general.showAdvertising ?? true) ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Duration Selector */}
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Advertising Duration (seconds)</label>
+            <select
+              value={general.adDuration ?? 5}
+              onChange={e => updateSettings('general.adDuration', parseInt(e.target.value))}
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
+            >
+              <option value={3}>3 seconds</option>
+              <option value={5}>5 seconds</option>
+              <option value={10}>10 seconds</option>
+            </select>
           </div>
         </div>
       </Section>

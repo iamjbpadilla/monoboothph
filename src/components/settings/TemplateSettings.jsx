@@ -209,6 +209,22 @@ function TemplateBlockEditor() {
             <span className="text-sm font-medium text-md-on-surface">Header</span>
             <div className="flex items-center gap-2">
               <Toggle value={blocks.header.enabled} onChange={v => upd('header', 'enabled', v)} />
+              <div className="flex gap-1">
+                <button
+                  onClick={() => moveBlock('header', 'up')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move up"
+                >
+                  <ChevronUp size={16} />
+                </button>
+                <button
+                  onClick={() => moveBlock('header', 'down')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move down"
+                >
+                  <ChevronDown size={16} />
+                </button>
+              </div>
               <button
                 onClick={() => {
                   upd('header', 'title', '');
@@ -266,6 +282,22 @@ function TemplateBlockEditor() {
             <span className="text-sm font-medium text-md-on-surface">Footer</span>
             <div className="flex items-center gap-2">
               <Toggle value={blocks.footer.enabled} onChange={v => upd('footer', 'enabled', v)} />
+              <div className="flex gap-1">
+                <button
+                  onClick={() => moveBlock('footer', 'up')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move up"
+                >
+                  <ChevronUp size={16} />
+                </button>
+                <button
+                  onClick={() => moveBlock('footer', 'down')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move down"
+                >
+                  <ChevronDown size={16} />
+                </button>
+              </div>
               <button
                 onClick={() => upd('footer', 'text', '')}
                 className="text-xs text-md-outline hover:text-md-on-surface-variant"
@@ -289,6 +321,22 @@ function TemplateBlockEditor() {
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-md-on-surface">Photos</span>
+            <div className="flex gap-1">
+              <button
+                onClick={() => moveBlock('photos', 'up')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move up"
+              >
+                <ChevronUp size={16} />
+              </button>
+              <button
+                onClick={() => moveBlock('photos', 'down')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move down"
+              >
+                <ChevronDown size={16} />
+              </button>
+            </div>
           </div>
           <div className="flex gap-2 mb-3">
             {BORDER_STYLES.map(s => (
@@ -307,7 +355,25 @@ function TemplateBlockEditor() {
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-md-on-surface">Divider</span>
-            <Toggle value={blocks.divider.enabled} onChange={v => upd('divider', 'enabled', v)} />
+            <div className="flex items-center gap-2">
+              <Toggle value={blocks.divider.enabled} onChange={v => upd('divider', 'enabled', v)} />
+              <div className="flex gap-1">
+                <button
+                  onClick={() => moveBlock('divider', 'up')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move up"
+                >
+                  <ChevronUp size={16} />
+                </button>
+                <button
+                  onClick={() => moveBlock('divider', 'down')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move down"
+                >
+                  <ChevronDown size={16} />
+                </button>
+              </div>
+            </div>
           </div>
           <div className="flex gap-2 mb-3">
             {['solid', 'dashed', 'dotted', 'double'].map(s => (
@@ -356,17 +422,181 @@ function TemplateBlockEditor() {
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-md-on-surface">Custom Text</span>
-            <Toggle value={blocks.customText.enabled} onChange={v => upd('customText', 'enabled', v)} />
+            <div className="flex items-center gap-2">
+              <Toggle value={blocks.customText.enabled} onChange={v => upd('customText', 'enabled', v)} />
+              <div className="flex gap-1">
+                <button
+                  onClick={() => moveBlock('customText', 'up')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move up"
+                >
+                  <ChevronUp size={16} />
+                </button>
+                <button
+                  onClick={() => moveBlock('customText', 'down')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move down"
+                >
+                  <ChevronDown size={16} />
+                </button>
+              </div>
+            </div>
           </div>
-          <TextInput label="Content" value={blocks.customText.content} onChange={v => upd('customText', 'content', v)} placeholder="#SnapAndRoll" />
+          <TextInput label="Content" value={blocks.customText.content} onChange={v => upd('customText', 'content', v)} placeholder="#MONOSTUDIOPH" />
         </div>
+      </div>
+
+      {/* Receipt Items */}
+      <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm font-medium text-md-on-surface">Receipt Items</span>
+          <div className="flex items-center gap-2">
+            <Toggle value={blocks.receiptItems.enabled} onChange={v => upd('receiptItems', 'enabled', v)} />
+            <div className="flex gap-1">
+              <button
+                onClick={() => moveBlock('receiptItems', 'up')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move up"
+              >
+                <ChevronUp size={16} />
+              </button>
+              <button
+                onClick={() => moveBlock('receiptItems', 'down')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move down"
+              >
+                <ChevronDown size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+        {blocks.receiptItems.enabled && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  const newItems = [...(blocks.receiptItems.items || []), { name: '', quantity: 1, price: 0 }];
+                  upd('receiptItems', 'items', newItems);
+                }}
+                className="px-3 py-1.5 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110"
+              >
+                + Add Item
+              </button>
+              <button
+                onClick={() => {
+                  const wittyItems = [
+                    { name: 'Good Vibes', quantity: 1, price: 999 },
+                    { name: 'Bad Decisions', quantity: 2, price: 0 },
+                    { name: 'Y2K Energy', quantity: 1, price: 500 },
+                    { name: 'Main Character Energy', quantity: 1, price: 750 },
+                    { name: 'Side Quest', quantity: 3, price: 150 },
+                    { name: 'Plot Armor', quantity: 1, price: 1000 },
+                    { name: 'Emotional Damage', quantity: 1, price: 50 },
+                    { name: 'Brain Cells', quantity: 0, price: 0 },
+                    { name: 'Social Battery', quantity: 1, price: 25 },
+                    { name: 'Serenity', quantity: 1, price: 888 },
+                  ];
+                  const randomItems = wittyItems.sort(() => 0.5 - Math.random()).slice(0, 3);
+                  upd('receiptItems', 'items', randomItems);
+                }}
+                className="px-3 py-1.5 rounded-lg bg-md-secondary-container text-md-on-secondary-container text-xs font-medium hover:brightness-110"
+              >
+                🎲 Random Witty Items
+              </button>
+              <button
+                onClick={() => upd('receiptItems', 'items', [])}
+                className="px-3 py-1.5 rounded-lg bg-md-error-container text-md-on-error-container text-xs font-medium hover:brightness-110"
+              >
+                Clear All
+              </button>
+            </div>
+            <div className="space-y-2">
+              {(blocks.receiptItems.items || []).map((item, idx) => (
+                <div key={idx} className="flex gap-2 items-center">
+                  <TextInput
+                    label="Item"
+                    value={item.name}
+                    onChange={v => {
+                      const newItems = [...blocks.receiptItems.items];
+                      newItems[idx] = { ...newItems[idx], name: v };
+                      upd('receiptItems', 'items', newItems);
+                    }}
+                    placeholder="Item name"
+                    className="flex-1"
+                  />
+                  <TextInput
+                    label="Qty"
+                    type="number"
+                    value={item.quantity}
+                    onChange={v => {
+                      const newItems = [...blocks.receiptItems.items];
+                      newItems[idx] = { ...newItems[idx], quantity: parseInt(v) || 1 };
+                      upd('receiptItems', 'items', newItems);
+                    }}
+                    className="w-16"
+                  />
+                  <TextInput
+                    label="Price"
+                    type="number"
+                    value={item.price}
+                    onChange={v => {
+                      const newItems = [...blocks.receiptItems.items];
+                      newItems[idx] = { ...newItems[idx], price: parseFloat(v) || 0 };
+                      upd('receiptItems', 'items', newItems);
+                    }}
+                    className="w-20"
+                  />
+                  <button
+                    onClick={() => {
+                      const newItems = blocks.receiptItems.items.filter((_, i) => i !== idx);
+                      upd('receiptItems', 'items', newItems);
+                    }}
+                    className="w-8 h-8 rounded-lg bg-md-error text-md-on-error flex items-center justify-center hover:bg-md-error-container hover:text-md-on-error-container"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-md-on-surface-variant">Randomize every print</span>
+              <Toggle value={blocks.receiptItems.randomize} onChange={v => upd('receiptItems', 'randomize', v)} />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-md-on-surface-variant">Show Qty</span>
+              <Toggle value={blocks.receiptItems.showQty} onChange={v => upd('receiptItems', 'showQty', v)} />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-md-on-surface-variant">Show Total</span>
+              <Toggle value={blocks.receiptItems.showTotal} onChange={v => upd('receiptItems', 'showTotal', v)} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Barcode */}
       <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-md-on-surface">Barcode</span>
-          <Toggle value={blocks.barcode.enabled} onChange={v => upd('barcode', 'enabled', v)} />
+          <div className="flex items-center gap-2">
+            <Toggle value={blocks.barcode.enabled} onChange={v => upd('barcode', 'enabled', v)} />
+            <div className="flex gap-1">
+              <button
+                onClick={() => moveBlock('barcode', 'up')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move up"
+              >
+                <ChevronUp size={16} />
+              </button>
+              <button
+                onClick={() => moveBlock('barcode', 'down')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move down"
+              >
+                <ChevronDown size={16} />
+              </button>
+            </div>
+          </div>
         </div>
         <div className="flex gap-3 items-center">
           <TextInput label="Value" value={blocks.barcode.value} onChange={v => upd('barcode', 'value', v)} placeholder="SNAPROLL001" />

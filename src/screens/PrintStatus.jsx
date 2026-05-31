@@ -5,7 +5,7 @@ import { useSettings } from '../context/SettingsContext.jsx';
 import { usePrinter } from '../hooks/usePrinter.js';
 import { playSuccess, playError, playClick } from '../hooks/useSound.js';
 
-function ReceiptQR({ size = 148, eventName }) {
+function ReceiptQR({ size = 200, eventName }) {
   const [dataUrl, setDataUrl] = useState(null);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function ReceiptQR({ size = 148, eventName }) {
 
   if (!dataUrl) {
     return (
-      <div className="w-[148px] h-[148px] flex items-center justify-center bg-white rounded-2xl">
+      <div className="w-[200px] h-[200px] flex items-center justify-center bg-white rounded-2xl">
         <div className="w-6 h-6 border-2 border-md-outline border-t-md-primary rounded-full animate-spin" />
       </div>
     );
@@ -41,7 +41,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
   const { settings } = useSettings();
   const isDark = settings.general.theme === 'dark';
   const { print, status, statusMessage, error, reset } = usePrinter();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(20);
 
   useEffect(() => {
     print(imageDataUrl, settings.printer);
@@ -137,7 +137,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
       {status === 'success' && (
         <div className="flex flex-col items-center gap-2">
           <div className="rounded-2xl overflow-hidden shadow-md border border-md-outline-variant p-1 bg-white">
-            <ReceiptQR size={148} eventName={settings.general.eventName} />
+            <ReceiptQR size={200} eventName={settings.general.eventName} />
           </div>
           <p className="text-[10px] text-md-outline tracking-widest uppercase">Scan for digital copy</p>
         </div>
@@ -175,8 +175,9 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
 
       {/* Footer */}
       <div className="absolute bottom-6 flex flex-col items-center gap-0.5">
-        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">SNAP &amp; ROLL</p>
-        <p className="text-[10px] text-md-outline tracking-widest uppercase">Show them the proof!</p>
+        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO STUDIO PH</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
   );

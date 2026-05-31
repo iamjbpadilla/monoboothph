@@ -36,6 +36,12 @@ function dividerH(thickness, gap) { return (thickness || 1) + gap; }
 function photosH(slotH, count, photoGap, gap) { return slotH * count + photoGap * Math.max(0, count - 1) + gap; }
 function gridH(slotH, photoGap, gap) { return slotH * 2 + photoGap + gap; }
 function barcodeH(h, gap) { return h + gap; }
+function receiptItemsH(fontSize, items, showTotal, gap) {
+  const itemHeight = fontSize + 4;
+  const itemsHeight = items.length * itemHeight;
+  const totalHeight = showTotal ? fontSize + 8 : 0;
+  return itemsHeight + totalHeight + gap;
+}
 
 // --- draw helpers ---
 function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alignment = 'center', color = '#000000', fontFamily = 'sans-serif' } = {}) {
@@ -95,7 +101,7 @@ async function renderBarcode(ctx, x, y, contentWidth, { value = 'SNAPROLL', type
     const tmpCanvas = document.createElement('canvas');
     JsBarcode(tmpCanvas, value, {
       format: type,
-      width: 3,
+      width: Math.max(2, Math.floor(contentWidth / 50)),
       height: 80,
       displayValue: showText,
       fontSize: 22,
@@ -103,9 +109,9 @@ async function renderBarcode(ctx, x, y, contentWidth, { value = 'SNAPROLL', type
       background: '#ffffff',
       lineColor: '#000000',
     });
-    const bw = Math.min(tmpCanvas.width, contentWidth);
+    const bw = contentWidth;
     const bh = (bw / tmpCanvas.width) * tmpCanvas.height;
-    const bx = x + (contentWidth - bw) / 2;
+    const bx = x;
     ctx.drawImage(tmpCanvas, bx, y, bw, bh);
     return bh;
   } catch {
@@ -113,7 +119,7 @@ async function renderBarcode(ctx, x, y, contentWidth, { value = 'SNAPROLL', type
   }
 }
 
-function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderColor) {
+function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderColor, mirror = false) {
   if (borderStyle && borderStyle !== 'none') {
     const thickness = borderStyle === 'thin' ? 1 : borderStyle === 'thick' ? 4 : 2;
     const radius = borderStyle === 'rounded' ? 8 : 0;
@@ -125,16 +131,30 @@ function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderC
       ctx.roundRect(x, y, width, height, radius);
       ctx.stroke();
       ctx.clip();
-      ctx.drawImage(img, x, y, width, height);
+      if (mirror) {
+        ctx.translate(x + width, y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(img, 0, 0, width, height);
+      } else {
+        ctx.drawImage(img, x, y, width, height);
+      }
       ctx.restore();
       return;
     }
     ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
   }
-  ctx.drawImage(img, x, y, width, height);
+  if (mirror) {
+    ctx.save();
+    ctx.translate(x + width, y);
+    ctx.scale(-1, 1);
+    ctx.drawImage(img, 0, 0, width, height);
+    ctx.restore();
+  } else {
+    ctx.drawImage(img, x, y, width, height);
+  }
 }
 
-export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings) {
+export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, mirrorImages = false) {
   const { dpi, paperWidthMm } = printerSettings;
   const canvasWidth = calcCanvasWidth(dpi, paperWidthMm);
   const contentWidth = canvasWidth - MARGIN * 2;
@@ -198,6 +218,11 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'customText':
         if (blocks.customText.enabled && blocks.customText.content) contentH += textH(blocks.customText.fontSize, elGap);
         break;
+      case 'receiptItems':
+        if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
+          contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
+        }
+        break;
       case 'barcode':
         if (blocks.barcode.enabled) contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
         break;
@@ -253,7 +278,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               fontSize: subFontSize,
               bold: false,
               alignment: blocks.header.alignment,
-              color: '#666666',
+              color: '#000000',
               fontFamily: fontBody,
             });
             y += textH(subFontSize, elGap);
@@ -271,7 +296,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const py = y + row * (photoSlotHeight + photoGap);
             if (imgs[i]) {
               drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor);
+                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
             } else {
               ctx.fillStyle = '#e8e8e8';
               ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
@@ -284,7 +309,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             if (frames[i]) {
               const img = await loadImage(frames[i]);
               drawPhotoWithBorder(ctx, img, x, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor);
+                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
             } else {
               ctx.fillStyle = '#e8e8e8';
               ctx.fillRect(x, py, photoSlotWidth, photoSlotHeight);
@@ -312,7 +337,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         drawText(ctx, dateStr, x, y, contentWidth, {
           fontSize: DATETIME_FONT,
           alignment: 'center',
-          color: '#555555',
+          color: '#000000',
           fontFamily: fontBody,
         });
         y += textH(DATETIME_FONT, elGap);
@@ -328,6 +353,77 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         y += textH(blocks.customText.fontSize, elGap);
         break;
       }
+      case 'receiptItems': {
+        if (!blocks.receiptItems.enabled) break;
+
+        const fontSize = blocks.receiptItems.fontSize || 20;
+        const itemHeight = fontSize + 4;
+        const showQty = blocks.receiptItems.showQty !== false;
+
+        // Get items - use random witty items if randomize is enabled
+        let items = blocks.receiptItems.items || [];
+        if (blocks.receiptItems.randomize) {
+          const wittyItems = [
+            { name: 'Good Vibes', quantity: 1, price: 999 },
+            { name: 'Bad Decisions', quantity: 2, price: 0 },
+            { name: 'Y2K Energy', quantity: 1, price: 500 },
+            { name: 'Main Character Energy', quantity: 1, price: 750 },
+            { name: 'Side Quest', quantity: 3, price: 150 },
+            { name: 'Plot Armor', quantity: 1, price: 1000 },
+            { name: 'Emotional Damage', quantity: 1, price: 50 },
+            { name: 'Brain Cells', quantity: 0, price: 0 },
+            { name: 'Social Battery', quantity: 1, price: 25 },
+            { name: 'Serenity', quantity: 1, price: 888 },
+          ];
+          items = wittyItems.sort(() => 0.5 - Math.random()).slice(0, 3);
+        }
+
+        if (!items.length) break;
+
+        // Draw table header
+        ctx.font = `bold ${fontSize}px '${fontBody}', sans-serif`;
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'left';
+        ctx.fillText('ITEM', x, y + fontSize);
+        if (showQty) {
+          ctx.textAlign = 'right';
+          ctx.fillText('QTY', x + contentWidth * 0.6, y + fontSize);
+        }
+        ctx.textAlign = 'right';
+        ctx.fillText('PRICE', x + contentWidth, y + fontSize);
+        y += itemHeight;
+
+        // Draw items
+        ctx.font = `normal ${fontSize}px '${fontBody}', sans-serif`;
+        let total = 0;
+        for (const item of items) {
+          ctx.textAlign = 'left';
+          ctx.fillText(item.name || '', x, y + fontSize);
+          if (showQty) {
+            ctx.textAlign = 'right';
+            ctx.fillText(String(item.quantity || 1), x + contentWidth * 0.6, y + fontSize);
+          }
+          ctx.textAlign = 'right';
+          const price = parseFloat(item.price) || 0;
+          ctx.fillText(`₱${price.toFixed(2)}`, x + contentWidth, y + fontSize);
+          total += price * (item.quantity || 1);
+          y += itemHeight;
+        }
+
+        // Draw total line
+        if (blocks.receiptItems.showTotal) {
+          ctx.font = `bold ${fontSize}px '${fontBody}', sans-serif`;
+          ctx.fillStyle = '#000000';
+          ctx.textAlign = 'left';
+          ctx.fillText('TOTAL', x, y + fontSize + 4);
+          ctx.textAlign = 'right';
+          ctx.fillText(`₱${total.toFixed(2)}`, x + contentWidth, y + fontSize + 4);
+          y += fontSize + 8;
+        }
+
+        y += elGap;
+        break;
+      }
       case 'barcode': {
         if (!blocks.barcode.enabled) break;
         const bh = await renderBarcode(ctx, x, y, contentWidth, blocks.barcode);
@@ -339,7 +435,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         drawText(ctx, blocks.footer.text, x, y, contentWidth, {
           fontSize: blocks.footer.fontSize,
           alignment: blocks.footer.alignment,
-          color: '#555555',
+          color: '#000000',
           fontFamily: fontBody,
         });
         y += textH(blocks.footer.fontSize, elGap);

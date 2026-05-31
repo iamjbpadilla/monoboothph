@@ -4,13 +4,11 @@ import { useSettings } from '../../context/SettingsContext.jsx';
 const RES_MAP = {
   hd:  { width: 1280, height: 720 },
   fhd: { width: 1920, height: 1080 },
-  '4k': { width: 3840, height: 2160 },
 };
 
 const RESOLUTIONS = [
   { label: 'HD (720p)', value: 'hd' },
   { label: 'Full HD (1080p)', value: 'fhd' },
-  { label: '4K (2160p)', value: '4k' },
 ];
 
 const COUNTDOWN_OPTIONS = [3, 5, 10];
@@ -123,7 +121,19 @@ export default function CameraSettings() {
 
       {/* Device selector */}
       <div>
-        <label className="block text-xs font-medium text-md-on-surface-variant mb-1">Camera Device</label>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-xs font-medium text-md-on-surface-variant">Camera Device</label>
+          <button
+            onClick={() => {
+              updateSettings('camera.deviceId', '');
+              updateSettings('camera.resolution', 'hd');
+              updateSettings('camera.mirror', false);
+            }}
+            className="text-xs text-md-primary hover:text-md-on-primary transition-colors"
+          >
+            Reset
+          </button>
+        </div>
         <select
           value={camera.deviceId}
           onChange={e => updateSettings('camera.deviceId', e.target.value)}
@@ -171,13 +181,17 @@ export default function CameraSettings() {
           role="switch"
           aria-checked={camera.mirror}
           onClick={() => updateSettings('camera.mirror', !camera.mirror)}
-          className={`relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 ${
-            camera.mirror ? 'bg-md-primary' : 'bg-md-surface-container-highest ring-1 ring-inset ring-md-outline'
+          className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
+            camera.mirror
+              ? 'bg-md-primary'
+              : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
           }`}
         >
-          <span className={`absolute top-1 w-4 h-4 rounded-full shadow-sm transition-all duration-200 ${
-            camera.mirror ? 'translate-x-6 bg-md-on-primary' : 'translate-x-1 bg-md-outline'
-          }`} />
+          <span
+            className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
+              camera.mirror ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
+            }`}
+          />
         </button>
       </div>
 

@@ -13,6 +13,7 @@ import TemplateSelect from './screens/TemplateSelect.jsx';
 import Capture from './screens/Capture.jsx';
 import PrintPreview from './screens/PrintPreview.jsx';
 import PrintStatus from './screens/PrintStatus.jsx';
+import Advertising from './screens/Advertising.jsx';
 
 const RETAKE_MESSAGES = [
   'Cleaning the lens…',
@@ -46,7 +47,7 @@ function CleaningScreen({ onDone }) {
       {/* Branding header — large */}
       <div className="absolute top-10 flex flex-col items-center gap-1">
         <p className="text-2xl font-bold text-md-on-surface tracking-wide">
-          {boothName || 'Snap & Roll'}
+          {boothName || 'MONO STUDIO PH'}
         </p>
         {eventName && (
           <p className="text-base text-md-on-surface-variant tracking-widest uppercase">{eventName}</p>
@@ -57,6 +58,13 @@ function CleaningScreen({ onDone }) {
       <p key={msgIndex} className="text-2xl font-semibold text-md-on-surface text-center px-8 message-fade">
         {RETAKE_MESSAGES[msgIndex]}
       </p>
+
+      {/* Branding footer */}
+      <div className="absolute bottom-8 flex flex-col items-center gap-0.5 animate-in fade-in duration-700 delay-400">
+        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO STUDIO PH</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
+      </div>
     </div>
   );
 }
@@ -75,7 +83,7 @@ function ComposingScreen({ onDone }) {
       {/* Large branded title */}
       <div className="flex flex-col items-center gap-3 z-10 composing-text">
         <p className="text-4xl font-bold text-md-on-surface tracking-tight">
-          {boothName || 'Snap & Roll'}
+          {boothName || 'MONO STUDIO PH'}
         </p>
         {eventName && (
           <p className="text-xl text-md-on-surface-variant tracking-widest uppercase">{eventName}</p>
@@ -89,6 +97,13 @@ function ComposingScreen({ onDone }) {
           <p className="text-2xl font-semibold text-md-on-surface">Composing your print…</p>
           <p className="text-lg text-md-on-surface-variant mt-2">Just a moment</p>
         </div>
+      </div>
+
+      {/* Branding footer */}
+      <div className="absolute bottom-8 flex flex-col items-center gap-0.5 z-10 composing-text" style={{ animationDelay: '600ms' }}>
+        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO STUDIO PH</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
   );
@@ -223,6 +238,14 @@ function PhotoboothApp() {
     navigateTo('printStatus');
   }
 
+  function handlePrintComplete() {
+    if (settings.general.showAdvertising !== false) {
+      navigateTo('advertising');
+    } else {
+      goStandby();
+    }
+  }
+
   function renderScreen(name) {
     switch (name) {
       case 'standby':
@@ -248,7 +271,9 @@ function PhotoboothApp() {
           />
         ) : null;
       case 'printStatus':
-        return <PrintStatus imageDataUrl={printImageUrl} onHome={goStandby} />;
+        return <PrintStatus imageDataUrl={printImageUrl} onHome={handlePrintComplete} />;
+      case 'advertising':
+        return <Advertising onComplete={goStandby} />;
       case 'composing':
         return <ComposingScreen frames={capturedFrames} onDone={() => navigateTo('printPreview')} />;
       case 'cleaning':
@@ -264,7 +289,7 @@ function PhotoboothApp() {
       <div className="w-full h-full flex flex-col items-center justify-center bg-md-surface" data-theme={theme}>
         <div className="flex flex-col items-center gap-6">
           <div className="w-16 h-16 border-[4px] border-md-primary/20 border-t-md-primary rounded-full animate-spin" />
-          <p className="text-lg font-medium text-md-on-surface-variant">Loading Snap & Roll…</p>
+          <p className="text-lg font-medium text-md-on-surface-variant">Loading MONO STUDIO PH…</p>
         </div>
       </div>
     );
@@ -281,7 +306,7 @@ function PhotoboothApp() {
         </div>
       ))}
 
-      <SettingsPanel />
+      <SettingsPanel currentScreen={screens[screens.length - 1]?.name} />
       <IntroModal onComplete={() => setIntroCompleted(true)} />
       {introCompleted && !permissionGranted && (
         <PermissionModal

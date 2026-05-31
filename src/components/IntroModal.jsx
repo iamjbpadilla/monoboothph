@@ -8,7 +8,7 @@ const INTRO_COMPLETED_KEY = 'snaproll_intro_completed';
 const STEPS = [
   {
     icon: Camera,
-    title: 'Welcome to Snap & Roll',
+    title: 'Welcome to MONO STUDIO PH',
     description: 'Your modern photobooth experience. Capture memories, print receipts, and share moments instantly.',
   },
   {

@@ -4,9 +4,12 @@ import {
   Flower2, TreePine, Cherry, Coffee, Wine, Beer,
   Bird, PawPrint, Rocket, Swords, Gamepad2, Dices,
   Globe, MapPin, Umbrella, Snowflake, Anchor, Bike,
+  Pizza, Sandwich, Drum, Guitar, Mic, Headphones,
+  Car, Plane, Train, Bus, Compass, Sunrise, Sunset, Cloud, CloudRain,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { playClick } from '../hooks/useSound.js';
+import { PAPERBACKGROUNDS } from '../lib/theme.js';
 
 const ICON_MAP = {
   camera: Camera, sparkles: Sparkles, heart: Heart, star: Star,
@@ -17,7 +20,10 @@ const ICON_MAP = {
   wine: Wine, beer: Beer, bird: Bird, paw: PawPrint,
   rocket: Rocket, swords: Swords, game: Gamepad2, dice: Dices,
   globe: Globe, pin: MapPin, umbrella: Umbrella, snow: Snowflake,
-  anchor: Anchor, bike: Bike,
+  anchor: Anchor, bike: Bike, pizza: Pizza, sandwich: Sandwich,
+  drum: Drum, guitar: Guitar, mic: Mic, headphones: Headphones,
+  car: Car, plane: Plane, train: Train, bus: Bus, compass: Compass,
+  sunrise: Sunrise, sunset: Sunset, cloud: Cloud, rain: CloudRain,
 };
 
 function BrandingIcon({ iconKey, size = 52 }) {
@@ -29,6 +35,7 @@ function BrandingIcon({ iconKey, size = 52 }) {
 export default function Standby({ onStart }) {
   const { settings } = useSettings();
   const { general } = settings;
+  const background = PAPERBACKGROUNDS[general.standbyBackground ?? 'plain'] ?? PAPERBACKGROUNDS.plain;
 
   function handleStart() {
     playClick();
@@ -37,9 +44,11 @@ export default function Standby({ onStart }) {
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-center select-none cursor-pointer bg-md-surface active:scale-[0.99] page-content-enter"
+      className={`w-full h-full flex flex-col items-center justify-center select-none cursor-pointer bg-md-surface active:scale-[0.99] page-content-enter ${background.className}`}
       onClick={handleStart}
-      style={{ transition: 'transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
+      style={{
+        transition: 'transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+      }}
     >
       <div className="flex flex-col items-center gap-8 px-8 text-center">
         {/* Logo / Icon */}
@@ -80,7 +89,9 @@ export default function Standby({ onStart }) {
 
       {/* Branding footer */}
       <div className="absolute bottom-8 flex flex-col items-center gap-0.5 animate-in fade-in duration-700 delay-400">
-        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">Snap &amp; Roll</p>
+        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO STUDIO PH</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
   );
