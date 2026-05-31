@@ -1,0 +1,174 @@
+# Changelog
+
+## [Unreleased] - {date}
+
+### Added
+- Changelog now loaded from external CHANGELOG.md file for easier maintenance
+- Wide Load template - 2x3 landscape layout with 6 photos
+- Tall Order template - 2x3 portrait layout with 6 photos
+
+### Changed
+- Fixed Wide Load grid layout to 2 columns 3 rows (was 3 columns 2 rows)
+- Changed template selection grid to 2 columns (was 3 columns)
+- Fixed camera capture screen to support 6-shot templates (added to SHOT_COUNTS)
+- Made Wide Load preview icon same height as Solo Star (changed aspect ratio to 3:4)
+- Made thumbnail strip responsive with dynamic sizing based on total shots (min 40px, max 80px)
+- Changed template selection grid back to 2 columns for better layout
+- Fixed Wide Load icon to use correct 4/3 landscape aspect ratio
+- Maximized thumbnail size based on camera preview frame width to fill available space
+- Changed settings template previews to 3 column grid to save vertical space
+- Image and video carousel for advertising screen with auto-rotation every 4 seconds
+- Media carousel settings in Advertising tab with URL input and auto-detection
+- Dedicated Advertising tab in settings with all advertising configuration options
+- Real-time ad preview in Advertising settings (embedded at bottom for portrait tablet)
+- Advertising screen enhancements with fully customizable content
+- Advertising Content settings section with title, subtitle, marketing message, social media URLs, contact info, and event promotion fields
+- Multiple background style options for advertising screen (gradients: purple-pink, blue-cyan, orange-red, green-teal; solids: purple, blue, dark)
+- QR code generation for Facebook URL on advertising screen
+- Social media links for Facebook, Instagram, and TikTok on advertising screen
+- Contact info display (phone and email) with clickable links on advertising screen
+- Display toggles for social media, contact info, QR code, and logo on advertising screen
+- Event promotion banner field for special offers on advertising screen
+- App icon assets generated from mono-logo.svg with purple accent color (#9C27B0)
+- Android adaptive and standard icons at all required densities (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
+- Web icons including favicon (SVG, PNG sizes), Apple touch icon, and PWA manifest icons
+- iOS app icons at multiple sizes (60, 76, 120, 152, 167, 180px)
+- Icon generation script (scripts/generate-icons.js) using sharp for automated asset creation
+- Advertising/marketing screen shown after print success (configurable duration: 3, 5, or 10 seconds)
+- Settings entry for advertising page (enable/disable toggle and duration selector)
+- 20-second auto-return timer on template selection if start button not pressed
+- 6 new accent colors: Cyan, Lime, Violet, Brown, Slate, Olive
+- Reset button for camera device and options in Camera settings
+- Option to hide Qty column on receipt items block
+- Receipt items: randomize every print option to generate witty items
+- Template settings: added up/down buttons to all blocks for reordering
+- 5 new standby background patterns: wave, geometric, marble, noise, gradient
+- 24 new branding icons: celebration, confetti, balloon, champagne, pizza, burger, and more
+- Social media links section in About settings (Instagram, Facebook)
+- Contact information section in About settings (email, phone)
+- How to Use quick guide in About settings with 4-step instructions
+- Mock receipt purchased items block with customizable item name, quantity, and price
+- Witty random items auto-populate feature (Good Vibes, Bad Decisions, Y2K Energy, etc.)
+- Receipt items table rendering with ITEM, QTY, PRICE columns and total calculation
+- Security hardening: Enabled R8/ProGuard for native code obfuscation in release builds
+- Security hardening: Replaced localStorage with Capacitor Preferences for encrypted storage using Android Keystore
+- Guided intro modal for first app launch with 3-step onboarding flow
+- Automatic font download script using Google Fonts CSS API
+- Local font bundling for offline use (11 font families with multiple weights)
+- WAKE_LOCK permission to keep screen on during kiosk mode
+- Changelog system to document all changes
+- Modal animations: fade out, scale, slide-in effects for intro and permission modals
+- Device ID display in About settings using @capacitor/device
+- Extended device info with model, platform, OS version, manufacturer, battery level, and charging status
+- Branded loading screen during permission checks
+- Smooth fade transitions for modals
+- Staggered animations to modals
+- Enhanced Standby screen entry animation
+
+### Changed
+- Renamed templates with catchy names: Solo Star, Double Take, Triple Threat, Quad Squad, Wide Load, Tall Order
+- Increased template card height from 320px to 360px for uniform text container
+- Synced new templates to settings panel with canvas compositor support
+- Configured app-icon.svg with black background, white logo, and safe zone scaling for Vite static assets
+- Hidden template selection counter display while keeping timer functional in background
+- Optimized settings layout for compact tablet use - reduced padding, margins, and gaps across all settings
+- Added smooth animation transitions to PermissionModal - fade and slide in/out with scale effect
+- Added smooth animation transitions to IntroModal - fade and slide in/out with scale effect
+- Replaced app icons with higher DPI versions from app-icon/res/mipmap-anydpi-v26
+- Disabled splash screen on Android and iOS for faster app launch
+- Styled alert dialogs with Material Design 3 using Radix UI Dialog component
+- Styled dropdowns with Material Design 3 using Radix UI Select component
+- Replaced app icons with provided custom icons from app-icon folder
+- Moved advertising settings from General tab to dedicated Advertising tab
+- Applied Material Design 8dp grid spacing to standby screen (24dp padding, proper section spacing)
+- Applied Material Design 8dp grid spacing to advertising screen (24dp padding, proper section spacing)
+- Centered logo vertically and horizontally on both standby and advertising screens
+- Rebranded from MONO STUDIO PH to MONO BOOTH PH throughout the app
+- Advertising screen now displays MONO BOOTH PH marketing content with camera icon, branding, and Facebook link
+- Advertising screen now has functional countdown timer (shows seconds remaining)
+- Expanded test text generation in Settings > Identity with 36 titles and 36 subtitles for more variety
+- Removed return button from template selection screen
+- Standby background options now display in single line with horizontal scroll
+- Updated accent colors to more vibrant Material Design colors (Purple, Pink, Red, Orange, Amber, Yellow, Lime, Green, Teal, Cyan, Blue, Indigo, Violet, Rose, Deep Purple)
+- Removed navigation bar and back button from camera capture mode for larger preview area
+- Camera now queries and uses actual supported resolutions from track capabilities
+- Front camera set as default (facingMode: user)
+- App now runs in fullscreen mode (status bar and navigation bar hidden)
+- Default theme changed from Dark to Light
+- Mirror button on print preview now has fixed width (w-32)
+- Removed download button from print preview
+- Removed 4K resolution option from Camera settings (kept HD and Full HD only)
+- Settings icon now only shows on standby screen
+- Barcode resized to match full content width (same as images)
+- All receipt template texts changed to solid black (#000000)
+- Default divider thickness changed from 6 to 2
+- Default template: moved timestamp to top of block order
+- Default template: disabled custom text by default
+- Default template: divider set to black, dashed, 2 thickness
+- Reordered About page sections: About Mono Studio, Developer, Connect, Changelog, How to Use, Device Info, Web APIs, Dependencies
+- Removed email and phone number from Connect section in About settings
+- Camera shutter sound updated to DSLR-like mechanical sound with click and mirror slap
+- Removed unused standby background patterns (kept only plain, grid, dots, lines)
+- Removed standby background patterns (kept only plain, grid, dots, lines)
+- Print status auto-return timer increased from 10 to 20 seconds
+- QR code size increased from 148px to 200px for better scannability
+- Template cards now have uniform height (280px) for consistent layout
+- Standby background previews now use theme-aware CSS for dark/light visibility
+- Footer branding standardized across all waiting screens (Standby, Cleaning, Composing, PrintStatus)
+- Rebranded from Snap & Roll to MONO BOOTH PH throughout the app
+- Package name updated to com.momostudioph.receipt
+- Added tagline and location to footer: No proof without @monoboothph, Kabankalan City & Beyond
+- Updated developer name to Jubet M. Padilla
+- Moved countdown timer from Capture to Camera settings
+- Removed flash effect option from Capture settings
+- Removed Capture tab from settings panel
+- Reordered settings tabs: General > Templates > Camera > Printer > About
+- Updated font files to use correct weight-specific URLs from Google Fonts
+- Fixed Lato font weights (300, 400, 700, 900) - removed non-existent 500/600 weights
+- Permission modal now uses Capacitor Preferences for state persistence
+- SettingsContext now uses Capacitor Preferences for encrypted settings storage
+
+### Fixed
+- Template selection timer - removed timer reset on card selection, timer now continues running
+- Splash screen showing - added Capacitor SplashScreen plugin config with launchShowDuration: 0
+- Camera settings tab - fixed StyledSelect value handling for Radix UI Select compatibility
+- Print preview mirror glitch - added smooth transition animation with loading spinner
+- Icon display issues - replaced broken emoji icons with lucide-react icons (Share2, Globe, Camera)
+- App icon spacing - added 15% padding to standard icons and 10% padding to adaptive foreground for proper visual spacing
+- App icon not displaying - fixed icon generation script to use PNG instead of SVG for adaptive icon foreground
+- Persistent fullscreen mode - updated MainActivity to use modern WindowInsetsController API for Android 11+
+- Mirror toggle button in Camera settings - now matches template toggle styling exactly
+- Mirror toggle button visual bug in Camera settings - fixed styling and positioning
+- Triple template supporting text not visible - increased card height from 280px to 320px
+- Chosen branding icon not appearing on standby screen - added missing icons to ICON_MAP
+- Mirror button glitch on print preview - replaced icon with text label
+- Print status footer mismatched with standby screen - standardized footer text
+- Settings panel not displaying contents - converted inline styles to CSS classes
+- Print preview stuttering on high-resolution cameras - downsampling to max 1200px width
+- Animation glitch - bumped settings version to clear stale state
+- Typography not loading correctly on Android app - fonts now bundled locally
+- Permission modal showing when permissions already granted - added proper state checking
+- Font files had incorrect sizes (1.6KB) - downloaded correct versions (70-300KB)
+- App hanging on welcome modal after camera permission granted - fixed modal rendering condition
+- Permission modal reappearing after grant - added permissionGranted state check
+- Can't touch to start booth after permission granted - removed animation delays blocking interaction
+- Modals reappearing on app launch - simplified animation flow to prevent race conditions
+- Intro modal hanging on "Ready to Start" - added completed state for immediate unmounting
+
+### Security
+- Native Android code obfuscation enabled via R8/ProGuard
+- All local storage now encrypted via Android Keystore
+- No sensitive keys hardcoded in frontend code
+
+## [0.0.0] - Initial Release
+
+### Added
+- Initial photobooth application
+- Camera capture functionality
+- Template system with 4 layouts
+- Print preview and status screens
+- Settings panel with general, camera, printer, capture, and template options
+- Material Design 3 UI
+- Sound system with retro vibe
+- Service worker for PWA support
+- Capacitor integration for Android

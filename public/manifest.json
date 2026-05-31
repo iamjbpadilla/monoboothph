@@ -1,0 +1,18 @@
+{
+  "name": "MONO BOOTH PH",
+  "short_name": "Mono Booth",
+  "description": "Snap & Roll Photo Booth Kiosk Application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

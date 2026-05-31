@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Camera } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
+import StyledSelect from '../StyledSelect.jsx';
 
 const RES_MAP = {
   hd:  { width: 1280, height: 720 },
@@ -85,7 +87,7 @@ export default function CameraSettings() {
   }, [camera.mirror]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Live preview */}
       <div className="rounded-xl overflow-hidden border border-md-outline-variant bg-black relative" style={{ aspectRatio: '4/3' }}>
         <video
@@ -102,7 +104,7 @@ export default function CameraSettings() {
         )}
         {previewStatus === 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/80 text-center px-4">
-            <span className="text-2xl">📷</span>
+            <Camera size={32} className="text-red-400" />
             <p className="text-red-400 text-xs">{previewError}</p>
             <button
               onClick={() => startStream(camera.deviceId, camera.resolution, camera.mirror)}
@@ -134,18 +136,12 @@ export default function CameraSettings() {
             Reset
           </button>
         </div>
-        <select
-          value={camera.deviceId}
-          onChange={e => updateSettings('camera.deviceId', e.target.value)}
-          className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-        >
-          <option value="">Default / Auto</option>
-          {devices.map(d => (
-            <option key={d.deviceId} value={d.deviceId}>
-              {d.label || `Camera ${d.deviceId.slice(0, 8)}`}
-            </option>
-          ))}
-        </select>
+        <StyledSelect
+          value={camera.deviceId || 'auto'}
+          onValueChange={v => updateSettings('camera.deviceId', v === 'auto' ? '' : v)}
+          options={[{ value: 'auto', label: 'Default / Auto' }, ...devices.map(d => ({ value: d.deviceId, label: d.label || `Camera ${d.deviceId.slice(0, 8)}` }))]}
+          placeholder="Select camera"
+        />
         {devices.length === 0 && previewStatus !== 'error' && (
           <p className="text-md-outline text-xs mt-1">Waiting for permission to list devices…</p>
         )}
@@ -159,7 +155,7 @@ export default function CameraSettings() {
             <button
               key={r.value}
               onClick={() => updateSettings('camera.resolution', r.value)}
-              className={`px-4 py-3.5 rounded-xl border text-sm text-left transition-colors ${
+              className={`px-4 py-2.5 rounded-xl border text-sm text-left transition-colors ${
                 camera.resolution === r.value
                   ? 'bg-md-primary text-md-on-primary border-md-primary'
                   : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant hover:bg-md-surface-container-high'

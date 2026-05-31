@@ -139,7 +139,7 @@ export default function GeneralSettings() {
               type="text"
               value={general.boothName}
               onChange={e => updateSettings('general.boothName', e.target.value)}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-4 py-3.5 text-md-on-surface text-base focus:outline-none focus:border-md-primary transition-colors"
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-4 py-2.5 text-md-on-surface text-base focus:outline-none focus:border-md-primary transition-colors"
               placeholder="Snap & Roll"
             />
           </div>
@@ -149,7 +149,7 @@ export default function GeneralSettings() {
               type="text"
               value={general.eventName}
               onChange={e => updateSettings('general.eventName', e.target.value)}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-4 py-3.5 text-md-on-surface text-base focus:outline-none focus:border-md-primary transition-colors"
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-4 py-2.5 text-md-on-surface text-base focus:outline-none focus:border-md-primary transition-colors"
               placeholder="Receipt Photobooth"
             />
           </div>
@@ -287,46 +287,6 @@ export default function GeneralSettings() {
         </div>
       </Section>
 
-      {/* ── Advertising ── */}
-      <Section title="Advertising">
-        <div className="space-y-4">
-          {/* Enable/Disable Toggle */}
-          <div className="flex items-center justify-between">
-            <label className="block text-xs font-medium text-md-on-surface-variant">Show Advertising After Print</label>
-            <button
-              role="switch"
-              aria-checked={general.showAdvertising ?? true}
-              onClick={() => updateSettings('general.showAdvertising', !(general.showAdvertising ?? true))}
-              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
-                (general.showAdvertising ?? true)
-                  ? 'bg-md-primary'
-                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
-              }`}
-            >
-              <span
-                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
-                  (general.showAdvertising ?? true) ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* Duration Selector */}
-          <div>
-            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Advertising Duration (seconds)</label>
-            <select
-              value={general.adDuration ?? 5}
-              onChange={e => updateSettings('general.adDuration', parseInt(e.target.value))}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-            >
-              <option value={3}>3 seconds</option>
-              <option value={5}>5 seconds</option>
-              <option value={10}>10 seconds</option>
-            </select>
-          </div>
-        </div>
-      </Section>
-
       {/* ── Typography ── */}
       <Section title="Typography">
         <div className="grid grid-cols-1 gap-2">
@@ -336,7 +296,7 @@ export default function GeneralSettings() {
               <button
                 key={pair.id}
                 onClick={() => updateSettings('general.fontPair', pair.id)}
-                className={`flex items-center justify-between px-4 py-3.5 rounded-xl border text-left transition-all duration-150 ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
                   isActive
                     ? 'bg-md-primary-container border-md-primary shadow-md'
                     : 'bg-md-surface-container border-md-outline-variant hover:bg-md-surface-container-high'
@@ -367,7 +327,7 @@ export default function GeneralSettings() {
 
       {/* ── Branding ── */}
       <Section title="Branding">
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Upload guide note */}
           <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant">
             <Info size={16} className="text-md-primary mt-0.5 flex-shrink-0" />
@@ -377,7 +337,7 @@ export default function GeneralSettings() {
           </div>
 
           {/* Logo upload area */}
-          <div className="flex items-center gap-4 p-4 rounded-2xl border border-md-outline-variant bg-md-surface-container">
+          <div className="flex items-center gap-3 p-3 rounded-2xl border border-md-outline-variant bg-md-surface-container">
             {general.logoBase64 ? (
               <>
                 <img src={general.logoBase64} alt="Logo" className="h-16 w-16 object-contain rounded-xl bg-md-surface" />

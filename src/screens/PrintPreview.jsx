@@ -13,6 +13,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
   const [maxW, setMaxW] = useState('100%');
   const [countdown, setCountdown] = useState(AUTO_PRINT_SECONDS);
   const [mirrorImages, setMirrorImages] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const autoFiredRef = useRef(false);
 
   function handleCanvasReady(canvas) {
@@ -33,6 +34,12 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
     autoFiredRef.current = true;
     const dataUrl = canvasRef.current.toDataURL('image/png');
     onPrint(dataUrl);
+  }
+
+  function handleMirrorToggle() {
+    setIsTransitioning(true);
+    setMirrorImages(prev => !prev);
+    setTimeout(() => setIsTransitioning(false), 300);
   }
 
   function handleDownload() {
@@ -107,13 +114,21 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
       {/* Receipt preview — no-scroll, zoom-to-fit */}
       <div ref={receiptAreaRef} className="flex-1 overflow-hidden min-h-0 flex flex-col items-center px-6 py-5 page-content-enter">
         <div
-          className="overflow-hidden rounded-2xl shadow-xl transition-shadow duration-200 hover:shadow-2xl mx-auto w-full preview-receipt-enter"
+          className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl mx-auto w-full preview-receipt-enter ${
+            isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
+          }`}
           style={{
             maxWidth: maxW,
             background: settings.templates.blocks?.backgroundColor || '#ffffff',
           }}
         >
+          {isTransitioning && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-10">
+              <div className="w-8 h-8 border-2 border-md-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
           <ReceiptCanvas
+            key={mirrorImages ? 'mirrored' : 'normal'}
             frames={frames}
             templateKey={templateKey}
             templateSettings={settings.templates}
@@ -135,7 +150,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
           Retake
         </button>
         <button
-          onClick={() => { playClick(); setMirrorImages(!mirrorImages); }}
+          onClick={() => { playClick(); handleMirrorToggle(); }}
           className={`flex items-center justify-center gap-2 w-32 px-4 py-5 rounded-full font-medium text-base border transition-all duration-150 ${
             mirrorImages
               ? 'bg-md-primary text-md-on-primary border-md-primary hover:brightness-110 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] shadow'

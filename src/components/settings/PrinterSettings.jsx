@@ -34,7 +34,7 @@ export default function PrinterSettings() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div>
         <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Print Transport</label>
         <div className="grid grid-cols-2 gap-2">
@@ -42,7 +42,7 @@ export default function PrinterSettings() {
             <button
               key={t.value}
               onClick={() => updateSettings('printer.transport', t.value)}
-              className={`px-3 py-3.5 rounded-xl border text-sm text-left transition-colors ${
+              className={`px-3 py-2.5 rounded-xl border text-sm text-left transition-colors ${
                 printer.transport === t.value
                   ? 'bg-md-secondary-container border-md-secondary text-md-on-secondary-container'
                   : 'bg-md-surface-container border-md-outline-variant text-md-on-surface-variant hover:bg-md-surface-container-high'
@@ -62,7 +62,7 @@ export default function PrinterSettings() {
               type="text"
               value={printer.wifiIp}
               onChange={e => updateSettings('printer.wifiIp', e.target.value)}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm placeholder:text-md-outline focus:outline-none focus:border-md-primary"
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm placeholder:text-md-outline focus:outline-none focus:border-md-primary"
               placeholder="192.168.1.100"
             />
           </div>
@@ -72,7 +72,7 @@ export default function PrinterSettings() {
               type="number"
               value={printer.wifiPort}
               onChange={e => updateSettings('printer.wifiPort', e.target.value)}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm placeholder:text-md-outline focus:outline-none focus:border-md-primary"
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm placeholder:text-md-outline focus:outline-none focus:border-md-primary"
               placeholder="9100"
             />
           </div>
@@ -88,7 +88,7 @@ export default function PrinterSettings() {
               <button
                 key={d}
                 onClick={() => updateSettings('printer.dpi', d)}
-                className={`py-3.5 rounded-xl border text-sm transition-colors ${
+                className={`py-2.5 rounded-xl border text-sm transition-colors ${
                   printer.dpi === d
                     ? 'bg-md-primary text-md-on-primary border-md-primary'
                     : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant hover:bg-md-surface-container-high'
@@ -101,7 +101,7 @@ export default function PrinterSettings() {
               type="number"
               value={!DPI_PRESETS.includes(printer.dpi) ? printer.dpi : ''}
               onChange={e => updateSettings('printer.dpi', Number(e.target.value))}
-              className={`py-3.5 rounded-xl border text-sm text-center focus:outline-none focus:border-md-primary ${
+              className={`py-2.5 rounded-xl border text-sm text-center focus:outline-none focus:border-md-primary ${
                 !DPI_PRESETS.includes(printer.dpi)
                   ? 'bg-md-primary text-md-on-primary border-md-primary'
                   : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant'

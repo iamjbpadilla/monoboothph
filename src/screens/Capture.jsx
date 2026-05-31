@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Camera } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { useCamera } from '../hooks/useCamera.js';
 import { SLOT_RATIOS } from '../lib/canvasCompositor.js';
@@ -7,7 +7,7 @@ import { playShutter, playBeep, playClick } from '../hooks/useSound.js';
 import CountdownOverlay from '../components/CountdownOverlay.jsx';
 import ThumbnailStrip from '../components/ThumbnailStrip.jsx';
 
-const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4 };
+const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
 const RETAKE_MESSAGES = [
   'Cleaning the lens…',
@@ -195,7 +195,7 @@ export default function Capture({ templateKey, onComplete, onBack }) {
               {/* Camera error state */}
               {(status === 'error' || error) && (
                 <div className="absolute inset-0 bg-gray-200 flex flex-col items-center justify-center gap-2 z-10">
-                  <span className="text-2xl">📷</span>
+                  <Camera size={32} className="text-gray-500" />
                   <p className="text-gray-600 text-xs text-center px-4">{error || 'Camera unavailable'}</p>
                 </div>
               )}
@@ -261,6 +261,7 @@ export default function Capture({ templateKey, onComplete, onBack }) {
           frames={frames}
           totalShots={totalShots}
           templateKey={templateKey}
+          frameSize={frameSize}
         />
       </div>
     </div>

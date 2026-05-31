@@ -6,7 +6,7 @@ import { playClick } from '../hooks/useSound.js';
 const TEMPLATES = [
   {
     key: '1strip',
-    label: 'Solo',
+    label: 'Solo Star',
     shots: 1,
     description: 'Your moment, your spotlight',
     preview: () => (
@@ -17,7 +17,7 @@ const TEMPLATES = [
   },
   {
     key: '2strip',
-    label: 'Double',
+    label: 'Double Take',
     shots: 2,
     description: 'Double the fun, double the memories',
     preview: () => (
@@ -29,7 +29,7 @@ const TEMPLATES = [
   },
   {
     key: '3strip',
-    label: 'Triple',
+    label: 'Triple Threat',
     shots: 3,
     description: 'Three perfect poses in a row',
     preview: () => (
@@ -42,7 +42,7 @@ const TEMPLATES = [
   },
   {
     key: '4grid',
-    label: 'Quad',
+    label: 'Quad Squad',
     shots: 4,
     description: 'A collage of your best moments',
     preview: () => (
@@ -51,6 +51,38 @@ const TEMPLATES = [
         <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.28 }} />
         <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.21 }} />
         <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.14 }} />
+      </div>
+    ),
+  },
+  {
+    key: '2x3-landscape',
+    label: 'Wide Load',
+    shots: 6,
+    description: 'Six photos in landscape layout',
+    preview: () => (
+      <div className="w-full grid grid-cols-2 gap-1 p-2">
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.35 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.30 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.25 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.20 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.15 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '4/3', background: 'var(--color-md-primary)', opacity: 0.10 }} />
+      </div>
+    ),
+  },
+  {
+    key: '2x3-portrait',
+    label: 'Tall Order',
+    shots: 6,
+    description: 'Six photos in portrait layout',
+    preview: () => (
+      <div className="w-full grid grid-cols-2 gap-1 p-2">
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.35 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.30 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.25 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.20 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.15 }} />
+        <div className="w-full rounded" style={{ aspectRatio: '3/4', background: 'var(--color-md-primary)', opacity: 0.10 }} />
       </div>
     ),
   },
@@ -118,9 +150,6 @@ export default function TemplateSelect({ onSelect, onBack }) {
         <div className="flex-1 text-center">
           <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Choose Template</h2>
         </div>
-        <div className="w-12 flex items-center justify-center text-md-outline text-sm font-medium">
-          {timeLeft}s
-        </div>
       </div>
 
       {/* MD3 Cards grid */}
@@ -131,8 +160,8 @@ export default function TemplateSelect({ onSelect, onBack }) {
             return (
               <button
                 key={key}
-                onClick={() => { playClick(); handleInteraction(); setSelected(key); }}
-                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative h-[320px] ${
+                onClick={() => { playClick(); setSelected(key); }}
+                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative h-[360px] ${
                   isSelected
                     ? 'bg-md-primary-container ring-2 ring-md-primary scale-[1.02] shadow-lg'
                     : 'bg-md-surface-container-high hover:bg-md-surface-container-highest hover:scale-[1.03] hover:shadow-xl'

@@ -19,9 +19,9 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 9, // bump to force preferences refresh when defaults change
+  _version: 10, // bump to force preferences refresh when defaults change
   general: {
-    boothName: 'MONO STUDIO PH',
+    boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
     logoBase64: null,
     theme: 'light',
@@ -31,6 +31,31 @@ const DEFAULT_SETTINGS = {
     standbyBackground: 'plain',
     showAdvertising: true,
     adDuration: 5,
+    advertising: {
+      title: 'MONO BOOTH PH',
+      subtitle: 'Capture Your Best Moments',
+      message: 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!',
+      facebookUrl: 'https://facebook.com/monoboothph',
+      instagramUrl: 'https://instagram.com/monoboothph',
+      tiktokUrl: '',
+      phone: '',
+      email: '',
+      eventPromotion: '',
+      testimonials: [
+        'Amazing service! Our guests loved the photobooth!',
+        'Professional and fun - highly recommend!',
+        'Best photobooth experience we\'ve had!'
+      ],
+      media: [], // Array of { type: 'image'|'video', url: string }
+      display: {
+        showSocial: true,
+        showContact: false,
+        showCarousel: false,
+        showQR: true,
+        showLogo: false,
+        backgroundStyle: 'gradient-purple-pink'
+      }
+    }
   },
   camera: {
     deviceId: '',

@@ -11,6 +11,8 @@ export const SLOT_RATIOS = {
   '2strip': { w: 4, h: 3 }, // landscape 4:3
   '3strip': { w: 4, h: 3 }, // landscape 4:3
   '4grid':  { w: 3, h: 4 }, // portrait 3:4 (2×2)
+  '2x3-landscape': { w: 4, h: 3 }, // landscape 4:3 (2×3)
+  '2x3-portrait': { w: 3, h: 4 }, // portrait 3:4 (2×3)
 };
 
 export function calcCanvasWidth(dpi, paperWidthMm) {
@@ -175,11 +177,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
   const photoGap = blocks.photos.gap || 8;
   const elGap = blocks.elementSpacing || 16;
-  const photoSlotWidth = templateKey === '4grid'
-    ? Math.floor((contentWidth - photoGap) / 2)
+  const isGrid = templateKey === '4grid' || templateKey === '2x3-landscape' || templateKey === '2x3-portrait';
+  const gridCols = templateKey === '4grid' || templateKey === '2x3-portrait' || templateKey === '2x3-landscape' ? 2 : 1;
+  const gridRows = templateKey === '4grid' ? 2 : templateKey === '2x3-landscape' || templateKey === '2x3-portrait' ? 3 : 1;
+  const photoSlotWidth = isGrid
+    ? Math.floor((contentWidth - photoGap * (gridCols - 1)) / gridCols)
     : contentWidth;
   const photoSlotHeight = Math.round(photoSlotWidth * ratio.h / ratio.w);
-  const stripCount = templateKey === '1strip' ? 1 : templateKey === '2strip' ? 2 : 3;
+  const stripCount = templateKey === '1strip' ? 1 : templateKey === '2strip' ? 2 : templateKey === '3strip' ? 3 : templateKey === '2x3-landscape' || templateKey === '2x3-portrait' ? 6 : 3;
 
   const order = blocks.blockOrder || ['header', 'dividerBefore', 'photos', 'dividerAfter', 'datetime', 'customText', 'barcode', 'footer'];
 
@@ -205,9 +210,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         if (blocks.divider.enabled) contentH += dividerH(blocks.divider.thickness, elGap);
         break;
       case 'photos':
-        contentH += templateKey === '4grid'
-          ? gridH(photoSlotHeight, photoGap, elGap)
-          : photosH(photoSlotHeight, stripCount, photoGap, elGap);
+        if (templateKey === '4grid') {
+          contentH += gridH(photoSlotHeight, photoGap, elGap);
+        } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
+          contentH += photoSlotHeight * 3 + photoGap * 2 + elGap;
+        } else {
+          contentH += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+        }
         break;
       case 'dividerAfter':
         if (blocks.divider.enabled) contentH += dividerH(blocks.divider.thickness, elGap);
@@ -303,6 +312,38 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             }
           }
           y += gridH(photoSlotHeight, photoGap, elGap);
+        } else if (templateKey === '2x3-landscape') {
+          const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
+          const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
+          for (let i = 0; i < 6; i++) {
+            const [col, row] = slots[i];
+            const px = x + col * (photoSlotWidth + photoGap);
+            const py = y + row * (photoSlotHeight + photoGap);
+            if (imgs[i]) {
+              drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
+                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
+            } else {
+              ctx.fillStyle = '#e8e8e8';
+              ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
+            }
+          }
+          y += photoSlotHeight * 3 + photoGap * 2 + elGap;
+        } else if (templateKey === '2x3-portrait') {
+          const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
+          const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
+          for (let i = 0; i < 6; i++) {
+            const [col, row] = slots[i];
+            const px = x + col * (photoSlotWidth + photoGap);
+            const py = y + row * (photoSlotHeight + photoGap);
+            if (imgs[i]) {
+              drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
+                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
+            } else {
+              ctx.fillStyle = '#e8e8e8';
+              ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
+            }
+          }
+          y += photoSlotHeight * 3 + photoGap * 2 + elGap;
         } else {
           for (let i = 0; i < stripCount; i++) {
             const py = y + i * (photoSlotHeight + photoGap);

@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { compositeReceipt, SLOT_RATIOS } from '../../lib/canvasCompositor.js';
 
-const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4 };
+const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
 function makePlaceholders(templateKey) {
   const ratio = SLOT_RATIOS[templateKey];
@@ -79,10 +79,12 @@ function ReceiptPreview({ templateKey }) {
 }
 
 const TEMPLATE_TABS = [
-  { key: '1strip', label: 'Solo',   shots: 1 },
-  { key: '2strip', label: 'Double', shots: 2 },
-  { key: '3strip', label: 'Triple', shots: 3 },
-  { key: '4grid',  label: 'Quad',   shots: 4 },
+  { key: '1strip', label: 'Solo Star', shots: 1 },
+  { key: '2strip', label: 'Double Take', shots: 2 },
+  { key: '3strip', label: 'Triple Threat', shots: 3 },
+  { key: '4grid',  label: 'Quad Squad', shots: 4 },
+  { key: '2x3-landscape', label: 'Wide Load', shots: 6 },
+  { key: '2x3-portrait', label: 'Tall Order', shots: 6 },
 ];
 
 const BORDER_STYLES = ['none', 'thin', 'thick', 'rounded'];
@@ -617,7 +619,7 @@ function TemplateBlockEditor() {
 
 export default function TemplateSettings() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
       {/* Settings panel - sticky on desktop */}
       <div className="lg:sticky lg:top-0 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto space-y-3">
         <div className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant mb-3">
@@ -627,11 +629,11 @@ export default function TemplateSettings() {
       </div>
 
       {/* All template previews */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant">
           Template Previews
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {TEMPLATE_TABS.map(t => (
             <div key={t.key}>
               <div className="mb-2 text-sm font-medium text-md-on-surface">

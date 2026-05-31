@@ -50,8 +50,8 @@ export default function Standby({ onStart }) {
         transition: 'transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
       }}
     >
-      <div className="flex flex-col items-center gap-8 px-8 text-center">
-        {/* Logo / Icon */}
+      <div className="flex flex-col items-center gap-6 p-6 text-center">
+        {/* Logo / Icon - Material Design 8dp grid spacing */}
         {general.logoBase64 ? (
           <img src={general.logoBase64} alt="Logo" className="w-28 h-28 object-contain rounded-3xl standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700" />
         ) : general.brandingIcon ? (
@@ -64,8 +64,8 @@ export default function Standby({ onStart }) {
           </div>
         )}
 
-        {/* Title block */}
-        <div className="flex flex-col gap-1">
+        {/* Title block - 24dp spacing from logo */}
+        <div className="flex flex-col gap-2">
           {/* MD3 Display Small */}
           <h1 className="text-[56px] leading-[64px] font-normal tracking-tight text-md-on-surface standby-title-glow animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
             {general.boothName || 'Snap & Roll'}
@@ -78,18 +78,18 @@ export default function Standby({ onStart }) {
           )}
         </div>
 
-        {/* Big touch CTA */}
+        {/* Big touch CTA - 24dp spacing from title */}
         <div
-          className="mt-2 flex items-center justify-center min-h-[64px] px-10 rounded-full bg-md-primary text-md-on-primary text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl active:shadow-md active:scale-[0.97] standby-cta-pulse animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300"
+          className="flex items-center justify-center min-h-[64px] px-10 rounded-full bg-md-primary text-md-on-primary text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl active:shadow-md active:scale-[0.97] standby-cta-pulse animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300"
           style={{ transition: 'box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
         >
           Tap to Start
         </div>
       </div>
 
-      {/* Branding footer */}
-      <div className="absolute bottom-8 flex flex-col items-center gap-0.5 animate-in fade-in duration-700 delay-400">
-        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO STUDIO PH</p>
+      {/* Branding footer - 24dp from bottom (Material Design standard) */}
+      <div className="absolute bottom-6 flex flex-col items-center gap-1 animate-in fade-in duration-700 delay-400">
+        <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO BOOTH PH</p>
         <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
         <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>

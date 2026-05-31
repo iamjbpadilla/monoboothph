@@ -7,6 +7,7 @@ const PERMISSION_STORAGE_KEY = 'snaproll-camera-granted';
 
 export default function PermissionModal({ onPermissionGranted, onPermissionDenied }) {
   const [status, setStatus] = useState('checking'); // checking | requesting | granted | denied
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     checkPermission();
@@ -52,23 +53,35 @@ export default function PermissionModal({ onPermissionGranted, onPermissionDenie
 
       if (result.camera === 'granted') {
         await Preferences.set({ key: PERMISSION_STORAGE_KEY, value: 'true' });
-        setStatus('granted');
-        onPermissionGranted();
+        setIsExiting(true);
+        setTimeout(() => {
+          setStatus('granted');
+          onPermissionGranted();
+        }, 300);
       } else {
-        setStatus('denied');
-        onPermissionDenied();
+        setIsExiting(true);
+        setTimeout(() => {
+          setStatus('denied');
+          onPermissionDenied();
+        }, 300);
       }
     } catch (err) {
       console.error('Permission request failed:', err);
-      setStatus('denied');
-      onPermissionDenied();
+      setIsExiting(true);
+      setTimeout(() => {
+        setStatus('denied');
+        onPermissionDenied();
+      }, 300);
     }
   }
 
   function handleDeny() {
     playClick();
-    setStatus('denied');
-    onPermissionDenied();
+    setIsExiting(true);
+    setTimeout(() => {
+      setStatus('denied');
+      onPermissionDenied();
+    }, 300);
   }
 
   if (status === 'granted') {
@@ -76,8 +89,12 @@ export default function PermissionModal({ onPermissionGranted, onPermissionDenie
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
-      <div className="bg-md-surface rounded-2xl max-w-md w-full p-6 shadow-2xl animate-in slide-in-from-bottom-8 duration-500">
+    <div className={`fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 transition-all duration-300 ${
+      isExiting ? 'animate-out fade-out' : 'animate-in fade-in'
+    }`}>
+      <div className={`bg-md-surface rounded-2xl max-w-md w-full p-6 shadow-2xl transition-all duration-300 ${
+        isExiting ? 'animate-out slide-out-to-bottom-8 scale-95 opacity-0' : 'animate-in slide-in-from-bottom-8'
+      }`}>
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-md-primary-container rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
             <svg className="w-8 h-8 text-md-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

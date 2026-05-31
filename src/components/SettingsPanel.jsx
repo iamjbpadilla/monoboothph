@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
 import GeneralSettings from './settings/GeneralSettings.jsx';
@@ -7,18 +7,21 @@ import CameraSettings from './settings/CameraSettings.jsx';
 import PrinterSettings from './settings/PrinterSettings.jsx';
 import TemplateSettings from './settings/TemplateSettings.jsx';
 import AboutSettings from './settings/AboutSettings.jsx';
+import AdvertisingSettings from './settings/AdvertisingSettings.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
+import ConfirmDialog from './ConfirmDialog.jsx';
 
 const TABS = [
-  { key: 'general',   label: 'General',   icon: Sliders },
-  { key: 'templates', label: 'Templates', icon: Layout },
-  { key: 'camera',    label: 'Camera',    icon: Camera },
-  { key: 'printer',   label: 'Printer',   icon: Printer },
-  { key: 'about',     label: 'About',     icon: Info },
+  { key: 'general',      label: 'General',      icon: Sliders },
+  { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
+  { key: 'templates',    label: 'Templates',    icon: Layout },
+  { key: 'camera',       label: 'Camera',       icon: Camera },
+  { key: 'printer',      label: 'Printer',      icon: Printer },
+  { key: 'about',        label: 'About',        icon: Info },
 ];
 
 const TAB_MAP = {
-  general: GeneralSettings, camera: CameraSettings,
+  general: GeneralSettings, advertising: AdvertisingSettings, camera: CameraSettings,
   printer: PrinterSettings, templates: TemplateSettings, about: AboutSettings,
 };
 
@@ -27,6 +30,7 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
   const [activeTab, setActiveTab] = useState('general');
   const [pendingClose, setPendingClose] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
   const { isDirty, saveSettings, discardSettings, resetSettings } = useSettings();
   const { showSnackbar } = useSnackbar();
 
@@ -68,10 +72,13 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
   }
 
   function handleReset() {
-    if (confirm('Reset ALL settings to factory defaults? This cannot be undone.')) {
-      resetSettings();
-      showSnackbar('Reset to defaults');
-    }
+    setShowResetDialog(true);
+  }
+
+  function handleConfirmReset() {
+    resetSettings();
+    showSnackbar('Reset to defaults');
+    setShowResetDialog(false);
   }
 
   return (
@@ -96,7 +103,7 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
         <div className={`fixed inset-0 z-50 bg-md-surface flex flex-col overflow-hidden ${closing ? 'md3-settings-exit' : 'md3-settings-enter'}`}>
 
           {/* Top App Bar */}
-          <div className="flex items-center h-16 px-2 flex-shrink-0 bg-md-surface-container-low border-b border-md-outline-variant">
+          <div className="flex items-center h-14 px-2 flex-shrink-0 bg-md-surface-container-low border-b border-md-outline-variant">
             <button
               onClick={() => { playClick(); handleClose(); }}
               className="w-12 h-12 flex items-center justify-center rounded-full text-md-on-surface hover:bg-md-surface-container-highest hover:scale-110 hover:shadow-md active:scale-95 transition-all duration-150"
@@ -137,7 +144,7 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
 
           {/* Nav rail + content */}
           <div className="flex flex-1 overflow-hidden">
-            <nav className="w-24 flex-shrink-0 bg-md-surface-container-low flex flex-col py-4 gap-1 border-r border-md-outline-variant">
+            <nav className="w-20 flex-shrink-0 bg-md-surface-container-low flex flex-col py-3 gap-1 border-r border-md-outline-variant">
               {TABS.map(({ key, label, icon: Icon }) => {
                 const isActive = activeTab === key;
                 return (
@@ -163,8 +170,8 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
               })}
             </nav>
 
-            <div className="flex-1 overflow-y-auto p-5 bg-md-surface">
-              <p className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant mb-5">
+            <div className="flex-1 overflow-y-auto p-4 bg-md-surface">
+              <p className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant mb-4">
                 {TABS.find(t => t.key === activeTab)?.label}
               </p>
               <div key={activeTab} className="tab-fade-in">
@@ -204,6 +211,17 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
           )}
         </div>
       )}
+
+      {/* Reset confirmation dialog */}
+      <ConfirmDialog
+        open={showResetDialog}
+        onOpenChange={setShowResetDialog}
+        title="Reset All Settings"
+        description="Reset ALL settings to factory defaults? This cannot be undone."
+        onConfirm={handleConfirmReset}
+        confirmText="Reset"
+        cancelText="Cancel"
+      />
     </>
   );
 }
