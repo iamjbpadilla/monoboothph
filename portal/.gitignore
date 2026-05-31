@@ -12,11 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Portal specific
-portal/node_modules
-portal/dist
-portal/.env
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,6 +22,3 @@ portal/.env
 *.njsproj
 *.sln
 *.sw?
-
-# Local Netlify folder
-.netlify

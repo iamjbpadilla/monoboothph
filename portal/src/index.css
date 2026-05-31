@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* ── Material Design 3 — Light Theme ───────────────────────────────────────────── */
+:root {
+  /* Primary */
+  --color-md-primary:               #6750A4;
+  --color-md-on-primary:            #FFFFFF;
+  --color-md-primary-container:     #EADDFF;
+  --color-md-on-primary-container:  #21005D;
+  /* Secondary */
+  --color-md-secondary:             #625B71;
+  --color-md-on-secondary:          #FFFFFF;
+  --color-md-secondary-container:   #E8DEF8;
+  --color-md-on-secondary-container:#1D192B;
+  /* Tertiary */
+  --color-md-tertiary:              #7D5260;
+  --color-md-on-tertiary:           #FFFFFF;
+  /* Error */
+  --color-md-error:                 #B3261E;
+  --color-md-on-error:              #FFFFFF;
+  --color-md-error-container:       #F9DEDC;
+  --color-md-on-error-container:    #410E0B;
+  /* Surface */
+  --color-md-surface:               #FFFBFE;
+  --color-md-surface-dim:           #DED8E1;
+  --color-md-surface-bright:        #FFFBFE;
+  --color-md-surface-container-lowest:  #FFFFFF;
+  --color-md-surface-container-low:     #F7F2FA;
+  --color-md-surface-container:         #F3EDF7;
+  --color-md-surface-container-high:    #ECE6F0;
+  --color-md-surface-container-highest: #E6E0E9;
+  --color-md-on-surface:            #1C1B1F;
+  --color-md-on-surface-variant:    #49454F;
+  --color-md-inverse-surface:       #313033;
+  --color-md-inverse-on-surface:    #F4EFF4;
+  /* Outline */
+  --color-md-outline:               #79747E;
+  --color-md-outline-variant:       #CAC4D0;
+  /* Font */
+  --font-sans: 'Roboto', system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Roboto', system-ui, sans-serif;
+  background-color: var(--color-md-surface, #FFFBFE);
+  color: var(--color-md-on-surface, #1C1B1F);
+}
+
+/* ── MD3 Motion System ─────────────────────────────────────────────────── */
+:root {
+  --md-sys-motion-duration-short1:  50ms;
+  --md-sys-motion-duration-short2:  100ms;
+  --md-sys-motion-duration-short3:  150ms;
+  --md-sys-motion-duration-short4:  200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1:   450ms;
+  --md-sys-motion-duration-long2:   500ms;
+  --md-sys-motion-duration-long3:   550ms;
+  --md-sys-motion-duration-long4:   600ms;
+  --md-sys-motion-easing-standard:           cubic-bezier(0.4, 0.0, 0.2, 1);
+  --md-sys-motion-easing-decelerate:         cubic-bezier(0.0, 0.0, 0.2, 1);
+  --md-sys-motion-easing-accelerate:         cubic-bezier(0.4, 0.0, 1,   1);
+  --md-sys-motion-easing-emphasized:         cubic-bezier(0.2, 0.0, 0.0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+}
+
+@keyframes md3-fade-up {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes md3-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Page content entrance */
+@keyframes page-content-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.page-content-enter {
+  animation: page-content-enter 350ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 100ms both;
+}
+
+/* Standby subtle animations */
+@keyframes standby-icon-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.03); }
+}
+@keyframes standby-title-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+@keyframes standby-cta-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); }
+}
+.standby-icon-float {
+  animation: standby-icon-float 4s ease-in-out infinite;
+}
+.standby-title-glow {
+  animation: standby-title-glow 5s ease-in-out infinite;
+}
+.standby-cta-pulse {
+  animation: standby-cta-pulse 3s ease-in-out infinite;
+}
