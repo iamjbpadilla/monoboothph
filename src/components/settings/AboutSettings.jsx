@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { Device } from '@capacitor/device';
+
 const DEPENDENCIES = [
   { name: 'React',                      version: '^19.2.6',  license: 'MIT',        note: 'UI framework' },
   { name: 'React DOM',                  version: '^19.2.6',  license: 'MIT',        note: 'DOM renderer' },
@@ -36,7 +40,94 @@ const LICENSE_BADGE = {
   'Apache 2.0':'bg-orange-500/15 text-orange-400',
 };
 
+const CHANGELOG_DATA = [
+  {
+    version: 'Unreleased',
+    date: new Date().toLocaleDateString(),
+    changes: [
+      { type: 'Added', text: 'Security hardening: Enabled R8/ProGuard for native code obfuscation in release builds' },
+      { type: 'Added', text: 'Security hardening: Replaced localStorage with Capacitor Preferences for encrypted storage using Android Keystore' },
+      { type: 'Added', text: 'Guided intro modal for first app launch with 3-step onboarding flow' },
+      { type: 'Added', text: 'Automatic font download script using Google Fonts CSS API' },
+      { type: 'Added', text: 'Local font bundling for offline use (11 font families with multiple weights)' },
+      { type: 'Added', text: 'WAKE_LOCK permission to keep screen on during kiosk mode' },
+      { type: 'Added', text: 'Changelog system to document all changes' },
+      { type: 'Added', text: 'Modal animations: fade out, scale, slide-in effects for intro and permission modals' },
+      { type: 'Added', text: 'Device ID display in About settings using @capacitor/device' },
+      { type: 'Added', text: 'Extended device info with model, platform, OS version, manufacturer, battery level, and charging status' },
+      { type: 'Changed', text: 'Updated developer name to Jubet M. Padilla' },
+      { type: 'Changed', text: 'Moved countdown timer from Capture to Camera settings' },
+      { type: 'Changed', text: 'Removed flash effect option from Capture settings' },
+      { type: 'Changed', text: 'Removed Capture tab from settings panel' },
+      { type: 'Changed', text: 'Reordered settings tabs: General > Templates > Camera > Printer > About' },
+      { type: 'Fixed', text: 'App glitch on startup (modals flashing before permission checks complete)' },
+      { type: 'Added', text: 'Branded loading screen during permission checks' },
+      { type: 'Added', text: 'Smooth fade transitions for modals' },
+      { type: 'Added', text: 'Staggered animations to modals' },
+      { type: 'Added', text: 'Enhanced Standby screen entry animation' },
+      { type: 'Changed', text: 'Updated font files to use correct weight-specific URLs from Google Fonts' },
+      { type: 'Changed', text: 'Fixed Lato font weights (300, 400, 700, 900) - removed non-existent 500/600 weights' },
+      { type: 'Changed', text: 'Permission modal now uses Capacitor Preferences for state persistence' },
+      { type: 'Changed', text: 'SettingsContext now uses Capacitor Preferences for encrypted settings storage' },
+      { type: 'Fixed', text: 'Typography not loading correctly on Android app - fonts now bundled locally' },
+      { type: 'Fixed', text: 'Permission modal showing when permissions already granted - added proper state checking' },
+      { type: 'Fixed', text: 'Font files had incorrect sizes (1.6KB) - downloaded correct versions (70-300KB)' },
+      { type: 'Fixed', text: 'App hanging on welcome modal after camera permission granted - fixed modal rendering condition' },
+      { type: 'Fixed', text: 'Permission modal reappearing after grant - added permissionGranted state check' },
+      { type: 'Fixed', text: 'Can\'t touch to start booth after permission granted - removed animation delays blocking interaction' },
+      { type: 'Fixed', text: 'Modals reappearing on app launch - simplified animation flow to prevent race conditions' },
+      { type: 'Fixed', text: 'Intro modal hanging on "Ready to Start" - added completed state for immediate unmounting' },
+      { type: 'Security', text: 'Native Android code obfuscation enabled via R8/ProGuard' },
+      { type: 'Security', text: 'All local storage now encrypted via Android Keystore' },
+      { type: 'Security', text: 'No sensitive keys hardcoded in frontend code' },
+    ],
+  },
+  {
+    version: '0.0.0',
+    date: 'Initial Release',
+    changes: [
+      { type: 'Added', text: 'Initial photobooth application' },
+      { type: 'Added', text: 'Camera capture functionality' },
+      { type: 'Added', text: 'Template system with 4 layouts' },
+      { type: 'Added', text: 'Print preview and status screens' },
+      { type: 'Added', text: 'Settings panel with general, camera, printer, capture, and template options' },
+      { type: 'Added', text: 'Material Design 3 UI' },
+      { type: 'Added', text: 'Sound system with retro vibe' },
+      { type: 'Added', text: 'Service worker for PWA support' },
+      { type: 'Added', text: 'Capacitor integration for Android' },
+    ],
+  },
+];
+
+const CHANGE_TYPE_COLORS = {
+  Added: 'bg-green-500/15 text-green-400',
+  Changed: 'bg-blue-500/15 text-blue-400',
+  Fixed: 'bg-yellow-500/15 text-yellow-400',
+  Security: 'bg-red-500/15 text-red-400',
+};
+
 export default function AboutSettings() {
+  const [changelogExpanded, setChangelogExpanded] = useState(false);
+  const [deviceInfo, setDeviceInfo] = useState(null);
+  const [webApisExpanded, setWebApisExpanded] = useState(false);
+  const [dependenciesExpanded, setDependenciesExpanded] = useState(false);
+
+  useEffect(() => {
+    async function loadDeviceInfo() {
+      try {
+        const [id, info, battery] = await Promise.all([
+          Device.getId(),
+          Device.getInfo(),
+          Device.getBatteryInfo(),
+        ]);
+        setDeviceInfo({ ...id, ...info, ...battery });
+      } catch (err) {
+        console.error('Failed to get device info:', err);
+      }
+    }
+    loadDeviceInfo();
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Hero */}
@@ -57,49 +148,139 @@ export default function AboutSettings() {
         </p>
       </div>
 
+      {/* Changelog */}
+      <div className="space-y-2">
+        <button
+          onClick={() => setChangelogExpanded(!changelogExpanded)}
+          className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+        >
+          <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Changelog</p>
+          {changelogExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+        </button>
+        {changelogExpanded && (
+          <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+            {CHANGELOG_DATA.map((release) => (
+              <div key={release.version} className="bg-md-surface-container p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-md-on-surface">{release.version}</span>
+                  <span className="text-xs text-md-on-surface-variant">{release.date}</span>
+                </div>
+                <div className="space-y-2">
+                  {release.changes.map((change, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <span className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${CHANGE_TYPE_COLORS[change.type] ?? 'bg-md-surface-container-highest text-md-on-surface-variant'}`}>
+                        {change.type}
+                      </span>
+                      <span className="text-xs text-md-on-surface-variant leading-relaxed">{change.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Developer */}
       <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
         <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Developer</p>
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-full bg-md-secondary-container flex items-center justify-center text-md-on-secondary-container font-semibold text-base select-none">
-            JB
+            JP
           </div>
           <div>
-            <div className="text-sm font-semibold text-md-on-surface">jbpa</div>
+            <div className="text-sm font-semibold text-md-on-surface">Jubet M. Padilla</div>
             <div className="text-xs text-md-on-surface-variant">Designer &amp; Developer</div>
           </div>
         </div>
       </div>
 
+      {/* Device Info */}
+      {deviceInfo && (
+        <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
+          <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Device Info</p>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-md-on-surface-variant">Device ID</span>
+              <span className="text-xs font-mono text-md-on-surface">{deviceInfo.identifier || 'N/A'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-md-on-surface-variant">Model</span>
+              <span className="text-xs text-md-on-surface">{deviceInfo.model || 'N/A'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-md-on-surface-variant">Platform</span>
+              <span className="text-xs text-md-on-surface">{deviceInfo.platform || 'N/A'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-md-on-surface-variant">OS Version</span>
+              <span className="text-xs text-md-on-surface">{deviceInfo.osVersion || 'N/A'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-md-on-surface-variant">Manufacturer</span>
+              <span className="text-xs text-md-on-surface">{deviceInfo.manufacturer || 'N/A'}</span>
+            </div>
+            {deviceInfo.batteryLevel !== undefined && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-md-on-surface-variant">Battery</span>
+                <span className="text-xs text-md-on-surface">{Math.round(deviceInfo.batteryLevel * 100)}%</span>
+              </div>
+            )}
+            {deviceInfo.isCharging !== undefined && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-md-on-surface-variant">Charging</span>
+                <span className="text-xs text-md-on-surface">{deviceInfo.isCharging ? 'Yes' : 'No'}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Web Platform APIs */}
       <div className="space-y-2">
-        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Web Platform APIs</p>
-        <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
-          {PLATFORM_APIS.map(a => (
-            <div key={a.name} className="flex items-center justify-between px-4 py-3 bg-md-surface-container">
-              <span className="text-sm text-md-on-surface font-medium">{a.name}</span>
-              <span className="text-xs text-md-on-surface-variant ml-2 text-right">{a.note}</span>
-            </div>
-          ))}
-        </div>
+        <button
+          onClick={() => setWebApisExpanded(!webApisExpanded)}
+          className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+        >
+          <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Web Platform APIs</p>
+          {webApisExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+        </button>
+        {webApisExpanded && (
+          <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+            {PLATFORM_APIS.map(a => (
+              <div key={a.name} className="flex items-center justify-between px-4 py-3 bg-md-surface-container">
+                <span className="text-sm text-md-on-surface font-medium">{a.name}</span>
+                <span className="text-xs text-md-on-surface-variant ml-2 text-right">{a.note}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Open-source dependencies */}
       <div className="space-y-2">
-        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Open-Source Dependencies</p>
-        <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
-          {DEPENDENCIES.map(d => (
-            <div key={d.name} className="flex items-start justify-between px-4 py-3 bg-md-surface-container gap-2">
-              <div className="min-w-0 flex-1">
-                <div className="text-sm text-md-on-surface font-medium truncate">{d.name}</div>
-                <div className="text-xs text-md-on-surface-variant">{d.version} · {d.note}</div>
+        <button
+          onClick={() => setDependenciesExpanded(!dependenciesExpanded)}
+          className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+        >
+          <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Open-Source Dependencies</p>
+          {dependenciesExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+        </button>
+        {dependenciesExpanded && (
+          <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+            {DEPENDENCIES.map(d => (
+              <div key={d.name} className="flex items-start justify-between px-4 py-3 bg-md-surface-container gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm text-md-on-surface font-medium truncate">{d.name}</div>
+                  <div className="text-xs text-md-on-surface-variant">{d.version} · {d.note}</div>
+                </div>
+                <span className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${LICENSE_BADGE[d.license] ?? 'bg-md-surface-container-highest text-md-on-surface-variant'}`}>
+                  {d.license}
+                </span>
               </div>
-              <span className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${LICENSE_BADGE[d.license] ?? 'bg-md-surface-container-highest text-md-on-surface-variant'}`}>
-                {d.license}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* App license */}

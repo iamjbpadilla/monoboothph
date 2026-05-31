@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { Preferences } from '@capacitor/preferences';
 
 // Font size guide (203 DPI): 20px ≈ 2.5mm, 28px ≈ 3.5mm, 40px ≈ 5mm
 function defaultBlocks() {
@@ -17,7 +18,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 7, // bump to force localStorage refresh when defaults change
+  _version: 7, // bump to force preferences refresh when defaults change
   general: {
     boothName: 'Snap & Roll',
     eventName: 'Receipt Photobooth',
@@ -48,14 +49,14 @@ const DEFAULT_SETTINGS = {
   },
 };
 
-function loadSettings() {
+async function loadSettings() {
   try {
-    const raw = localStorage.getItem('snaproll_settings');
-    if (!raw) return DEFAULT_SETTINGS;
-    const saved = JSON.parse(raw);
+    const { value } = await Preferences.get({ key: 'snaproll_settings' });
+    if (!value) return DEFAULT_SETTINGS;
+    const saved = JSON.parse(value);
     // Version mismatch → wipe and use fresh defaults
     if (saved._version !== DEFAULT_SETTINGS._version) {
-      localStorage.removeItem('snaproll_settings');
+      await Preferences.remove({ key: 'snaproll_settings' });
       return DEFAULT_SETTINGS;
     }
     return deepMerge(DEFAULT_SETTINGS, saved);
@@ -85,9 +86,18 @@ function deepMerge(base, override) {
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
-  const [savedSettings, setSavedSettings] = useState(loadSettings);
-  const [settings, setSettings] = useState(loadSettings);
+  const [savedSettings, setSavedSettings] = useState(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [isDirty, setIsDirty] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    loadSettings().then(loadedSettings => {
+      setSavedSettings(loadedSettings);
+      setSettings(loadedSettings);
+      setLoaded(true);
+    });
+  }, []);
 
   const updateSettings = useCallback((path, value) => {
     setSettings(prev => {
@@ -101,8 +111,8 @@ export function SettingsProvider({ children }) {
     setIsDirty(true);
   }, []);
 
-  const saveSettings = useCallback(() => {
-    localStorage.setItem('snaproll_settings', JSON.stringify(settings));
+  const saveSettings = useCallback(async () => {
+    await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(settings) });
     setSavedSettings(structuredClone(settings));
     setIsDirty(false);
   }, [settings]);
@@ -112,12 +122,14 @@ export function SettingsProvider({ children }) {
     setIsDirty(false);
   }, [savedSettings]);
 
-  const resetSettings = useCallback(() => {
-    localStorage.removeItem('snaproll_settings');
+  const resetSettings = useCallback(async () => {
+    await Preferences.remove({ key: 'snaproll_settings' });
     setSavedSettings(DEFAULT_SETTINGS);
     setSettings(structuredClone(DEFAULT_SETTINGS));
     setIsDirty(false);
   }, []);
+
+  if (!loaded) return null;
 
   return (
     <SettingsContext.Provider value={{

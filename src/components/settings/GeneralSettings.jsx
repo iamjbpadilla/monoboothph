@@ -8,7 +8,7 @@ import {
   Globe, MapPin, Umbrella, Snowflake, Anchor, Bike,
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
-import { FONT_PAIRS, ACCENT_PALETTES, loadGoogleFont } from '../../lib/theme.js';
+import { FONT_PAIRS, ACCENT_PALETTES } from '../../lib/theme.js';
 
 const BRANDING_ICONS = [
   { key: 'camera', Icon: Camera, label: 'Camera' },
@@ -73,10 +73,7 @@ export default function GeneralSettings() {
   }
 
   useEffect(() => {
-    FONT_PAIRS.forEach(({ heading, body }) => {
-      loadGoogleFont(heading);
-      loadGoogleFont(body);
-    });
+    // Fonts are now loaded locally via @font-face in index.html
   }, []);
 
   return (

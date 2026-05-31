@@ -2,27 +2,6 @@ import { useSettings } from '../../context/SettingsContext.jsx';
 
 const COUNTDOWN_OPTIONS = [3, 5, 10];
 
-function Toggle({ value, onChange }) {
-  return (
-    <button
-      role="switch"
-      aria-checked={value}
-      onClick={() => onChange(!value)}
-      className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
-        value
-          ? 'bg-md-primary'
-          : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
-      }`}
-    >
-      <span
-        className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
-          value ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
-        }`}
-      />
-    </button>
-  );
-}
-
 export default function CaptureSettings() {
   const { settings, updateSettings } = useSettings();
   const { capture } = settings;
@@ -50,18 +29,6 @@ export default function CaptureSettings() {
             );
           })}
         </div>
-      </div>
-
-      {/* Flash */}
-      <div className="flex items-center justify-between py-4 px-4 rounded-xl bg-md-surface-container border border-md-outline-variant">
-        <div>
-          <div className="text-sm font-medium text-md-on-surface">Flash Effect</div>
-          <div className="text-xs text-md-on-surface-variant">White flash on each capture</div>
-        </div>
-        <Toggle
-          value={capture.flashEffect}
-          onChange={v => updateSettings('capture.flashEffect', v)}
-        />
       </div>
     </div>
   );

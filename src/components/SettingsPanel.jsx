@@ -1,28 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Timer, Layout, Sliders, RotateCcw, Info, Save } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
 import GeneralSettings from './settings/GeneralSettings.jsx';
 import CameraSettings from './settings/CameraSettings.jsx';
 import PrinterSettings from './settings/PrinterSettings.jsx';
-import CaptureSettings from './settings/CaptureSettings.jsx';
 import TemplateSettings from './settings/TemplateSettings.jsx';
 import AboutSettings from './settings/AboutSettings.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 
 const TABS = [
   { key: 'general',   label: 'General',   icon: Sliders },
+  { key: 'templates', label: 'Templates', icon: Layout },
   { key: 'camera',    label: 'Camera',    icon: Camera },
   { key: 'printer',   label: 'Printer',   icon: Printer },
-  { key: 'capture',   label: 'Capture',   icon: Timer },
-  { key: 'templates', label: 'Templates', icon: Layout },
   { key: 'about',     label: 'About',     icon: Info },
 ];
 
 const TAB_MAP = {
   general: GeneralSettings, camera: CameraSettings,
-  printer: PrinterSettings, capture: CaptureSettings,
-  templates: TemplateSettings, about: AboutSettings,
+  printer: PrinterSettings, templates: TemplateSettings, about: AboutSettings,
 };
 
 export default function SettingsPanel() {

@@ -75,17 +75,6 @@ export const ACCENT_PALETTES = {
   },
 };
 
-/** Dynamically inject a Google Fonts <link> tag (idempotent). */
-export function loadGoogleFont(fontName) {
-  const id = `gfont-${fontName.replace(/\s+/g, '-').toLowerCase()}`;
-  if (document.getElementById(id)) return;
-  const link = document.createElement('link');
-  link.id = id;
-  link.rel = 'stylesheet';
-  link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}:wght@300;400;500;600;700&display=swap`;
-  document.head.appendChild(link);
-}
-
 /** Apply an accent palette via an injected <style> block that respects data-theme. */
 export function applyAccent(accentKey) {
   const palette = ACCENT_PALETTES[accentKey] ?? ACCENT_PALETTES.purple;

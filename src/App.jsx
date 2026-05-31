@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { SettingsProvider, useSettings } from './context/SettingsContext.jsx';
 import { SnackbarProvider } from './context/SnackbarContext.jsx';
-import { loadGoogleFont, applyAccent, resolveFontPair } from './lib/theme.js';
+import { Preferences } from '@capacitor/preferences';
+import { Camera } from '@capacitor/camera';
+import { applyAccent, resolveFontPair } from './lib/theme.js';
 import { playTransition } from './hooks/useSound.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import PermissionModal from './components/PermissionModal.jsx';
+import IntroModal from './components/IntroModal.jsx';
 import Standby from './screens/Standby.jsx';
 import TemplateSelect from './screens/TemplateSelect.jsx';
 import Capture from './screens/Capture.jsx';
@@ -140,6 +143,8 @@ function PhotoboothApp() {
   const [captureSession, setCaptureSession] = useState(0);
   const [printImageUrl, setPrintImageUrl] = useState(null);
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [introCompleted, setIntroCompleted] = useState(false);
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -147,8 +152,6 @@ function PhotoboothApp() {
 
   useEffect(() => {
     const pair = resolveFontPair(settings.general.fontPair);
-    loadGoogleFont(pair.heading);
-    loadGoogleFont(pair.body);
     document.documentElement.style.setProperty('--font-heading', `'${pair.heading}', system-ui, sans-serif`);
     document.documentElement.style.fontFamily = `'${pair.body}', system-ui, sans-serif`;
   }, [settings.general.fontPair]);
@@ -156,6 +159,39 @@ function PhotoboothApp() {
   useEffect(() => {
     applyAccent(settings.general.accent || 'purple');
   }, [settings.general.accent]);
+
+  // Check permissions synchronously on mount to prevent modal flash
+  useEffect(() => {
+    async function checkPermissions() {
+      try {
+        const [introValue, permValue] = await Promise.all([
+          Preferences.get({ key: 'snaproll_intro_completed' }),
+          Preferences.get({ key: 'snaproll-camera-granted' }),
+        ]);
+
+        const introDone = introValue.value === 'true';
+        const permDone = permValue.value === 'true';
+
+        setIntroCompleted(introDone);
+
+        if (permDone) {
+          setPermissionGranted(true);
+        } else {
+          // Check native permissions if not in preferences
+          const result = await Camera.checkPermissions();
+          if (result.camera === 'granted') {
+            setPermissionGranted(true);
+          }
+        }
+
+        setAppReady(true);
+      } catch (err) {
+        console.error('Permission check failed:', err);
+        setAppReady(true);
+      }
+    }
+    checkPermissions();
+  }, []);
 
   function goStandby() {
     setSelectedTemplate(null);
@@ -222,6 +258,18 @@ function PhotoboothApp() {
     }
   }
 
+  // Branded loading screen
+  if (!appReady) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-md-surface" data-theme={theme}>
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-16 h-16 border-[4px] border-md-primary/20 border-t-md-primary rounded-full animate-spin" />
+          <p className="text-lg font-medium text-md-on-surface-variant">Loading Snap & Roll…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full relative overflow-hidden" data-theme={theme}>
       {screens.map(({ id, name, phase }) => (
@@ -234,10 +282,13 @@ function PhotoboothApp() {
       ))}
 
       <SettingsPanel />
-      <PermissionModal
-        onPermissionGranted={() => setPermissionGranted(true)}
-        onPermissionDenied={() => setPermissionGranted(false)}
-      />
+      <IntroModal onComplete={() => setIntroCompleted(true)} />
+      {introCompleted && !permissionGranted && (
+        <PermissionModal
+          onPermissionGranted={() => setPermissionGranted(true)}
+          onPermissionDenied={() => setPermissionGranted(false)}
+        />
+      )}
     </div>
   );
 }
