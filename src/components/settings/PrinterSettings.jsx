@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { calcCanvasWidth } from '../../lib/canvasCompositor.js';
 import { simulatePrint } from '../../lib/printerTransports/simulate.js';
+import { bluetoothPrint } from '../../lib/printerTransports/bluetooth.js';
+import { usbPrint } from '../../lib/printerTransports/usb.js';
+import { wifiPrint } from '../../lib/printerTransports/wifi.js';
 
 const TRANSPORTS = [
   { value: 'simulate', label: 'Simulate (Test Mode)', color: 'text-yellow-300' },
@@ -28,7 +31,24 @@ export default function PrinterSettings() {
     setTesting(true);
     setTestStatus('');
     try {
-      const result = await simulatePrint(null, msg => setTestStatus(msg));
+      const { transport, wifiIp, wifiPort } = printer;
+      const onStatus = msg => setTestStatus(msg);
+      
+      let result;
+      switch (transport) {
+        case 'bluetooth':
+          result = await bluetoothPrint(null, onStatus);
+          break;
+        case 'usb':
+          result = await usbPrint(null, onStatus);
+          break;
+        case 'wifi':
+          result = await wifiPrint(null, wifiIp, wifiPort, onStatus);
+          break;
+        default:
+          result = await simulatePrint(null, onStatus);
+      }
+      
       setTestStatus(result.message);
     } catch (err) {
       setTestStatus('Error: ' + err.message);
@@ -135,7 +155,7 @@ export default function PrinterSettings() {
           disabled={testing}
           className="w-full bg-md-secondary-container hover:brightness-105 hover:scale-[1.01] border border-md-outline-variant text-md-on-secondary-container rounded-xl px-4 py-4 text-base font-medium transition-all disabled:opacity-50"
         >
-          {testing ? 'Testing…' : 'Test Print (Simulate)'}
+          {testing ? 'Testing…' : `Test Print (${printer.transport === 'simulate' ? 'Simulate' : printer.transport.toUpperCase()})`}
         </button>
         {testStatus && (
           <p className="text-md-on-surface-variant text-xs mt-2 text-center">{testStatus}</p>
