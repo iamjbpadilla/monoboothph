@@ -167,28 +167,3 @@ html, body, #root {
 .standby-cta-pulse {
   animation: standby-cta-pulse 3s ease-in-out infinite;
 }
-
-/* ── Scrollbar Hide Utility ─────────────────────────────────────────────────── */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* ── Safe Area Support for Notched Devices ─────────────────────────────────── */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top);
-  }
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .safe-area-left {
-    padding-left: env(safe-area-inset-left);
-  }
-  .safe-area-right {
-    padding-right: env(safe-area-inset-right);
-  }
-}

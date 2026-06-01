@@ -1,5 +1,5 @@
-import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const WORKFLOW = [
   {
@@ -70,7 +70,7 @@ const TEMPLATES = [
     shots: 1,
     description: 'Your moment, your spotlight',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -105,7 +105,7 @@ const TEMPLATES = [
     shots: 2,
     description: 'Double the fun, double the memories',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -141,7 +141,7 @@ const TEMPLATES = [
     shots: 3,
     description: 'Three perfect poses in a row',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -178,7 +178,7 @@ const TEMPLATES = [
     shots: 4,
     description: 'A collage of your best moments',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -218,7 +218,7 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in landscape layout',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -260,7 +260,7 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in portrait layout',
     preview: () => (
-      <div className="w-full bg-white">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -331,12 +331,6 @@ const PACKAGES = [
 
 export default function Landing() {
   const [isVisible, setIsVisible] = useState({});
-  const [templatesScroll, setTemplatesScroll] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [currentSection, setCurrentSection] = useState(0);
-  const scrollContainerRef = useRef(null);
-
-  const sections = ['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -344,444 +338,275 @@ export default function Landing() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
-            const sectionIndex = sections.indexOf(entry.target.id);
-            if (sectionIndex !== -1) {
-              setCurrentSection(sectionIndex);
-            }
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
 
     document.querySelectorAll('[data-animate]').forEach((el) => {
       observer.observe(el);
     });
 
-    const headerEl = document.getElementById('header');
-    if (headerEl) {
-      observer.observe(headerEl);
-    }
-
     return () => observer.disconnect();
   }, []);
 
-  const scrollToSection = (direction) => {
-    const newIndex = direction === 'up' ? currentSection - 1 : currentSection + 1;
-    if (newIndex >= 0 && newIndex < sections.length) {
-      const sectionId = sections[newIndex];
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const scrollTemplates = (direction) => {
-    const container = document.getElementById('templates-container');
-    if (container) {
-      const scrollAmount = 300;
-      container.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    setTouchStart(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchEnd = e.changedTouches[0].clientX;
-    const diff = touchStart - touchEnd;
-    
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        scrollTemplates('right');
-      } else {
-        scrollTemplates('left');
-      }
-    }
-  };
-
   return (
-    <div ref={scrollContainerRef} className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
-      {/* Navigation Arrows */}
-      <div className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
-        <button
-          onClick={() => scrollToSection('up')}
-          disabled={currentSection === 0}
-          className={`w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px] ${
-            currentSection === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
-          }`}
-        >
-          <ChevronUp className="w-6 h-6 md:w-7 md:h-7" />
-        </button>
-        <button
-          onClick={() => scrollToSection('down')}
-          disabled={currentSection === sections.length - 1}
-          className={`w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px] ${
-            currentSection === sections.length - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
-          }`}
-        >
-          <ChevronDown className="w-6 h-6 md:w-7 md:h-7" />
-        </button>
-      </div>
-
-      {/* Navigation Dots */}
-      <nav className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex" style={{ marginTop: '160px' }}>
-        {['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'].map((section) => (
-          <a
-            key={section}
-            href={`#${section === 'header' ? '' : section}`}
-            className="w-2 h-2 rounded-full bg-gray-300 hover:bg-gray-900 transition-colors"
-            title={section === 'booking' ? 'Book & Footer' : section.charAt(0).toUpperCase() + section.slice(1)}
-          />
-        ))}
-      </nav>
-
+    <div className="w-full min-h-screen bg-white">
       {/* Header */}
-      <div id="header" className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-16 md:py-20 text-center animate-fade-in flex-1 flex flex-col justify-center overflow-y-auto scrollbar-hide">
-          <div className="mb-8 md:mb-10">
-            <img 
-              src="/mono-booth-ph.svg" 
-              alt="MONO BOOTH PH logo - Thermal receipt photo booth service in Kabankalan City" 
-              className="w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 object-contain invert mx-auto"
-            />
-          </div>
-          <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-6 md:mb-8 tracking-tight leading-tight">
-            MONO BOOTH PH
-          </h1>
-          <p className="text-xl md:text-2xl lg:text-4xl text-gray-800 leading-relaxed mb-4 md:mb-6 max-w-2xl mx-auto font-medium">
-            Thermal Receipt Photo Booth
-          </p>
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed mb-8 md:mb-10 max-w-2xl mx-auto">
-                Kabankalan City
-          </p>
-          <p className="text-base md:text-lg lg:text-xl text-gray-800 leading-relaxed mb-8 md:mb-10 max-w-2xl mx-auto italic">
-            "No proof without @monoboothph. Show 'em the receipts."
-          </p>
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base min-h-[44px]"
-          >
-            <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
-            Book Your Event Now
-            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-          </a>
-        </div>
+      <div className="max-w-4xl mx-auto px-6 py-20 text-center animate-fade-in">
+        <img 
+          src="/mono-booth-ph.svg" 
+          alt="MONO BOOTH PH" 
+          className="w-20 h-20 object-contain invert mx-auto mb-10"
+        />
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+          MONO BOOTH PH | Thermal Receipt Photo Booth in Kabankalan City
+        </h1>
+        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-8 max-w-2xl mx-auto">
+          No proof without @monoboothph. Show 'em the receipts.
+        </p>
+        <a
+          href="https://m.me/monoboothph"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          <MessageCircle className="w-5 h-5" />
+          Book Your Event Now
+          <ArrowRight className="w-5 h-5" />
+        </a>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* The Workflow */}
-      <div id="workflow" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">How It Works</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Three simple steps to your thermal receipt photo booth experience.
-          </p>
-          <div className="space-y-6 md:space-y-8">
-            {WORKFLOW.map((item, index) => (
-              <div 
-                key={index} 
-                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
-                  isVisible['workflow'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-center gap-3 md:gap-4 w-20 md:w-24 flex-shrink-0">
-                  <span className="text-gray-300 font-mono text-lg md:text-2xl font-bold group-hover:text-gray-900 transition-colors">{item.step}</span>
-                  <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors bg-gray-50 group-hover:bg-gray-100">
-                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-base md:text-lg">{item.icon}</span>
-                  </div>
-                </div>
-                <div className="flex-1 pt-2">
-                  <p className="font-bold text-gray-900 text-lg md:text-xl mb-2 leading-tight">{item.title}</p>
-                  <p className="text-gray-600 text-base md:text-lg leading-relaxed">{item.description}</p>
+      <div id="workflow" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Unique Thermal Print Experience</h2>
+        <div className="space-y-6">
+          {WORKFLOW.map((item, index) => (
+            <div 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['workflow'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="flex items-center gap-4 w-20 flex-shrink-0">
+                <span className="text-gray-300 font-mono text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
+                <div className="w-10 h-10 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors">
+                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{item.icon}</span>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="flex-1 pt-1">
+                <p className="font-bold text-gray-900 text-lg mb-1">{item.title}</p>
+                <p className="text-gray-600 leading-relaxed">{item.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Why MONO BOOTH PH */}
-      <div id="features" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">What's Included</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Every booking comes with these premium features at no extra cost.
-          </p>
-          <ul className="space-y-6 md:space-y-8">
-            {FEATURES.map((feature, index) => (
-              <li 
-                key={index} 
-                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
-                  isVisible['features'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors bg-gray-50 group-hover:bg-gray-100">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-base md:text-lg">{feature.icon}</span>
-                </div>
-                <div className="flex-1 pt-2">
-                  <p className="font-bold text-gray-900 text-lg md:text-xl mb-2 leading-tight">{feature.title}</p>
-                  <p className="text-gray-600 text-base md:text-lg leading-relaxed">{feature.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div id="features" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Why MONO BOOTH PH?</h2>
+        <ul className="space-y-6">
+          {FEATURES.map((feature, index) => (
+            <li 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['features'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{feature.icon}</span>
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="font-bold text-gray-900 text-lg mb-1">{feature.title}</p>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Proprietary Technology */}
-      <div id="technology" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Our Technology</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Built from the ground up for reliability and performance.
-          </p>
-          <ul className="space-y-6 md:space-y-8">
-            {TECHNOLOGY.map((tech, index) => (
-              <li 
-                key={index} 
-                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
-                  isVisible['technology'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors bg-gray-50 group-hover:bg-gray-100">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-base md:text-lg">{tech.icon}</span>
-                </div>
-                <div className="flex-1 pt-2">
-                  <p className="font-bold text-gray-900 text-lg md:text-xl mb-2 leading-tight">{tech.title}</p>
-                  <p className="text-gray-600 text-base md:text-lg leading-relaxed">{tech.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div id="technology" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Proprietary Locally-Built Kiosk App</h2>
+        <ul className="space-y-6">
+          {TECHNOLOGY.map((tech, index) => (
+            <li 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['technology'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{tech.icon}</span>
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="font-bold text-gray-900 text-lg mb-1">{tech.title}</p>
+                <p className="text-gray-600 leading-relaxed">{tech.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Print Templates */}
-      <div id="templates" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Print Templates</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Choose from our collection of print layouts for your event.
-          </p>
-          
-          <div className="relative">
-            <button
-              onClick={() => scrollTemplates('left')}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px]"
-            >
-              <ChevronLeft className="w-6 h-6 md:w-7 md:h-7" />
-            </button>
-            
+      <div id="templates" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Print Templates</h2>
+        <p className="text-gray-600 mb-12 text-lg leading-relaxed">
+          Choose from our collection of print layouts for your event.
+        </p>
+        
+        <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+          {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
             <div 
-              id="templates-container" 
-              className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide px-12"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
+              key={key}
+              className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
+                isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ 
+                transitionDelay: `${index * 100}ms`,
+                width: '280px'
+              }}
             >
-              {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
-                <div 
-                  key={key}
-                  className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
-                    isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ 
-                    transitionDelay: `${index * 100}ms`,
-                    width: '200px md:240px'
-                  }}
-                >
-                  <div className="bg-white transition-all group relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-gray-900 hover:shadow-lg">
-                    <div className="p-3 md:p-4 overflow-hidden">
-                      <Preview />
-                    </div>
-                    <div className="px-3 md:px-4 pb-4 md:pb-5 space-y-1 md:space-y-2 bg-gray-50 flex-shrink-0">
-                      <h3 className="font-bold text-gray-900 text-sm md:text-base">{label}</h3>
-                      <p className="text-gray-600 text-xs md:text-sm leading-tight">{description}</p>
-                      <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
-                    </div>
-                  </div>
+              <div className="bg-white transition-all group relative">
+                <Preview />
+                <div className="py-4 space-y-2">
+                  <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+                  <p className="text-gray-600 text-sm">{description}</p>
+                  <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
                 </div>
-              ))}
+              </div>
             </div>
-            
-            <button
-              onClick={() => scrollTemplates('right')}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px]"
-            >
-              <ChevronRight className="w-6 h-6 md:w-7 md:h-7" />
-            </button>
-          </div>
+          ))}
         </div>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Hourly Packages */}
-      <div id="packages" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Hourly Packages</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
-            {PACKAGES.map((pkg, index) => (
-              <div 
-                key={index} 
-                className={`border-2 border-gray-200 p-5 md:p-6 rounded-lg hover:border-gray-900 hover:shadow-xl transition-all duration-300 group transform hover:-translate-y-1 bg-white ${
-                  isVisible['packages'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-start gap-3 md:gap-4 mb-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors bg-gray-50 group-hover:bg-gray-100 rounded-lg">
-                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-base md:text-lg">{pkg.icon}</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 text-lg md:text-xl mb-1">{pkg.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{pkg.duration}</p>
-                    <p className="text-2xl md:text-3xl font-bold text-gray-900">{pkg.price}</p>
-                  </div>
+      <div id="packages" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Photo Booth Packages & Rates</h2>
+        <p className="text-gray-600 mb-12 text-lg leading-relaxed">
+          Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
+        </p>
+        
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {PACKAGES.map((pkg, index) => (
+            <div 
+              key={index} 
+              className={`border-2 border-gray-200 p-8 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
+                isVisible['packages'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-14 h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{pkg.icon}</span>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">{pkg.bestFor}</p>
-                <a
-                  href="https://m.me/monoboothph"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-3 md:px-6 md:py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm transform hover:scale-105 min-h-[44px] w-full justify-center"
-                >
-                  Book Now
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+                <div className="flex-1">
+                  <h3 className="font-bold text-gray-900 text-xl mb-1">{pkg.name}</h3>
+                  <p className="text-gray-600 text-sm mb-2">{pkg.duration}</p>
+                  <p className="text-3xl font-bold text-gray-900">{pkg.price}</p>
+                </div>
               </div>
-            ))}
-          </div>
-          
-          <p className="text-gray-600 mb-8 text-sm md:text-base bg-gray-50 p-4 rounded-lg">
-            <span className="text-gray-400">•</span> <span className="font-bold text-gray-900">Extra Time:</span> ₱1,000 per additional hour.
-          </p>
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">{pkg.bestFor}</p>
+              <a
+                href="https://m.me/monoboothph"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm transform hover:scale-105"
+              >
+                Book Now
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          ))}
         </div>
+        
+        <p className="text-gray-600 mb-8">
+          <span className="text-gray-400">•</span> <span className="font-bold text-gray-900">Extra Time:</span> ₱1,000 per additional hour.
+        </p>
       </div>
 
+      <hr className="border-gray-200 max-w-4xl mx-auto" />
+
       {/* Backup Copy Notice */}
-      <div id="backup" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide flex flex-col justify-center">
-          <div className="border-2 border-gray-200 p-6 md:p-10 text-center rounded-lg bg-white">
-            <div className="w-16 h-16 md:w-20 md:h-20 border-2 border-gray-200 flex items-center justify-center mx-auto mb-6 rounded-full bg-gray-50">
-              <Share2 className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 leading-tight">Missed Your Download?</h2>
-            <p className="text-gray-600 mb-6 md:mb-8 text-base md:text-lg leading-relaxed">
-              All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
-            </p>
-            <a
-              href="https://facebook.com/monoboothph"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base min-h-[44px]"
-            >
-              Visit Our Facebook Page
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-            </a>
-          </div>
+      <div className="max-w-4xl mx-auto px-6 py-20">
+        <div className="border-2 border-gray-200 p-10 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
+          <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+            All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
+          </p>
+          <a
+            href="https://facebook.com/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Visit Our Facebook Page
+            <ArrowRight className="w-5 h-5" />
+          </a>
         </div>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
-      {/* Booking & Footer */}
-      <div id="booking" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Book Your Event</h2>
-          <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
-            Ready to make your event unforgettable? Get in touch with us.
-          </p>
-          <ul className="space-y-6 md:space-y-8 mb-8 md:mb-10">
-            <li className={`flex gap-4 md:gap-6 items-start transition-all duration-700 ease-out ${
-              isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 bg-gray-50 rounded-lg">
-                <span className="text-gray-400 text-base md:text-lg"><Check className="w-5 h-5 md:w-6 md:h-6" /></span>
-              </div>
-              <div className="flex-1 pt-2">
-                <p className="font-bold text-gray-900 text-lg md:text-xl mb-2 leading-tight">Coverage Area</p>
-                <p className="text-gray-600 text-base md:text-lg leading-relaxed">Kabankalan City and surrounding areas</p>
-              </div>
-            </li>
-            <li className={`flex gap-4 md:gap-6 items-start transition-all duration-700 ease-out ${
-              isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`} style={{ transitionDelay: '100ms' }}>
-              <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 bg-gray-50 rounded-lg">
-                <span className="text-gray-400 text-base md:text-lg"><MessageCircle className="w-5 h-5 md:w-6 md:h-6" /></span>
-              </div>
-              <div className="flex-1 pt-2">
-                <p className="font-bold text-gray-900 text-lg md:text-xl mb-2 leading-tight">How to Book</p>
-                <p className="text-gray-600 text-base md:text-lg leading-relaxed">Send us a message on Messenger to check availability and lock in your date.</p>
-              </div>
-            </li>
-          </ul>
-          
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base min-h-[44px] w-full md:w-auto justify-center mb-12"
-          >
-            <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
-            Check Availability
-            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-          </a>
-
-          <hr className="border-gray-200 mb-12" />
-
-          <div className="text-center">
-            <div className="mb-6">
-              <img 
-                src="/mono-booth-ph.svg" 
-                alt="MONO BOOTH PH logo" 
-                className="w-12 h-12 md:w-16 md:h-16 object-contain invert mx-auto"
-              />
+      {/* Booking & Location */}
+      <div id="booking" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
+        <ul className="space-y-6 mb-10">
+          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+              <span className="text-gray-400"><Check className="w-5 h-5" /></span>
             </div>
-            <p className="text-sm md:text-base font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
-            <p className="text-xs md:text-sm text-gray-500 tracking-widest uppercase mb-6">No proof without @monoboothph</p>
-            <div className="flex justify-center gap-4">
-              <a
-                href="https://facebook.com/monoboothph"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition text-sm"
-              >
-                Facebook
-              </a>
-              <span className="text-gray-300">•</span>
-              <a
-                href="https://m.me/monoboothph"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition text-sm"
-              >
-                Messenger
-              </a>
+            <div className="pt-1">
+              <p className="font-bold text-gray-900 text-lg mb-1">Coverage</p>
+              <p className="text-gray-600">Kabankalan City and beyond</p>
             </div>
-          </div>
-        </div>
+          </li>
+          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`} style={{ transitionDelay: '100ms' }}>
+            <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+              <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
+            </div>
+            <div className="pt-1">
+              <p className="font-bold text-gray-900 text-lg mb-1">Inquiries</p>
+              <p className="text-gray-600">DM via Messenger to check date availability and lock in your schedule.</p>
+            </div>
+          </li>
+        </ul>
+        
+        <a
+          href="https://m.me/monoboothph"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          <MessageCircle className="w-5 h-5" />
+          Check Availability
+          <ArrowRight className="w-5 h-5" />
+        </a>
+      </div>
+
+      {/* Footer */}
+      <div className="max-w-4xl mx-auto px-6 py-16 text-center border-t-2 border-gray-200">
+        <p className="text-sm font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
+        <p className="text-xs text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>
   );
