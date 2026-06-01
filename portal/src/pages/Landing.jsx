@@ -72,7 +72,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
@@ -107,7 +107,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
@@ -143,7 +143,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
@@ -180,7 +180,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
@@ -220,7 +220,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
@@ -262,7 +262,7 @@ const TEMPLATES = [
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
-          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
