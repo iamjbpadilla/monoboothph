@@ -5,6 +5,7 @@ import { simulatePrint } from '../../lib/printerTransports/simulate.js';
 
 const TRANSPORTS = [
   { value: 'simulate', label: 'Simulate (Test Mode)', color: 'text-yellow-300' },
+  { value: 'bluetooth', label: 'Bluetooth ESC/POS', color: 'text-blue-300' },
   { value: 'usb', label: 'USB OTG ESC/POS', color: 'text-purple-300' },
   { value: 'wifi', label: 'WiFi / Network IP', color: 'text-green-300' },
 ];

@@ -30,6 +30,7 @@ const PLATFORM_APIS = [
   { name: 'MediaDevices / getUserMedia', note: 'Camera capture' },
   { name: 'ESC/POS Protocol',     note: 'Thermal printer commands' },
   { name: 'Web Serial / USB OTG', note: 'USB printer transport' },
+  { name: 'Web Bluetooth',        note: 'BT printer transport' },
   { name: 'Service Worker',       note: 'Offline / PWA caching' },
 ];
 
