@@ -70,7 +70,7 @@ const TEMPLATES = [
     shots: 1,
     description: 'Your moment, your spotlight',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -105,7 +105,7 @@ const TEMPLATES = [
     shots: 2,
     description: 'Double the fun, double the memories',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -141,7 +141,7 @@ const TEMPLATES = [
     shots: 3,
     description: 'Three perfect poses in a row',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -178,7 +178,7 @@ const TEMPLATES = [
     shots: 4,
     description: 'A collage of your best moments',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -218,7 +218,7 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in landscape layout',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -260,7 +260,7 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in portrait layout',
     preview: () => (
-      <div className="w-full bg-white border-2 border-gray-200 p-4">
+      <div className="w-full bg-white">
         <div className="text-center mb-3">
           <p className="font-bold text-base text-gray-900">MONO BOOTH PH</p>
           <p className="text-xs text-gray-600">Show 'em the receipts!</p>
@@ -384,26 +384,6 @@ export default function Landing() {
 
   return (
     <div ref={scrollContainerRef} className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
-      {/* Persistent Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-          <img 
-            src="/mono-booth-ph.svg" 
-            alt="MONO BOOTH PH logo" 
-            className="w-8 h-8 md:w-10 md:h-10 object-contain invert"
-          />
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-3 md:px-4 md:py-2 text-sm font-bold hover:bg-gray-800 transition border-2 border-gray-900 min-h-[44px]"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Book Now
-          </a>
-        </div>
-      </header>
-
       {/* Navigation Dots */}
       <nav className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex">
         {['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'].map((section) => (
@@ -411,7 +391,7 @@ export default function Landing() {
             key={section}
             href={`#${section === 'header' ? '' : section}`}
             className="w-2 h-2 rounded-full bg-gray-300 hover:bg-gray-900 transition-colors"
-            title={section.charAt(0).toUpperCase() + section.slice(1)}
+            title={section === 'booking' ? 'Book & Footer' : section.charAt(0).toUpperCase() + section.slice(1)}
           />
         ))}
       </nav>
@@ -455,7 +435,7 @@ export default function Landing() {
 
       {/* The Workflow */}
       <div id="workflow" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">How It Works</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Three simple steps to your thermal receipt photo booth experience.
@@ -489,7 +469,7 @@ export default function Landing() {
 
       {/* Why MONO BOOTH PH */}
       <div id="features" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">What's Included</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Every booking comes with these premium features at no extra cost.
@@ -520,7 +500,7 @@ export default function Landing() {
 
       {/* Proprietary Technology */}
       <div id="technology" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Our Technology</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Built from the ground up for reliability and performance.
@@ -551,7 +531,7 @@ export default function Landing() {
 
       {/* Print Templates */}
       <div id="templates" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Print Templates</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Choose from our collection of print layouts for your event.
@@ -610,7 +590,7 @@ export default function Landing() {
 
       {/* Hourly Packages */}
       <div id="packages" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Hourly Packages</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
@@ -657,7 +637,7 @@ export default function Landing() {
 
       {/* Backup Copy Notice */}
       <div id="backup" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide flex flex-col justify-center">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide flex flex-col justify-center">
           <div className="border-2 border-gray-200 p-6 md:p-10 text-center rounded-lg bg-white">
             <div className="w-16 h-16 md:w-20 md:h-20 border-2 border-gray-200 flex items-center justify-center mx-auto mb-6 rounded-full bg-gray-50">
               <Share2 className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
@@ -681,9 +661,9 @@ export default function Landing() {
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
-      {/* Booking & Location */}
+      {/* Booking & Footer */}
       <div id="booking" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Book Your Event</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Ready to make your event unforgettable? Get in touch with us.
@@ -717,44 +697,45 @@ export default function Landing() {
             href="https://m.me/monoboothph"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base min-h-[44px] w-full md:w-auto justify-center"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base min-h-[44px] w-full md:w-auto justify-center mb-12"
           >
             <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
             Check Availability
             <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
           </a>
-        </div>
-      </div>
 
-      {/* Footer */}
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-16 text-center border-t-2 border-gray-200">
-        <div className="mb-6">
-          <img 
-            src="/mono-booth-ph.svg" 
-            alt="MONO BOOTH PH logo" 
-            className="w-12 h-12 md:w-16 md:h-16 object-contain invert mx-auto"
-          />
-        </div>
-        <p className="text-sm md:text-base font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
-        <p className="text-xs md:text-sm text-gray-500 tracking-widest uppercase mb-6">No proof without @monoboothph</p>
-        <div className="flex justify-center gap-4">
-          <a
-            href="https://facebook.com/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 hover:text-gray-900 transition text-sm"
-          >
-            Facebook
-          </a>
-          <span className="text-gray-300">•</span>
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 hover:text-gray-900 transition text-sm"
-          >
-            Messenger
-          </a>
+          <hr className="border-gray-200 mb-12" />
+
+          <div className="text-center">
+            <div className="mb-6">
+              <img 
+                src="/mono-booth-ph.svg" 
+                alt="MONO BOOTH PH logo" 
+                className="w-12 h-12 md:w-16 md:h-16 object-contain invert mx-auto"
+              />
+            </div>
+            <p className="text-sm md:text-base font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
+            <p className="text-xs md:text-sm text-gray-500 tracking-widest uppercase mb-6">No proof without @monoboothph</p>
+            <div className="flex justify-center gap-4">
+              <a
+                href="https://facebook.com/monoboothph"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-gray-900 transition text-sm"
+              >
+                Facebook
+              </a>
+              <span className="text-gray-300">•</span>
+              <a
+                href="https://m.me/monoboothph"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-gray-900 transition text-sm"
+              >
+                Messenger
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
