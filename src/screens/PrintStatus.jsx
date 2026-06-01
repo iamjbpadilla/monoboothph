@@ -12,7 +12,7 @@ function ReceiptQR({ size = 200, sessionId }) {
   const [dataUrl, setDataUrl] = useState(null);
 
   useEffect(() => {
-    const url = `https://monoboothph.netlify.app/download/${sessionId}`;
+    const url = `https://monoboothph.vercel.app/download/${sessionId}`;
     QRCode.toDataURL(url, {
       width: size,
       margin: 2,

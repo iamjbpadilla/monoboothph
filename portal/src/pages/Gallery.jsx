@@ -250,7 +250,7 @@ export default function Gallery() {
 
   async function showQRCode(photo) {
     setQrModalPhoto(photo);
-    const url = `https://monoboothph.netlify.app/download/${photo.session_id}`;
+    const url = `https://monoboothph.vercel.app/download/${photo.session_id}`;
     const dataUrl = await QRCode.toDataURL(url, {
       width: 256,
       margin: 2,
@@ -745,7 +745,7 @@ export default function Gallery() {
                 <code className="text-xs">{qrModalPhoto.session_id}</code>
               </p>
               <a
-                href={`https://monoboothph.netlify.app/download/${qrModalPhoto.session_id}`}
+                href={`https://monoboothph.vercel.app/download/${qrModalPhoto.session_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm"
