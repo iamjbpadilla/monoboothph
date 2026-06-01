@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { calcCanvasWidth } from '../../lib/canvasCompositor.js';
 import { simulatePrint } from '../../lib/printerTransports/simulate.js';
-import { BleClient } from '@capacitor-community/bluetooth-le';
 
 const TRANSPORTS = [
   { value: 'simulate', label: 'Simulate (Test Mode)', color: 'text-yellow-300' },
-  { value: 'bluetooth', label: 'Bluetooth ESC/POS', color: 'text-blue-300' },
   { value: 'usb', label: 'USB OTG ESC/POS', color: 'text-purple-300' },
   { value: 'wifi', label: 'WiFi / Network IP', color: 'text-green-300' },
 ];
@@ -21,25 +19,7 @@ export default function PrinterSettings() {
 
   const canvasPx = calcCanvasWidth(printer.dpi, printer.paperWidthMm);
 
-  async function requestBluetoothPermission() {
-    try {
-      // Check if Bluetooth is enabled and has permission
-      await BleClient.initialize();
-      return true;
-    } catch (err) {
-      console.error('Bluetooth permission error:', err);
-      return false;
-    }
-  }
-
   async function handleTransportChange(transport) {
-    if (transport === 'bluetooth') {
-      const hasPermission = await requestBluetoothPermission();
-      if (!hasPermission) {
-        setTestStatus('Bluetooth permission denied. Please enable Bluetooth in device settings.');
-        return;
-      }
-    }
     updateSettings('printer.transport', transport);
   }
 
