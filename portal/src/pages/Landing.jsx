@@ -1,4 +1,4 @@
-import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check } from 'lucide-react';
+import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const WORKFLOW = [
@@ -134,6 +134,7 @@ const TEMPLATES = [
     label: 'Triple Threat',
     shots: 3,
     description: 'Three perfect poses in a row',
+    favorite: true,
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -451,7 +452,7 @@ export default function Landing() {
         </p>
         
         <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
-          {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
+          {TEMPLATES.map(({ key, label, shots, description, favorite, preview: Preview }, index) => (
             <div 
               key={key}
               className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
@@ -462,12 +463,13 @@ export default function Landing() {
                 width: '280px'
               }}
             >
-              <div className="bg-white border-2 border-gray-200 p-4 shadow-lg hover:shadow-xl hover:border-gray-900 transition-all group">
-                <div className="bg-gray-50 p-3 mb-4">
-                  <Preview />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+              <div className="bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl hover:border-gray-900 transition-all group relative">
+                <Preview />
+                <div className="p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+                    {favorite && <Star className="w-5 h-5 text-gray-900 fill-gray-900" />}
+                  </div>
                   <p className="text-gray-600 text-sm">{description}</p>
                   <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
                 </div>
