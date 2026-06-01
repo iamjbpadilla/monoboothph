@@ -89,7 +89,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
@@ -121,7 +125,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
@@ -154,7 +162,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
@@ -190,7 +202,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
@@ -228,7 +244,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
@@ -266,7 +286,11 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 bg-gray-900" />
+          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+            {[3,1,2,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3].map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            ))}
+          </div>
         </div>
         <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
