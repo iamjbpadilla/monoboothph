@@ -58,15 +58,24 @@ export async function bluetoothPrint(imageDataUrl, onStatus) {
 
     onStatus('Building print data...');
     const bytes = await buildEscPosImage(imageDataUrl);
-    const CHUNK = 512;
+    const CHUNK = 20; // Smaller chunk size for better compatibility
     onStatus('Sending data...');
     
     for (let i = 0; i < bytes.length; i += CHUNK) {
       const chunk = bytes.slice(i, i + CHUNK);
-      if (characteristic.properties.writeWithoutResponse) {
-        await characteristic.writeValueWithoutResponse(chunk);
-      } else {
-        await characteristic.writeValue(chunk);
+      try {
+        if (characteristic.properties.write) {
+          await characteristic.writeValue(chunk);
+        } else if (characteristic.properties.writeWithoutResponse) {
+          await characteristic.writeValueWithoutResponse(chunk);
+        } else {
+          throw new Error('Characteristic does not support write operations');
+        }
+        // Small delay between chunks
+        await new Promise(resolve => setTimeout(resolve, 10));
+      } catch (writeErr) {
+        console.error('Write error at chunk', i, ':', writeErr);
+        throw new Error(`Failed to write data at chunk ${i}: ${writeErr.message}`);
       }
     }
     
