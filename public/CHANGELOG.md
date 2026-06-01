@@ -3,11 +3,38 @@
 ## [Unreleased] - {date}
 
 ### Added
+- Test Print button under each template preview in Template Settings — prints layout sample using placeholder images via configured transport
+- Print All button in Template Settings — prints all 6 templates sequentially with per-template status (spinner → ✓ / ✗) and overall progress counter
+- Native Android USB Host API print plugin (UsbPrinterPlugin.java) replacing broken WebUSB API
+- Floyd-Steinberg error diffusion dithering for high-quality thermal photo printing
+- Bayer 4×4 ordered dithering option for dot-pattern thermal output
+- Simple threshold dithering as lightweight fallback
+- `optimizeImageForThermalPrinting` utility: 576px resize → grayscale → gamma → dithering → 1-bit pack
+- `generateThermalPreview` utility: same pipeline as printing but returns visible B&W canvas for UI preview
+- Thermal Print Tester panel in Printer Settings with live mock receipt preview
+- Camera capture button in Printer Settings for real photo test without running a full session
+- Sample portrait generator for testing dithering without a camera
+- Print Quality section with Gamma, Brightness, Contrast sliders and dithering algorithm selector
+- USB device filter XML for RP30A-UB USB Printer Class (class=7) OTG auto-detection
+- DPI presets expanded to 150 / 203 / 300 in Printer Settings
+
+### Fixed
+- Canvas asymmetric top/bottom margins — trailing element gap was adding 16px extra to bottom margin; now stripped so both sides equal MARGIN (22px)
+- Footer image canvas clipping — height was computed with a fixed 80px cap but draw used full-width aspect-ratio scaling; now both phases use the same formula
+- Barcode block whitespace — canvas over-allocated ~77px for barcode using fixed 110px constant; now computed dynamically from actual JsBarcode output dimensions
+- Template preview container no longer locked at 300px minimum height; preview now shrinks/grows to match exact canvas height as blocks are toggled
+- Canvas bottom trimming when Receipt Items block is enabled — header row (ITEM/QTY/PRICE) was not counted in height calculation
+- Template preview not updating when blocks are toggled — replaced boolean cancel flag with monotonic render ID to eliminate async race condition
+- "Printed via USB" text no longer shown on success screen after USB print
+
+### Changed
+- Print-only margin controls in Printer Settings: configurable top margin (0–48px) and bottom multiplier (−3x to 5x) that only affect thermal print output, leaving on-screen previews unchanged
+- Canvas top/bottom margin reduced from 22px to 12px for less blank lead-in on thermal prints
+- Settings version bumped to 14 (forces reset from v13 to apply new print margin defaults)
+- Default print settings: Gamma 1.8, Brightness −8, Contrast 64 (tuned for RP30A-UB)
 - Changelog now loaded from external CHANGELOG.md file for easier maintenance
 - Wide Load template - 2x3 landscape layout with 6 photos
 - Tall Order template - 2x3 portrait layout with 6 photos
-
-### Changed
 - Fixed Wide Load grid layout to 2 columns 3 rows (was 3 columns 2 rows)
 - Changed template selection grid to 2 columns (was 3 columns)
 - Fixed camera capture screen to support 6-shot templates (added to SHOT_COUNTS)

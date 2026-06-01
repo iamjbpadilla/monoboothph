@@ -3,7 +3,7 @@ import { resolveFontPair } from './theme.js';
 // canvasCompositor.js — builds the receipt canvas from frames + settings
 // RULE: 48px minimum margin enforced on all four edges. NO EXCEPTIONS.
 
-const MARGIN = 22;
+const MARGIN = 12;
 
 // Aspect ratios per template slot
 export const SLOT_RATIOS = {
@@ -40,9 +40,10 @@ function gridH(slotH, photoGap, gap) { return slotH * 2 + photoGap + gap; }
 function barcodeH(h, gap) { return h + gap; }
 function receiptItemsH(fontSize, items, showTotal, gap) {
   const itemHeight = fontSize + 4;
+  const headerHeight = itemHeight; // ITEM / QTY / PRICE header row always drawn
   const itemsHeight = items.length * itemHeight;
   const totalHeight = showTotal ? fontSize + 8 : 0;
-  return itemsHeight + totalHeight + gap;
+  return headerHeight + itemsHeight + totalHeight + gap;
 }
 
 // --- draw helpers ---
@@ -233,22 +234,45 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
         }
         break;
-      case 'barcode':
-        if (blocks.barcode.enabled) contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
+      case 'barcode': {
+        if (blocks.barcode.enabled) {
+          try {
+            const JsBarcode = (await import('jsbarcode')).default;
+            const tmp = document.createElement('canvas');
+            JsBarcode(tmp, blocks.barcode.value || 'SNAPROLL', {
+              format: blocks.barcode.type || 'CODE128',
+              width: Math.max(2, Math.floor(contentWidth / 50)),
+              height: 80,
+              displayValue: blocks.barcode.showText !== false,
+              fontSize: 22,
+              margin: 0,
+            });
+            contentH += barcodeH((contentWidth / tmp.width) * tmp.height, elGap);
+          } catch {
+            contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
+          }
+        }
         break;
-      case 'footer':
+      }
+      case 'footer': {
         if (blocks.footer.enabled) {
           if (blocks.footer.image) {
-            const scale = (blocks.footer.imageScale || 4) / 4; // 1-8 scale, default 4
-            contentH += Math.min(80, contentWidth * 0.25) * scale + (blocks.footer.imageTopMargin || 16) + elGap;
+            const scale = (blocks.footer.imageScale || 4) / 4;
+            const fImg = await loadImage(blocks.footer.image);
+            const fImgWidth = contentWidth * scale;
+            const fImgHeight = fImgWidth * (fImg.height / fImg.width);
+            contentH += fImgHeight + (blocks.footer.imageTopMargin || 16) + elGap;
           } else {
             contentH += textH(blocks.footer.fontSize, elGap);
           }
         }
         break;
+      }
     }
   }
 
+  // Strip the trailing elGap from the last element so top and bottom margins are equal
+  if (contentH > 0) contentH -= elGap;
   const totalHeight = MARGIN + contentH + MARGIN;
 
   // ── Create canvas ─────────────────────────────────────────────────────────

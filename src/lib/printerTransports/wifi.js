@@ -1,10 +1,10 @@
 import { buildEscPosImage } from '../escpos.js';
 
-export async function wifiPrint(imageDataUrl, ip, port, onStatus) {
+export async function wifiPrint(imageDataUrl, ip, port, onStatus, printerSettings = {}) {
   try {
     if (!ip) throw new Error('Printer IP address is not configured.');
     onStatus(`Connecting to ${ip}:${port}...`);
-    const bytes = await buildEscPosImage(imageDataUrl);
+    const bytes = await buildEscPosImage(imageDataUrl, printerSettings);
     const base64 = btoa(String.fromCharCode(...bytes));
 
     const response = await fetch(`http://${ip}:${port}/print`, {

@@ -146,7 +146,9 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
               <p className="text-[32px] leading-10 font-normal text-md-on-surface">
                 {settings.printer.transport === 'simulate' ? 'Simulated!' : 'Printed!'}
               </p>
-              <p className="text-lg mt-2 text-md-on-surface-variant">{statusMessage}</p>
+              {statusMessage && (
+                <p className="text-lg mt-2 text-md-on-surface-variant">{statusMessage}</p>
+              )}
             </div>
           </div>
         )}

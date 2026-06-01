@@ -207,14 +207,14 @@ function OperatorGuide({ expandedSections, toggleSection }) {
           <ul className="list-disc list-inside space-y-2">
             <li>Android tablet/device with MONO BOOTH PH app installed</li>
             <li>ESC/POS compatible thermal printer</li>
-            <li>USB or Bluetooth connection for printer</li>
+            <li>USB connection for printer</li>
             <li>Stable power supply</li>
             <li>Optional: External lighting for better photos</li>
           </ul>
 
           <h3 className="font-bold text-gray-900 mt-6">Initial Setup</h3>
           <ol className="list-decimal list-inside space-y-2">
-            <li>Connect printer to device via USB or Bluetooth</li>
+            <li>Connect printer to device via USB</li>
             <li>Open MONO BOOTH PH app</li>
             <li>Go to Settings → Hardware</li>
             <li>Test printer connection</li>
@@ -238,21 +238,13 @@ function OperatorGuide({ expandedSections, toggleSection }) {
             <li>Printer should auto-detect in settings</li>
           </ol>
 
-          <h3 className="font-bold text-gray-900 mt-6">Bluetooth Connection</h3>
-          <ol className="list-decimal list-inside space-y-2">
-            <li>Enable Bluetooth on device</li>
-            <li>Put printer in pairing mode (usually hold power button)</li>
-            <li>Pair with device via Android Bluetooth settings</li>
-            <li>Select printer in app settings</li>
-          </ol>
-
           <div className="bg-gray-50 border-2 border-gray-200 p-4 mt-4">
             <p className="font-semibold text-gray-900 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
               Troubleshooting
             </p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-              <li>If printer not detected, check USB cable or Bluetooth pairing</li>
+              <li>If printer not detected, check USB cable connection</li>
               <li>Restart printer if unresponsive</li>
               <li>Ensure printer has paper and is powered on</li>
             </ul>

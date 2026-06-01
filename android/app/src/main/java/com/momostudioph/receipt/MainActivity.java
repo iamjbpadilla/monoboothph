@@ -1,4 +1,4 @@
-package com.example.app;
+package com.momostudioph.receipt;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -7,10 +7,12 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import com.getcapacitor.BridgeActivity;
+import com.momostudioph.receipt.plugins.UsbPrinterPlugin;
 
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        registerPlugin(UsbPrinterPlugin.class);
         super.onCreate(savedInstanceState);
         enableImmersiveMode();
     }

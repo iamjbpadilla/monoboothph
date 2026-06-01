@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, Printer, CheckCircle, XCircle } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { compositeReceipt, SLOT_RATIOS } from '../../lib/canvasCompositor.js';
+import { simulatePrint } from '../../lib/printerTransports/simulate.js';
+import { usbPrint } from '../../lib/printerTransports/usb.js';
+import { wifiPrint } from '../../lib/printerTransports/wifi.js';
 
 const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
@@ -28,17 +31,18 @@ function makePlaceholders(templateKey) {
   });
 }
 
-function ReceiptPreview({ templateKey }) {
+function ReceiptPreview({ templateKey, onCanvasReady }) {
   const { settings } = useSettings();
   const containerRef = useRef(null);
   const debounceRef = useRef(null);
-  const cancelRef = useRef(false);
+  const renderIdRef = useRef(0);
+  const [loading, setLoading] = useState(true);
 
   const render = useCallback(() => {
-    cancelRef.current = true;
     clearTimeout(debounceRef.current);
+    setLoading(true);
     debounceRef.current = setTimeout(async () => {
-      cancelRef.current = false;
+      const myId = ++renderIdRef.current;
       try {
         const frames = makePlaceholders(templateKey);
         const canvas = await compositeReceipt(
@@ -48,7 +52,7 @@ function ReceiptPreview({ templateKey }) {
           settings.general,
           settings.printer,
         );
-        if (cancelRef.current) return;
+        if (myId !== renderIdRef.current) return; // stale — newer render already started
         const el = containerRef.current;
         if (!el) return;
         el.innerHTML = '';
@@ -56,14 +60,15 @@ function ReceiptPreview({ templateKey }) {
         canvas.style.height = 'auto';
         canvas.style.display = 'block';
         el.appendChild(canvas);
-      } catch { /* ignore */ }
+        onCanvasReady?.(canvas);
+        setLoading(false);
+      } catch { setLoading(false); }
     }, 300);
   }, [templateKey, settings]);
 
   useEffect(() => {
     render();
     return () => {
-      cancelRef.current = true;
       clearTimeout(debounceRef.current);
     };
   }, [render]);
@@ -73,7 +78,12 @@ function ReceiptPreview({ templateKey }) {
       <div className="bg-md-surface-container px-3 py-1.5 text-[10px] text-md-outline uppercase tracking-widest">
         Live Preview
       </div>
-      <div ref={containerRef} className="bg-white w-full p-3 flex items-center justify-center" style={{ minHeight: '300px' }} />
+      {loading && (
+        <div className="bg-white w-full flex items-center justify-center py-10">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+        </div>
+      )}
+      <div ref={containerRef} className={`bg-white w-full${loading ? ' hidden' : ''}`} />
     </div>
   );
 }
@@ -670,6 +680,49 @@ function TemplateBlockEditor() {
 }
 
 export default function TemplateSettings() {
+  const { settings } = useSettings();
+  const canvasMapRef = useRef({});
+  const [printStates, setPrintStates] = useState({});
+  const [printAllProgress, setPrintAllProgress] = useState(null); // null | { current, total }
+
+  async function runPrint(dataUrl) {
+    const { transport, wifiIp, wifiPort } = settings.printer;
+    const noop = () => {};
+    switch (transport) {
+      case 'usb':  return usbPrint(dataUrl, noop, settings.printer);
+      case 'wifi': return wifiPrint(dataUrl, wifiIp, wifiPort, noop, settings.printer);
+      default:     return simulatePrint(dataUrl, noop, settings.printer);
+    }
+  }
+
+  async function printOne(templateKey) {
+    const canvas = canvasMapRef.current[templateKey];
+    if (!canvas) return;
+    setPrintStates(s => ({ ...s, [templateKey]: 'printing' }));
+    try {
+      const dataUrl = canvas.toDataURL('image/png');
+      const result = await runPrint(dataUrl);
+      const next = result.success ? 'success' : 'error';
+      setPrintStates(s => ({ ...s, [templateKey]: next }));
+      if (result.success) setTimeout(() => setPrintStates(s => ({ ...s, [templateKey]: 'idle' })), 3000);
+    } catch {
+      setPrintStates(s => ({ ...s, [templateKey]: 'error' }));
+    }
+  }
+
+  async function printAll() {
+    const keys = TEMPLATE_TABS.map(t => t.key);
+    setPrintAllProgress({ current: 0, total: keys.length });
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      setPrintAllProgress({ current: i + 1, total: keys.length });
+      await printOne(key);
+    }
+    setPrintAllProgress(null);
+  }
+
+  const isPrintingAll = printAllProgress !== null;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
       {/* Settings panel - sticky on desktop */}
@@ -682,18 +735,58 @@ export default function TemplateSettings() {
 
       {/* All template previews */}
       <div className="space-y-3">
-        <div className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant">
-          Template Previews
+        <div className="flex items-center justify-between">
+          <div className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant">
+            Template Previews
+          </div>
+          <button
+            onClick={printAll}
+            disabled={isPrintingAll}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-md-primary text-md-on-primary disabled:opacity-50 hover:brightness-110 active:scale-95 transition-all"
+          >
+            {isPrintingAll ? (
+              <>
+                <div className="w-3 h-3 border border-md-on-primary border-t-transparent rounded-full animate-spin" />
+                {printAllProgress.current}/{printAllProgress.total}
+              </>
+            ) : (
+              <><Printer size={13} /> Print All</>  
+            )}
+          </button>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          {TEMPLATE_TABS.map(t => (
-            <div key={t.key}>
-              <div className="mb-2 text-sm font-medium text-md-on-surface">
-                {t.label} <span className="text-md-outline text-xs">({t.shots} shot{t.shots > 1 ? 's' : ''})</span>
+          {TEMPLATE_TABS.map(t => {
+            const pState = printStates[t.key] || 'idle';
+            const canPrint = !!canvasMapRef.current[t.key] && pState !== 'printing' && !isPrintingAll;
+            return (
+              <div key={t.key}>
+                <div className="mb-2 text-sm font-medium text-md-on-surface">
+                  {t.label} <span className="text-md-outline text-xs">({t.shots} shot{t.shots > 1 ? 's' : ''})</span>
+                </div>
+                <ReceiptPreview
+                  templateKey={t.key}
+                  onCanvasReady={canvas => { canvasMapRef.current[t.key] = canvas; }}
+                />
+                <button
+                  onClick={() => printOne(t.key)}
+                  disabled={!canPrint}
+                  className={`mt-2 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${
+                    pState === 'success'
+                      ? 'bg-green-500/15 text-green-400'
+                      : pState === 'error'
+                      ? 'bg-red-500/15 text-red-400'
+                      : 'bg-md-surface-container border border-md-outline-variant text-md-on-surface-variant hover:bg-md-surface-container-high disabled:opacity-40'
+                  }`}
+                >
+                  {pState === 'printing' && <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />}
+                  {pState === 'success'  && <CheckCircle size={13} />}
+                  {pState === 'error'    && <XCircle size={13} />}
+                  {pState === 'idle' && <Printer size={13} />}
+                  {pState === 'printing' ? 'Printing…' : pState === 'success' ? 'Done' : pState === 'error' ? 'Failed' : 'Print'}
+                </button>
               </div>
-              <ReceiptPreview templateKey={t.key} />
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

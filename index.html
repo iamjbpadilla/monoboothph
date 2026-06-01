@@ -342,6 +342,30 @@
   </head>
   <body>
     <div id="root"></div>
+    <div id="error-display" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; color: #fff; padding: 20px; font-family: monospace; z-index: 9999; overflow: auto;">
+      <h2 style="color: #ff4444;">APP ERROR</h2>
+      <pre id="error-message" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+      <p style="margin-top: 20px;">Error logged to: /storage/emulated/0/Android/data/com.momostudioph.receipt/files/error-log.txt</p>
+      <button onclick="window.location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #444; color: #fff; border: none; cursor: pointer;">Reload App</button>
+    </div>
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        const errorDiv = document.getElementById('error-display');
+        const errorPre = document.getElementById('error-message');
+        errorDiv.style.display = 'block';
+        errorPre.textContent = message + '\n\nSource: ' + source + '\nLine: ' + lineno + '\nColumn: ' + colno + '\n\nStack: ' + (error?.stack || 'No stack');
+        console.error('Global error caught:', message, error);
+        return false;
+      };
+      
+      window.addEventListener('unhandledrejection', function(event) {
+        const errorDiv = document.getElementById('error-display');
+        const errorPre = document.getElementById('error-message');
+        errorDiv.style.display = 'block';
+        errorPre.textContent = 'Unhandled Promise Rejection: ' + event.reason + '\n\nStack: ' + (event.reason?.stack || 'No stack');
+        console.error('Unhandled rejection:', event.reason);
+      });
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

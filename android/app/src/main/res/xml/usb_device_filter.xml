@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- USB Printer Class (class=7) — covers most ESC/POS thermal printers including RP30A-UB -->
+    <usb-device class="7" subclass="1" protocol="2" />
+    <!-- Fallback: any USB device (broadest match, prompts permission for any connected USB) -->
+    <usb-device />
+</resources>

@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { simulatePrint } from '../lib/printerTransports/simulate.js';
-import { bluetoothPrint } from '../lib/printerTransports/bluetooth.js';
 import { usbPrint } from '../lib/printerTransports/usb.js';
 import { wifiPrint } from '../lib/printerTransports/wifi.js';
 
@@ -19,17 +18,14 @@ export function usePrinter() {
       const onStatus = msg => setStatusMessage(msg);
 
       switch (transport) {
-        case 'bluetooth':
-          result = await bluetoothPrint(imageDataUrl, onStatus);
-          break;
         case 'usb':
-          result = await usbPrint(imageDataUrl, onStatus);
+          result = await usbPrint(imageDataUrl, onStatus, printerSettings);
           break;
         case 'wifi':
-          result = await wifiPrint(imageDataUrl, wifiIp, wifiPort, onStatus);
+          result = await wifiPrint(imageDataUrl, wifiIp, wifiPort, onStatus, printerSettings);
           break;
         default:
-          result = await simulatePrint(imageDataUrl, onStatus);
+          result = await simulatePrint(imageDataUrl, onStatus, printerSettings);
       }
 
       if (result.success) {

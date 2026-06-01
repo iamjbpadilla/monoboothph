@@ -23,7 +23,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 10, // bump to force preferences refresh when defaults change
+  _version: 14, // bump to force preferences refresh when defaults change
   general: {
     boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
@@ -67,6 +67,12 @@ const DEFAULT_SETTINGS = {
     wifiPort: '9100',
     dpi: 203,
     paperWidthMm: 80,
+    printDithering: 'floyd',
+    printGamma: 1.8,
+    printBrightness: -8,
+    printContrast: 64,
+    printTopMargin: 12,
+    printBottomMultiplier: 2,
   },
   capture: {
     countdownSeconds: 3,

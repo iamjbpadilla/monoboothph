@@ -1,4 +1,4 @@
-export async function simulatePrint(imageDataUrl, onStatus) {
+export async function simulatePrint(imageDataUrl, onStatus, printerSettings = {}) {
   onStatus('Simulating print job...');
   await new Promise(r => setTimeout(r, 800));
   onStatus('Sending to printer...');
