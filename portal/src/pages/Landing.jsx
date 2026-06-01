@@ -273,6 +273,27 @@ export default function Landing() {
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
+      {/* Backup Copy Notice */}
+      <div className="max-w-4xl mx-auto px-6 py-20">
+        <div className="border-2 border-gray-200 p-10 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
+          <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+            All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
+          </p>
+          <a
+            href="https://facebook.com/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Visit Our Facebook Page
+            <ArrowRight className="w-5 h-5" />
+          </a>
+        </div>
+      </div>
+
+      <hr className="border-gray-200 max-w-4xl mx-auto" />
+
       {/* Booking & Location */}
       <div id="booking" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
