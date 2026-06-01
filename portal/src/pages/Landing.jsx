@@ -450,23 +450,27 @@ export default function Landing() {
           Choose from our collection of print layouts for your event.
         </p>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TEMPLATES.map(({ key, label, shots, description, preview: Preview }) => (
+        <div className="relative py-12">
+          {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
             <div 
-              key={key} 
-              className={`border-2 border-gray-200 p-6 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
+              key={key}
+              className={`absolute left-0 right-0 transition-all duration-500 ease-out ${
                 isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
-              style={{ transitionDelay: `${key === '1strip' ? 0 : key === '2strip' ? 100 : key === '3strip' ? 200 : key === '4grid' ? 300 : key === '2x3-landscape' ? 400 : 500}ms` }}
+              style={{ 
+                transitionDelay: `${index * 150}ms`,
+                transform: `translateX(${index * 20}px) translateY(${index * 15}px) rotate(${index * 2}deg)`,
+                zIndex: TEMPLATES.length - index
+              }}
             >
-              <div className="bg-gray-50 p-4 mb-4">
-                <div className="w-full max-w-[120px] mx-auto">
-                  <Preview />
+              <div className="bg-white border-2 border-gray-200 p-4 shadow-lg hover:shadow-xl transition-shadow max-w-xs mx-auto">
+                <Preview />
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">{label}</h3>
+                  <p className="text-gray-600 text-sm mb-2">{description}</p>
+                  <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
                 </div>
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-1">{label}</h3>
-              <p className="text-gray-600 text-sm mb-2">{description}</p>
-              <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
             </div>
           ))}
         </div>
