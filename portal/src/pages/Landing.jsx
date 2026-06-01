@@ -69,6 +69,7 @@ const TEMPLATES = [
     label: 'Solo Star',
     shots: 1,
     description: 'Your moment, your spotlight',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -90,8 +91,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[0].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -104,6 +105,7 @@ const TEMPLATES = [
     label: 'Double Take',
     shots: 2,
     description: 'Double the fun, double the memories',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -126,8 +128,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[1].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -140,6 +142,7 @@ const TEMPLATES = [
     label: 'Triple Threat',
     shots: 3,
     description: 'Three perfect poses in a row',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -163,8 +166,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[2].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -177,6 +180,7 @@ const TEMPLATES = [
     label: 'Quad Squad',
     shots: 4,
     description: 'A collage of your best moments',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -203,8 +207,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[3].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -217,6 +221,7 @@ const TEMPLATES = [
     label: 'Wide Load',
     shots: 6,
     description: 'Six photos in landscape layout',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -245,8 +250,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[4].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -259,6 +264,7 @@ const TEMPLATES = [
     label: 'Tall Order',
     shots: 6,
     description: 'Six photos in portrait layout',
+    barcode: Array.from({ length: 80 }, () => Math.random() > 0.5 ? 2 : 1),
     preview: () => (
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
@@ -287,8 +293,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {Array.from({ length: 80 }).map((_, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
+            {TEMPLATES[5].barcode.map((width, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -393,9 +399,9 @@ export default function Landing() {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center gap-4 w-20 flex-shrink-0">
-                <span className="text-gray-300 font-mono text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
+                <span className="text-gray-500 font-mono text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
                 <div className="w-10 h-10 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{item.icon}</span>
+                  <span className="text-gray-600 group-hover:text-gray-900 transition-colors">{item.icon}</span>
                 </div>
               </div>
               <div className="flex-1 pt-1">
@@ -422,7 +428,7 @@ export default function Landing() {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{feature.icon}</span>
+                <span className="text-gray-600 group-hover:text-gray-900 transition-colors">{feature.icon}</span>
               </div>
               <div className="flex-1 pt-1">
                 <p className="font-bold text-gray-900 text-lg mb-1">{feature.title}</p>
@@ -448,7 +454,7 @@ export default function Landing() {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{tech.icon}</span>
+                <span className="text-gray-600 group-hover:text-gray-900 transition-colors">{tech.icon}</span>
               </div>
               <div className="flex-1 pt-1">
                 <p className="font-bold text-gray-900 text-lg mb-1">{tech.title}</p>
@@ -513,7 +519,7 @@ export default function Landing() {
             >
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-14 h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{pkg.icon}</span>
+                  <span className="text-gray-600 group-hover:text-gray-900 transition-colors">{pkg.icon}</span>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-gray-900 text-xl mb-1">{pkg.name}</h3>
@@ -571,7 +577,7 @@ export default function Landing() {
             isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-              <span className="text-gray-400"><Check className="w-5 h-5" /></span>
+              <span className="text-gray-600"><Check className="w-5 h-5" /></span>
             </div>
             <div className="pt-1">
               <p className="font-bold text-gray-900 text-lg mb-1">Coverage</p>
@@ -582,7 +588,7 @@ export default function Landing() {
             isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`} style={{ transitionDelay: '100ms' }}>
             <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-              <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
+              <span className="text-gray-600"><MessageCircle className="w-5 h-5" /></span>
             </div>
             <div className="pt-1">
               <p className="font-bold text-gray-900 text-lg mb-1">Inquiries</p>
@@ -606,7 +612,7 @@ export default function Landing() {
       {/* Footer */}
       <div className="max-w-4xl mx-auto px-6 py-16 text-center border-t-2 border-gray-200">
         <p className="text-sm font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
-        <p className="text-xs text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-xs text-gray-600 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>
   );

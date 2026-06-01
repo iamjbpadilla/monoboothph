@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /download
+
+Sitemap: https://www.monoboothph.com/sitemap.xml

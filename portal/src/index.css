@@ -160,10 +160,15 @@ html, body, #root {
 }
 .standby-icon-float {
   animation: standby-icon-float 4s ease-in-out infinite;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .standby-title-glow {
   animation: standby-title-glow 5s ease-in-out infinite;
+  will-change: opacity;
 }
 .standby-cta-pulse {
   animation: standby-cta-pulse 3s ease-in-out infinite;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
