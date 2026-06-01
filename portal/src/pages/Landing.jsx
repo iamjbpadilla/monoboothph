@@ -463,7 +463,7 @@ export default function Landing() {
                 width: '280px'
               }}
             >
-              <div className="bg-white shadow-lg hover:shadow-xl transition-all group relative">
+              <div className="bg-white transition-all group relative">
                 <Preview />
                 <div className="p-4 space-y-2">
                   <div className="flex items-center gap-2">
