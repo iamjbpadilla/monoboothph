@@ -73,12 +73,11 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Good Vibes</span>
@@ -105,13 +104,12 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Bad Decisions</span>
@@ -138,14 +136,13 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
         <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Y2K Energy</span>
@@ -172,7 +169,7 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="grid grid-cols-2 gap-1 mb-3">
@@ -182,7 +179,6 @@ const TEMPLATES = [
           <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
         </div>
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Main Character Energy</span>
@@ -209,7 +205,7 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="grid grid-cols-2 gap-1 mb-3">
@@ -221,7 +217,6 @@ const TEMPLATES = [
           <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#4b5563' }} />
         </div>
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Side Quest</span>
@@ -248,7 +243,7 @@ const TEMPLATES = [
       <div className="w-full bg-white border-2 border-gray-200 p-4">
         <div className="text-center mb-3">
           <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-600">Your Event Name</p>
+          <p className="text-xs text-gray-600">Show 'em the receipts!</p>
         </div>
         <div className="border-t border-gray-300 mb-3" />
         <div className="grid grid-cols-2 gap-1 mb-3">
@@ -260,7 +255,6 @@ const TEMPLATES = [
           <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#4b5563' }} />
         </div>
         <div className="border-t border-gray-300 my-3" />
-        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
         <div className="mt-3 text-xs text-gray-600">
           <div className="flex justify-between mb-1">
             <span>Plot Armor</span>
