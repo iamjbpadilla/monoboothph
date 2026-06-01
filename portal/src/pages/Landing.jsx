@@ -63,6 +63,91 @@ const TECHNOLOGY = [
   },
 ];
 
+const TEMPLATES = [
+  {
+    key: '1strip',
+    label: 'Solo Star',
+    shots: 1,
+    description: 'Your moment, your spotlight',
+    preview: () => (
+      <div className="w-full flex flex-col gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+      </div>
+    ),
+  },
+  {
+    key: '2strip',
+    label: 'Double Take',
+    shots: 2,
+    description: 'Double the fun, double the memories',
+    preview: () => (
+      <div className="w-full flex flex-col gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+      </div>
+    ),
+  },
+  {
+    key: '3strip',
+    label: 'Triple Threat',
+    shots: 3,
+    description: 'Three perfect poses in a row',
+    preview: () => (
+      <div className="w-full flex flex-col gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
+      </div>
+    ),
+  },
+  {
+    key: '4grid',
+    label: 'Quad Squad',
+    shots: 4,
+    description: 'A collage of your best moments',
+    preview: () => (
+      <div className="w-full grid grid-cols-2 gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
+      </div>
+    ),
+  },
+  {
+    key: '2x3-landscape',
+    label: 'Wide Load',
+    shots: 6,
+    description: 'Six photos in landscape layout',
+    preview: () => (
+      <div className="w-full grid grid-cols-2 gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#9ca3af' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#6b7280' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#4b5563' }} />
+      </div>
+    ),
+  },
+  {
+    key: '2x3-portrait',
+    label: 'Tall Order',
+    shots: 6,
+    description: 'Six photos in portrait layout',
+    preview: () => (
+      <div className="w-full grid grid-cols-2 gap-1 p-2">
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#6b7280' }} />
+        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#4b5563' }} />
+      </div>
+    ),
+  },
+];
+
 const PACKAGES = [
   {
     name: "The Minimalist",
@@ -222,6 +307,37 @@ export default function Landing() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <hr className="border-gray-200 max-w-4xl mx-auto" />
+
+      {/* Print Templates */}
+      <div id="templates" data-animate className="max-w-4xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Print Templates</h2>
+        <p className="text-gray-600 mb-12 text-lg leading-relaxed">
+          Choose from our collection of print layouts for your event.
+        </p>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TEMPLATES.map(({ key, label, shots, description, preview: Preview }) => (
+            <div 
+              key={key} 
+              className={`border-2 border-gray-200 p-6 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
+                isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${key === '1strip' ? 0 : key === '2strip' ? 100 : key === '3strip' ? 200 : key === '4grid' ? 300 : key === '2x3-landscape' ? 400 : 500}ms` }}
+            >
+              <div className="bg-gray-50 p-4 mb-4">
+                <div className="w-full max-w-[120px] mx-auto">
+                  <Preview />
+                </div>
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">{label}</h3>
+              <p className="text-gray-600 text-sm mb-2">{description}</p>
+              <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
