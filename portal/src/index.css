@@ -167,3 +167,12 @@ html, body, #root {
 .standby-cta-pulse {
   animation: standby-cta-pulse 3s ease-in-out infinite;
 }
+
+/* ── Scrollbar Hide Utility ─────────────────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
