@@ -159,7 +159,7 @@ If port 5174 is in use, Vite will automatically try the next available port (517
 2. Check Supabase project is active
 3. Verify RLS policies are correct
 
-### Netlify Build Failures
-1. Check build logs in Netlify dashboard
+### Vercel Build Failures
+1. Check build logs in Vercel dashboard
 2. Verify build command is `npm run build`
 3. Ensure all dependencies are in package.json

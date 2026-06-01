@@ -10,7 +10,7 @@ A photobooth kiosk application with admin portal for event management.
 - **All testing must be done locally** - No production testing
 - **Windsurf only for code editing** - No deployment operations
 - **GitHub Desktop for git operations** - All commits/pushes via GitHub Desktop
-- **Manual deployment only** - No auto-deploy to Netlify
+- **Manual deployment only** - No auto-deploy to Vercel
 
 For detailed workflow procedures, see [WORKFLOW.md](./WORKFLOW.md)
 

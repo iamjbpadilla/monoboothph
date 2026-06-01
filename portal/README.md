@@ -16,7 +16,7 @@ Admin panel and photo download portal for Snap & Roll photobooth kiosks.
 
 - Node.js 18+
 - Supabase account
-- Netlify account (for deployment)
+- Vercel account (for deployment)
 
 ### Environment Variables
 
@@ -43,9 +43,9 @@ npm run build
 
 ### Deployment
 
-Deploy to Netlify:
-1. Connect your Netlify account to the portal/ directory
-2. Set environment variables in Netlify dashboard
+Deploy to Vercel:
+1. Connect your Vercel account to the portal/ directory
+2. Set environment variables in Vercel dashboard
 3. Deploy
 
 ## Database Setup

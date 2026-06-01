@@ -50,14 +50,14 @@ Visit http://localhost:5173 to test:
 - `/admin/apps` - Create an app
 - `/admin/gallery` - View gallery (empty until photos uploaded)
 
-### 4. Deploy to Netlify
+### 4. Deploy to Vercel
 
 1. Push code to GitHub
-2. In Netlify, create new site from Git
-3. Set base directory to `portal`
+2. In Vercel, create new project from Git
+3. Set root directory to `portal`
 4. Set build command: `npm run build`
-5. Set publish directory: `dist`
-6. Add environment variables in Netlify dashboard
+5. Set output directory: `dist`
+6. Add environment variables in Vercel dashboard
 7. Deploy
 
 ### 5. Kiosk Integration (Future)
