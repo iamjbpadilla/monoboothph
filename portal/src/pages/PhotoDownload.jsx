@@ -205,24 +205,12 @@ export default function PhotoDownload() {
             {getTimeUntilDeletion(photo.created_at)}
           </span>
         </p>
-
-        <a
-          href="https://m.me/monoboothph"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 font-semibold hover:bg-gray-50 transition border-2 border-gray-200 mt-4"
-        >
-          <MessageCircle className="w-5 h-5" />
-          Book Your Event
-          <ArrowRight className="w-5 h-5" />
-        </a>
       </div>
 
       {/* Footer branding */}
       <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-200">
         <p className="text-sm font-bold text-gray-900 tracking-wider">MONO BOOTH PH</p>
         <p className="text-[10px] text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
-        <p className="text-[10px] text-gray-400">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
   );
