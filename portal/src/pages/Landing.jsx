@@ -70,8 +70,29 @@ const TEMPLATES = [
     shots: 1,
     description: 'Your moment, your spotlight',
     preview: () => (
-      <div className="w-full flex flex-col gap-1 p-2">
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Good Vibes</span>
+            <span>₱999.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱999.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
@@ -81,9 +102,30 @@ const TEMPLATES = [
     shots: 2,
     description: 'Double the fun, double the memories',
     preview: () => (
-      <div className="w-full flex flex-col gap-1 p-2">
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
+        <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Bad Decisions</span>
+            <span>₱0.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱0.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
@@ -93,10 +135,31 @@ const TEMPLATES = [
     shots: 3,
     description: 'Three perfect poses in a row',
     preview: () => (
-      <div className="w-full flex flex-col gap-1 p-2">
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
+        <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+        <div className="w-full rounded border-2 border-gray-200 mb-1" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
         <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Y2K Energy</span>
+            <span>₱500.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱500.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
@@ -106,11 +169,34 @@ const TEMPLATES = [
     shots: 4,
     description: 'A collage of your best moments',
     preview: () => (
-      <div className="w-full grid grid-cols-2 gap-1 p-2">
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
+        <div className="grid grid-cols-2 gap-1 mb-3">
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
+        </div>
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Main Character Energy</span>
+            <span>₱750.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱750.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
@@ -120,13 +206,36 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in landscape layout',
     preview: () => (
-      <div className="w-full grid grid-cols-2 gap-1 p-2">
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#9ca3af' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#6b7280' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#4b5563' }} />
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
+        <div className="grid grid-cols-2 gap-1 mb-3">
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#f3f4f6' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#e5e7eb' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#d1d5db' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#9ca3af' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#6b7280' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '4/3', background: '#4b5563' }} />
+        </div>
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Side Quest</span>
+            <span>₱150.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱150.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
@@ -136,13 +245,36 @@ const TEMPLATES = [
     shots: 6,
     description: 'Six photos in portrait layout',
     preview: () => (
-      <div className="w-full grid grid-cols-2 gap-1 p-2">
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#6b7280' }} />
-        <div className="w-full rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#4b5563' }} />
+      <div className="w-full bg-white border-2 border-gray-200 p-4">
+        <div className="text-center mb-3">
+          <p className="font-bold text-sm text-gray-900">MONO BOOTH PH</p>
+          <p className="text-xs text-gray-600">Your Event Name</p>
+        </div>
+        <div className="border-t border-gray-300 mb-3" />
+        <div className="grid grid-cols-2 gap-1 mb-3">
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#f3f4f6' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#e5e7eb' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#d1d5db' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#9ca3af' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#6b7280' }} />
+          <div className="rounded border-2 border-gray-200" style={{ aspectRatio: '3/4', background: '#4b5563' }} />
+        </div>
+        <div className="border-t border-gray-300 my-3" />
+        <p className="text-xs text-gray-600 text-center">Jun 01, 2026 20:30</p>
+        <div className="mt-3 text-xs text-gray-600">
+          <div className="flex justify-between mb-1">
+            <span>Plot Armor</span>
+            <span>₱1,000.00</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>₱1,000.00</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <div className="w-full h-8 bg-gray-900" />
+        </div>
+        <p className="text-xs text-gray-600 text-center mt-3">No proof without @monoboothph</p>
       </div>
     ),
   },
