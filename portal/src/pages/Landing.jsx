@@ -44,8 +44,11 @@ export default function Landing() {
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
           MONO BOOTH PH
         </h1>
-        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-4 max-w-2xl mx-auto">
-          No proof without @monoboothph. Show 'em the receipts.
+        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-2 max-w-2xl mx-auto">
+          No proof without @monoboothph.
+        </p>
+        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-8 max-w-2xl mx-auto">
+          Show 'em the receipts.
         </p>
         <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
           Powered by our custom, locally-engineered digital camera architecture.
@@ -83,14 +86,13 @@ export default function Landing() {
 
         <div className="border-2 border-gray-200 p-8">
           <h3 className="font-bold text-gray-900 text-lg mb-6">Package Inclusions</h3>
-          <ul className="space-y-3">
+          <div className="flex flex-wrap gap-3">
             {INCLUSIONS.map((inclusion, index) => (
-              <li key={index} className="flex items-center gap-3 text-gray-700">
-                <span className="w-2 h-2 bg-gray-900 rounded-full flex-shrink-0" />
+              <span key={index} className="border-2 border-gray-200 bg-white px-4 py-2 rounded-lg text-gray-700 text-sm">
                 {inclusion}
-              </li>
+              </span>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
 
