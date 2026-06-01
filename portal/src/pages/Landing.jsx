@@ -367,7 +367,7 @@ export default function Landing() {
     <div className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
       {/* Navigation Dots */}
       <nav className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
-        {['header', 'workflow', 'features', 'technology', 'templates', 'packages'].map((section) => (
+        {['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'].map((section) => (
           <a
             key={section}
             href={`#${section === 'header' ? '' : section}`}
@@ -593,64 +593,68 @@ export default function Landing() {
       </div>
 
       {/* Backup Copy Notice */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
-        <div className="border-2 border-gray-200 p-10 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
-          <p className="text-gray-600 mb-8 text-lg leading-relaxed">
-            All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
-          </p>
-          <a
-            href="https://facebook.com/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Visit Our Facebook Page
-            <ArrowRight className="w-5 h-5" />
-          </a>
+      <div id="backup" data-animate className="min-h-screen snap-start flex items-center">
+        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
+          <div className="border-2 border-gray-200 p-10 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
+            <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+              All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
+            </p>
+            <a
+              href="https://facebook.com/monoboothph"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Visit Our Facebook Page
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          </div>
         </div>
       </div>
 
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Booking & Location */}
-      <div id="booking" data-animate className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
-        <ul className="space-y-6 mb-10">
-          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
-            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-              <span className="text-gray-400"><Check className="w-5 h-5" /></span>
-            </div>
-            <div className="pt-1">
-              <p className="font-bold text-gray-900 text-lg mb-1">Coverage</p>
-              <p className="text-gray-600">Kabankalan City and beyond</p>
-            </div>
-          </li>
-          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
-            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`} style={{ transitionDelay: '100ms' }}>
-            <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-              <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
-            </div>
-            <div className="pt-1">
-              <p className="font-bold text-gray-900 text-lg mb-1">Inquiries</p>
-              <p className="text-gray-600">DM via Messenger to check date availability and lock in your schedule.</p>
-            </div>
-          </li>
-        </ul>
-        
-        <a
-          href="https://m.me/monoboothph"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
-        >
-          <MessageCircle className="w-5 h-5" />
-          Check Availability
-          <ArrowRight className="w-5 h-5" />
-        </a>
+      <div id="booking" data-animate className="min-h-screen snap-start flex items-center">
+        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
+          <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
+          <ul className="space-y-6 mb-10">
+            <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+              isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-gray-400"><Check className="w-5 h-5" /></span>
+              </div>
+              <div className="pt-1">
+                <p className="font-bold text-gray-900 text-lg mb-1">Coverage</p>
+                <p className="text-gray-600">Kabankalan City and beyond</p>
+              </div>
+            </li>
+            <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+              isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`} style={{ transitionDelay: '100ms' }}>
+              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
+              </div>
+              <div className="pt-1">
+                <p className="font-bold text-gray-900 text-lg mb-1">Inquiries</p>
+                <p className="text-gray-600">DM via Messenger to check date availability and lock in your schedule.</p>
+              </div>
+            </li>
+          </ul>
+          
+          <a
+            href="https://m.me/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Check Availability
+            <ArrowRight className="w-5 h-5" />
+          </a>
+        </div>
       </div>
 
       {/* Footer */}
