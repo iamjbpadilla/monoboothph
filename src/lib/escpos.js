@@ -17,10 +17,13 @@ function cutPaper() {
 
 // Convert image dataURL to ESC/POS raster bitmap
 async function imageToEscPos(dataUrl) {
+  if (!dataUrl) {
+    throw new Error('No image data provided');
+  }
   const img = new Image();
   await new Promise((res, rej) => {
     img.onload = res;
-    img.onerror = rej;
+    img.onerror = () => rej(new Error('Failed to load image'));
     img.src = dataUrl;
   });
 

@@ -5,6 +5,11 @@ export async function bluetoothPrint(imageDataUrl, onStatus) {
     if (!navigator.bluetooth) {
       throw new Error('Web Bluetooth API not supported in this browser.');
     }
+    
+    if (!imageDataUrl) {
+      throw new Error('No image data provided for printing');
+    }
+    
     onStatus('Requesting Bluetooth device...');
     const device = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
@@ -37,6 +42,16 @@ export async function bluetoothPrint(imageDataUrl, onStatus) {
     return { success: true, message: 'Printed via Bluetooth' };
   } catch (err) {
     console.error('Bluetooth print error:', err);
-    return { success: false, message: err.message || 'Bluetooth connection failed' };
+    let errorMessage = 'Bluetooth connection failed';
+    if (err) {
+      if (typeof err === 'string') {
+        errorMessage = err;
+      } else if (err.message) {
+        errorMessage = err.message;
+      } else if (err.type === 'error') {
+        errorMessage = 'Bluetooth operation failed';
+      }
+    }
+    return { success: false, message: errorMessage };
   }
 }
