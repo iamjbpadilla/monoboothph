@@ -5,12 +5,12 @@
 ### Development Rules
 1. **All testing must be done locally** - No production testing
 2. **Windsurf only for code editing** - No deployment operations
-3. **GitHub Desktop for git operations** - All commits/pushes via GitHub Desktop
+3. **GitHub CLI for git operations** - All commits/pushes via GitHub CLI
 4. **Manual deployment only** - No auto-deploy to Netlify
 
 ### Deployment Rules
 1. **Manual approval required** - Deploy only after explicit user confirmation
-2. **GitHub Desktop → Netlify** - Deployment triggered manually from GitHub Desktop
+2. **GitHub CLI → Netlify** - Deployment triggered after pushing via GitHub CLI
 3. **No CI/CD auto-deploy** - Disable automatic deployments
 4. **Local dev server verification** - Must test locally before any deployment
 
@@ -40,19 +40,18 @@
 3. Verify Supabase connections
 4. Test offline-first behavior
 
-## Manual Deployment via GitHub Desktop
+## Manual Deployment via GitHub CLI
 
 ### Step 1: Commit Changes
-1. Open GitHub Desktop
-2. Review changes in current repository
-3. Stage files to commit
-4. Write meaningful commit message
-5. Commit changes
+```bash
+git add .
+git commit -m "Your commit message"
+```
 
 ### Step 2: Push to GitHub
-1. Click "Push origin" in GitHub Desktop
-2. Wait for push to complete
-3. Verify changes are on GitHub
+```bash
+git push origin main
+```
 
 ### Step 3: Manual Netlify Deploy
 1. Open Netlify dashboard
