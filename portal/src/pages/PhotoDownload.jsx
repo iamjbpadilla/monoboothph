@@ -124,14 +124,14 @@ export default function PhotoDownload() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-50 rounded-2xl p-8 text-center border border-gray-200">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white border-2 border-gray-200 p-8 text-center">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
             className="w-16 h-16 mx-auto mb-4 object-contain invert"
           />
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Photo Not Found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Photo Not Found</h2>
           <p className="text-gray-600 mb-6">
             {error}. Photos uploaded daily to our Facebook page.
           </p>
@@ -139,7 +139,7 @@ export default function PhotoDownload() {
             href="https://facebook.com/monoboothph"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition"
+            className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900"
           >
             <ExternalLink className="w-5 h-5" />
             Visit Our Facebook Page
@@ -150,9 +150,9 @@ export default function PhotoDownload() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col p-4 md:p-8">
       {/* Header branding */}
-      <div className="flex flex-col items-center gap-1 py-4">
+      <div className="flex flex-col items-center gap-1 py-4 border-b-2 border-gray-200">
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
@@ -161,17 +161,17 @@ export default function PhotoDownload() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 max-w-2xl w-full mx-auto">
-        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200 w-full relative min-h-[200px]">
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 max-w-2xl w-full mx-auto py-8">
+        <div className="bg-white border-2 border-gray-200 p-4 w-full relative min-h-[200px]">
           {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-none animate-spin" />
             </div>
           )}
           <img
             src={photo.publicUrl}
             alt="Your photo"
-            className="w-full rounded-xl"
+            className="w-full"
             onLoad={() => setImageLoading(false)}
             style={{ display: imageLoading ? 'none' : 'block' }}
           />
@@ -183,13 +183,13 @@ export default function PhotoDownload() {
             <Camera className="w-4 h-4" />
             Long-press on photo to save to gallery
           </p>
-          <p className="text-xs text-gray-400">or use the button below</p>
+          <p className="text-xs text-gray-500">or use the button below</p>
         </div>
         
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="inline-flex items-center justify-center gap-2 bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs"
+          className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-8 py-4 font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-gray-900"
         >
           <Download className="w-6 h-6" />
           {downloading ? 'Downloading...' : 'Download'}
@@ -203,8 +203,8 @@ export default function PhotoDownload() {
       </div>
 
       {/* Footer branding */}
-      <div className="flex flex-col items-center gap-1 py-4">
-        <p className="text-sm font-semibold text-gray-900 tracking-wider">MONO BOOTH PH</p>
+      <div className="flex flex-col items-center gap-1 py-4 border-t-2 border-gray-200">
+        <p className="text-sm font-bold text-gray-900 tracking-wider">MONO BOOTH PH</p>
         <p className="text-[10px] text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
         <p className="text-[10px] text-gray-400">📍 Kabankalan City & Beyond</p>
       </div>
