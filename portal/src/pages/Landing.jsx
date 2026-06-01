@@ -1,4 +1,4 @@
-import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 
 const WORKFLOW = [
@@ -333,7 +333,10 @@ export default function Landing() {
   const [isVisible, setIsVisible] = useState({});
   const [templatesScroll, setTemplatesScroll] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
+  const [currentSection, setCurrentSection] = useState(0);
   const scrollContainerRef = useRef(null);
+
+  const sections = ['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -341,18 +344,38 @@ export default function Landing() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
+            const sectionIndex = sections.indexOf(entry.target.id);
+            if (sectionIndex !== -1) {
+              setCurrentSection(sectionIndex);
+            }
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.5 }
     );
 
     document.querySelectorAll('[data-animate]').forEach((el) => {
       observer.observe(el);
     });
 
+    const headerEl = document.getElementById('header');
+    if (headerEl) {
+      observer.observe(headerEl);
+    }
+
     return () => observer.disconnect();
   }, []);
+
+  const scrollToSection = (direction) => {
+    const newIndex = direction === 'up' ? currentSection - 1 : currentSection + 1;
+    if (newIndex >= 0 && newIndex < sections.length) {
+      const sectionId = sections[newIndex];
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   const scrollTemplates = (direction) => {
     const container = document.getElementById('templates-container');
@@ -384,8 +407,30 @@ export default function Landing() {
 
   return (
     <div ref={scrollContainerRef} className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
+      {/* Navigation Arrows */}
+      <div className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
+        <button
+          onClick={() => scrollToSection('up')}
+          disabled={currentSection === 0}
+          className={`w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px] ${
+            currentSection === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
+          }`}
+        >
+          <ChevronUp className="w-6 h-6 md:w-7 md:h-7" />
+        </button>
+        <button
+          onClick={() => scrollToSection('down')}
+          disabled={currentSection === sections.length - 1}
+          className={`w-12 h-12 md:w-14 md:h-14 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg min-w-[44px] min-h-[44px] ${
+            currentSection === sections.length - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
+          }`}
+        >
+          <ChevronDown className="w-6 h-6 md:w-7 md:h-7" />
+        </button>
+      </div>
+
       {/* Navigation Dots */}
-      <nav className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex">
+      <nav className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex" style={{ marginTop: '160px' }}>
         {['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'].map((section) => (
           <a
             key={section}
