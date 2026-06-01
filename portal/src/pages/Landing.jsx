@@ -482,7 +482,7 @@ export default function Landing() {
             >
               <div className="bg-white transition-all group relative">
                 <Preview />
-                <div className="p-4 space-y-2">
+                <div className="py-4 space-y-2">
                   <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
                   <p className="text-gray-600 text-sm">{description}</p>
                   <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
