@@ -1,4 +1,4 @@
-import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check } from 'lucide-react';
+import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const WORKFLOW = [
@@ -331,6 +331,7 @@ const PACKAGES = [
 
 export default function Landing() {
   const [isVisible, setIsVisible] = useState({});
+  const [templatesScroll, setTemplatesScroll] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -351,21 +352,19 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
+  const scrollTemplates = (direction) => {
+    const container = document.getElementById('templates-container');
+    if (container) {
+      const scrollAmount = 300;
+      container.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <>
-      <style>{`
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-scroll {
-          animation: scroll 30s linear infinite;
-        }
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-      <div className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
+    <div className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
       {/* Navigation Dots */}
       <nav className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
         {['header', 'workflow', 'features', 'technology', 'templates', 'packages'].map((section) => (
@@ -502,28 +501,44 @@ export default function Landing() {
             Choose from our collection of print layouts for your event.
           </p>
           
-          <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide animate-scroll">
-            {[...TEMPLATES, ...TEMPLATES].map(({ key, label, shots, description, preview: Preview }, index) => (
-              <div 
-                key={`${key}-${index}`}
-                className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
-                  isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ 
-                  transitionDelay: `${(index % TEMPLATES.length) * 100}ms`,
-                  width: '280px'
-                }}
-              >
-                <div className="bg-white transition-all group relative">
-                  <Preview />
-                  <div className="py-4 space-y-2">
-                    <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
-                    <p className="text-gray-600 text-sm">{description}</p>
-                    <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
+          <div className="relative">
+            <button
+              onClick={() => scrollTemplates('left')}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            
+            <div id="templates-container" className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+              {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
+                <div 
+                  key={key}
+                  className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
+                    isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
+                  style={{ 
+                    transitionDelay: `${index * 100}ms`,
+                    width: '280px'
+                  }}
+                >
+                  <div className="bg-white transition-all group relative">
+                    <Preview />
+                    <div className="py-4 space-y-2">
+                      <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+                      <p className="text-gray-600 text-sm">{description}</p>
+                      <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            <button
+              onClick={() => scrollTemplates('right')}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </div>
@@ -644,6 +659,5 @@ export default function Landing() {
         <p className="text-xs text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>
-    </>
   );
 }
