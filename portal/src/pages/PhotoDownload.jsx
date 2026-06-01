@@ -1,11 +1,10 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Download, ExternalLink, Camera, MessageCircle, ArrowRight } from 'lucide-react';
 
 export default function PhotoDownload() {
   const { sessionId } = useParams();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
@@ -14,12 +13,8 @@ export default function PhotoDownload() {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
-    if (!sessionId) {
-      navigate('/');
-      return;
-    }
     fetchPhoto();
-  }, [sessionId, navigate]);
+  }, [sessionId]);
 
   // Update current time every second for countdown
   useEffect(() => {

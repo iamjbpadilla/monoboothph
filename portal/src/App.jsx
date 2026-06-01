@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Landing from './pages/Landing';
 import PhotoDownload from './pages/PhotoDownload';
 import AdminLogin from './pages/AdminLogin';
@@ -13,6 +13,7 @@ function App() {
       <div className="portal-bg" />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/download" element={<Navigate to="/" replace />} />
         <Route path="/download/:sessionId" element={<PhotoDownload />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route
