@@ -170,18 +170,18 @@ export default function PhotoDownload() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-2xl w-full mx-auto py-12">
-        <div className="bg-white border-2 border-gray-800 p-6 w-full relative min-h-[200px] rounded-lg">
+        <div className="bg-white border-2 border-gray-800 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden">
           {imageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-gray-600 border-t-white rounded-full animate-spin" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
+              <div className="w-12 h-12 border-3 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4" />
+              <p className="text-sm text-gray-500 font-medium">Loading your photo...</p>
             </div>
           )}
           <img
             src={photo.publicUrl}
             alt="Your photo"
-            className="w-full"
+            className={`w-full transition-all duration-700 ease-out ${imageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
             onLoad={() => setImageLoading(false)}
-            style={{ display: imageLoading ? 'none' : 'block' }}
           />
         </div>
         
