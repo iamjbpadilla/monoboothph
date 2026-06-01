@@ -3,11 +3,17 @@ import { buildEscPosImage } from '../escpos.js';
 export async function bluetoothPrint(imageDataUrl, onStatus) {
   try {
     if (!navigator.bluetooth) {
-      throw new Error('Web Bluetooth API not supported in this browser.');
+      throw new Error('Web Bluetooth API not supported in this browser. Bluetooth printing is only available on the Android app.');
     }
     
     if (!imageDataUrl) {
       throw new Error('No image data provided for printing');
+    }
+    
+    // Check if running in browser (not Capacitor app)
+    const isCapacitor = window.Capacitor && window.Capacitor.isNative();
+    if (!isCapacitor) {
+      throw new Error('Bluetooth printing is only available on the Android app. Please use USB or WiFi for browser testing.');
     }
     
     onStatus('Requesting Bluetooth device...');
