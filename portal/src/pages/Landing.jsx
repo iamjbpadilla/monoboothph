@@ -89,7 +89,7 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
             {[2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1].map((width, i) => (
               <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
             ))}
