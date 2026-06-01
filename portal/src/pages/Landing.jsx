@@ -84,15 +84,11 @@ export default function Landing() {
           ))}
         </div>
 
-        <div className="border-2 border-gray-200 p-8">
-          <h3 className="font-bold text-gray-900 text-lg mb-6">Package Inclusions</h3>
-          <div className="flex flex-wrap gap-3">
-            {INCLUSIONS.map((inclusion, index) => (
-              <span key={index} className="border-2 border-gray-200 bg-white px-4 py-2 rounded-lg text-gray-700 text-sm">
-                {inclusion}
-              </span>
-            ))}
-          </div>
+        <div className="mt-8 text-center">
+          <p className="text-xs text-gray-500 font-semibold mb-3 uppercase tracking-wider">Package Inclusions</p>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            Unlimited Physical Prints • Dual-Output Experience • Zero-Lag Digital Portal • Bespoke Branding • Studio-Grade Execution
+          </p>
         </div>
       </div>
 
