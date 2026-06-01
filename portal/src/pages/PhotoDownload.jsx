@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Download, AlertCircle, ExternalLink, Camera, MessageCircle, ArrowRight } from 'lucide-react';
+import { Download, ExternalLink, Camera, MessageCircle, ArrowRight } from 'lucide-react';
 
 export default function PhotoDownload() {
   const { sessionId } = useParams();
@@ -126,9 +126,6 @@ export default function PhotoDownload() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white border-2 border-gray-200 p-10 text-center">
-          <div className="w-16 h-16 border-2 border-gray-200 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-gray-400" />
-          </div>
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
