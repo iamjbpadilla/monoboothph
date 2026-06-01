@@ -114,7 +114,7 @@ export default function PhotoDownload() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain brightness-75 animate-pulse"
+            className="w-24 h-24 mx-auto mb-4 object-contain animate-pulse"
           />
           <p className="text-lg text-gray-800">Loading your photo...</p>
         </div>
@@ -129,7 +129,7 @@ export default function PhotoDownload() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-16 h-16 mx-auto mb-6 object-contain brightness-75"
+            className="w-16 h-16 mx-auto mb-6 object-contain"
           />
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Photo Not Found</h2>
           <p className="text-gray-700 mb-8">
@@ -164,13 +164,13 @@ export default function PhotoDownload() {
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
-          className="w-12 h-12 object-contain brightness-75"
+          className="w-12 h-12 object-contain grayscale brightness-50"
         />
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-2xl w-full mx-auto py-12">
-        <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden shadow-xl">
+        <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden shadow-lg">
           {imageLoading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
               <div className="w-12 h-12 border-3 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4" />
