@@ -23,7 +23,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 14, // bump to force preferences refresh when defaults change
+  _version: 15, // bump to force preferences refresh when defaults change
   general: {
     boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
@@ -47,6 +47,9 @@ const DEFAULT_SETTINGS = {
       phone: '',
       email: '',
       posterWall: [], // Array of { type: 'url'|'upload', value: string } (1-10 images)
+      showFullScreen: false,
+      fullScreenImages: [], // Array of { type: 'url'|'upload', value: string }
+      fullScreenImageMode: 'scale', // 'scale' | 'fit' | 'stretch'
       display: {
         showSocial: true,
         showContact: false,
@@ -71,8 +74,8 @@ const DEFAULT_SETTINGS = {
     printGamma: 1.8,
     printBrightness: -8,
     printContrast: 64,
-    printTopMargin: 12,
-    printBottomMultiplier: 2,
+    printTopMargin: 22,
+    printBottomMultiplier: 4,
   },
   capture: {
     countdownSeconds: 3,

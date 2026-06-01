@@ -27,10 +27,14 @@
 - Template preview not updating when blocks are toggled — replaced boolean cancel flag with monotonic render ID to eliminate async race condition
 - "Printed via USB" text no longer shown on success screen after USB print
 
+### Added
+- Full-screen image carousel in Advertising Settings — dedicated image list (upload/URL) with Scale/Fit/Stretch modes; rotates round-robin on every advertising screen appearance; hides all other ad elements (title, social, QR, poster wall) when enabled
+
 ### Changed
 - Print-only margin controls in Printer Settings: configurable top margin (0–48px) and bottom multiplier (−3x to 5x) that only affect thermal print output, leaving on-screen previews unchanged
+- Default print top margin increased to 22px, bottom multiplier to 4x
 - Canvas top/bottom margin reduced from 22px to 12px for less blank lead-in on thermal prints
-- Settings version bumped to 14 (forces reset from v13 to apply new print margin defaults)
+- Settings version bumped to 15 (forces reset from v14 to apply new print margin and advertising defaults)
 - Default print settings: Gamma 1.8, Brightness −8, Contrast 64 (tuned for RP30A-UB)
 - Changelog now loaded from external CHANGELOG.md file for easier maintenance
 - Wide Load template - 2x3 landscape layout with 6 photos

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import QRCode from 'qrcode';
 
+let fullScreenIndex = 0; // round-robin across all ad screen appearances
+
 const BACKGROUND_STYLES = {
   'gradient-purple-pink': 'bg-gradient-to-br from-purple-600 to-pink-500',
   'gradient-blue-cyan': 'bg-gradient-to-br from-blue-600 to-cyan-500',
@@ -59,6 +61,30 @@ export default function Advertising({ onComplete }) {
   const title = adConfig.title || 'MONO BOOTH PH';
   const subtitle = adConfig.subtitle || 'Capture Your Best Moments';
   const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';
+
+  // ── Full Screen Image Mode ──
+  const fsImages = adConfig.fullScreenImages || [];
+  if (adConfig.showFullScreen && fsImages.length > 0) {
+    const idx = fullScreenIndex % fsImages.length;
+    fullScreenIndex = (fullScreenIndex + 1) % fsImages.length;
+    const mode = adConfig.fullScreenImageMode || 'scale';
+    const objFit = mode === 'fit' ? 'contain' : mode === 'stretch' ? 'fill' : 'cover';
+    return (
+      <div className="w-full h-full relative bg-black page-content-enter">
+        <img
+          src={fsImages[idx].value}
+          alt=""
+          className="w-full h-full"
+          style={{ objectFit: objFit }}
+        />
+        {/* Timer overlay */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-sm font-semibold text-white">{timeLeft}s</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`w-full h-full flex flex-col items-center justify-center ${backgroundClass} page-content-enter relative`}>
