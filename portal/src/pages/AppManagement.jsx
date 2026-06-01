@@ -205,7 +205,7 @@ export default function AppManagement() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search apps by name or pairing code..."
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
                 />
               </div>
             </div>
@@ -224,32 +224,32 @@ export default function AppManagement() {
                 </button>
               </div>
             ) : (
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden portal-card">
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm portal-card">
                 <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">App Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pairing Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Devices</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">App Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pairing Code</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Devices</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredApps.map((app) => {
                   const appDevices = devices.filter(d => d.app_id === app.id);
                   return (
-                    <tr key={app.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.name}</td>
+                    <tr key={app.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{app.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <code className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">{app.pairing_code}</code>
+                        <code className="text-sm font-mono text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg">{app.pairing_code}</code>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {appDevices.length > 0 ? (
-                          <div className="space-y-1">
+                          <div className="space-y-1.5">
                             {appDevices.map(device => (
                               <div key={device.id} className="flex items-center gap-2 text-xs">
-                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-medium ${
                                   device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                   <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -259,11 +259,6 @@ export default function AppManagement() {
                                 <span className="text-gray-400">
                                   ({device.print_count || 0} prints)
                                 </span>
-                                {device.last_sync && (
-                                  <span className="text-gray-400">
-                                    ({new Date(device.last_sync).toLocaleString()})
-                                  </span>
-                                )}
                               </div>
                             ))}
                           </div>
@@ -310,27 +305,27 @@ export default function AppManagement() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New App</h2>
             <input
               type="text"
               value={newAppName}
               onChange={(e) => setNewAppName(e.target.value)}
               placeholder="App name (e.g., Wedding Reception)"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
               autoFocus
             />
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition text-sm font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={createApp}
                 disabled={creating || !newAppName.trim()}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
               >
                 {creating ? 'Creating...' : 'Create'}
               </button>

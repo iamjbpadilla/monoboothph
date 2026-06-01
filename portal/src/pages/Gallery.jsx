@@ -351,11 +351,11 @@ export default function Gallery() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6 portal-card">
+        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm portal-card">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Filters:</span>
+              <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Filters:</span>
             </div>
             
             <div className="relative">
@@ -365,14 +365,14 @@ export default function Gallery() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by session ID..."
-                className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm w-64"
+                className="pl-9 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm w-64"
               />
             </div>
             
             <select
               value={selectedApp}
               onChange={(e) => setSelectedApp(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+              className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
             >
               <option value="all">All Apps</option>
               {apps.map(app => (
@@ -383,7 +383,7 @@ export default function Gallery() {
             <select
               value={selectedDevice}
               onChange={(e) => setSelectedDevice(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+              className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
             >
               <option value="all">All Devices</option>
               {devices.map(device => (
@@ -396,14 +396,14 @@ export default function Gallery() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+                className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
               />
-              <span className="text-gray-500">to</span>
+              <span className="text-gray-400">to</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+                className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
               />
               {(startDate || endDate) && (
                 <button
@@ -411,15 +411,15 @@ export default function Gallery() {
                     setStartDate('');
                     setEndDate('');
                   }}
-                  className="text-gray-500 hover:text-gray-700 text-sm"
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
                   title="Clear date filter"
                 >
-                  Clear
+                  <XCircle className="w-4 h-4" />
                 </button>
               )}
             </div>
 
-            <div className="ml-auto text-sm text-gray-500">
+            <div className="ml-auto text-sm text-gray-500 font-medium">
               {filteredPhotos.length} photos
             </div>
           </div>
@@ -435,7 +435,7 @@ export default function Gallery() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {paginatedPhotos.map((photo, index) => (
-              <div key={photo.id} className="relative group bg-white rounded-lg border border-gray-200 overflow-hidden portal-card cursor-pointer" onClick={() => openPreview(photo, index)}>
+              <div key={photo.id} className="relative group bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow portal-card cursor-pointer" onClick={() => openPreview(photo, index)}>
                 <div className="aspect-square relative">
                   <img
                     src={photo.publicUrl}
@@ -448,14 +448,14 @@ export default function Gallery() {
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => showQRCode(photo)}
-                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition"
+                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-sm"
                       title="Show QR Code"
                     >
                       <QrCode className="w-4 h-4 text-gray-800" />
                     </button>
                     <button
                       onClick={() => downloadPhoto(photo)}
-                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition"
+                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-sm"
                       title="Download"
                     >
                       <Download className="w-4 h-4 text-gray-800" />
@@ -465,16 +465,16 @@ export default function Gallery() {
                         setSelectedPhotos(new Set([photo.id]));
                         handleBulkDelete();
                       }}
-                      className="p-2 bg-red-600 rounded-full hover:bg-red-700 transition"
+                      className="p-2 bg-red-600 rounded-full hover:bg-red-700 transition shadow-sm"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4 text-white" />
                     </button>
                   </div>
                 </div>
-                <div className="p-2">
-                  <p className="text-xs text-gray-600 truncate" title={photo.session_id}>{photo.session_id}</p>
-                  <p className="text-[10px] text-gray-400 mt-1">{new Date(photo.timestamp).toLocaleDateString()}</p>
+                <div className="p-3">
+                  <p className="text-xs font-medium text-gray-900 truncate" title={photo.session_id}>{photo.session_id}</p>
+                  <p className="text-[10px] text-gray-500 mt-1">{new Date(photo.timestamp).toLocaleDateString()}</p>
                 </div>
               </div>
             ))}
@@ -486,18 +486,18 @@ export default function Gallery() {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 font-medium">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />
@@ -506,11 +506,11 @@ export default function Gallery() {
           )}
           </>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden portal-card">
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm portal-card">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     <input
                       type="checkbox"
                       checked={selectedPhotos.size === paginatedPhotos.length && paginatedPhotos.length > 0}
@@ -524,18 +524,18 @@ export default function Gallery() {
                       className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                     />
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">App</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auto-delete</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Preview</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Session ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">App</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Device</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Auto-delete</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {paginatedPhotos.map((photo) => (
-                  <tr key={photo.id} className="hover:bg-gray-50">
+                  <tr key={photo.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"

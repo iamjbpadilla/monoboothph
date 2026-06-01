@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { LayoutDashboard, Plus, Images, Smartphone, LogOut, Settings, CheckCircle, XCircle, Loader2, AlertTriangle, Clock, Printer, Activity, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Plus, Images, Smartphone, LogOut, CheckCircle, XCircle, Loader2, Activity, Printer } from 'lucide-react';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ apps: 0, devices: 0, photos: 0, totalPrints: 0, onlineDevices: 0 });
+  const [stats, setStats] = useState({ apps: 0, devices: 0, photos: 0, totalPrints: 0 });
   const [loading, setLoading] = useState(true);
   const [dbStatus, setDbStatus] = useState('checking'); // checking, connected, error
   const [storageStatus, setStorageStatus] = useState('checking'); // checking, connected, error
   const [storageUsage, setStorageUsage] = useState({ used: 0, total: 0, percentage: 0 });
   const [recentActivity, setRecentActivity] = useState([]);
-  const [expiringSoon, setExpiringSoon] = useState([]);
 
   useEffect(() => {
     checkDbConnection();
@@ -19,7 +18,6 @@ export default function AdminDashboard() {
     fetchStorageUsage();
     fetchStats();
     fetchRecentActivity();
-    fetchExpiringSoon();
   }, []);
 
   async function checkDbConnection() {
@@ -99,11 +97,10 @@ export default function AdminDashboard() {
 
   async function fetchStats() {
     try {
-      const [appsCount, devicesCount, photosCount, onlineDevicesCount, devicesWithPrints] = await Promise.all([
+      const [appsCount, devicesCount, photosCount, devicesWithPrints] = await Promise.all([
         supabase.from('apps').select('*', { count: 'exact', head: true }),
         supabase.from('devices').select('*', { count: 'exact', head: true }),
         supabase.from('photos').select('*', { count: 'exact', head: true }),
-        supabase.from('devices').select('*', { count: 'exact', head: true }).eq('status', 'online'),
         supabase.from('devices').select('print_count'),
       ]);
 
@@ -114,7 +111,6 @@ export default function AdminDashboard() {
         devices: devicesCount.count || 0,
         photos: photosCount.count || 0,
         totalPrints: totalPrints,
-        onlineDevices: onlineDevicesCount.count || 0,
       });
     } catch (err) {
       console.error('Error fetching stats:', err);
@@ -135,22 +131,6 @@ export default function AdminDashboard() {
       setRecentActivity(data || []);
     } catch (err) {
       console.error('Error fetching recent activity:', err);
-    }
-  }
-
-  async function fetchExpiringSoon() {
-    try {
-      const { data, error } = await supabase
-        .from('photos')
-        .select('*')
-        .gte('created_at', new Date(Date.now() - 2.5 * 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: true })
-        .limit(5);
-
-      if (error) throw error;
-      setExpiringSoon(data || []);
-    } catch (err) {
-      console.error('Error fetching expiring photos:', err);
     }
   }
 
@@ -213,8 +193,8 @@ export default function AdminDashboard() {
           <div className="space-y-8">
             {/* Stats Section */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Overview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Overview</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                   title="Total Apps"
                   value={stats.apps}
@@ -222,9 +202,10 @@ export default function AdminDashboard() {
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
-                  title="Online Devices"
-                  value={stats.onlineDevices}
+                  title="Total Devices"
+                  value={stats.devices}
                   icon={<Smartphone className="w-5 h-5 text-green-600" />}
+                  onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
                   title="Total Photos"
@@ -237,64 +218,25 @@ export default function AdminDashboard() {
                   value={stats.totalPrints}
                   icon={<Printer className="w-5 h-5 text-orange-600" />}
                 />
-                <StatCard
-                  title="All Devices"
-                  value={stats.devices}
-                  icon={<Activity className="w-5 h-5 text-gray-600" />}
-                />
               </div>
             </div>
 
             {/* Storage Section */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Storage</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Storage</h2>
               <StorageCard
                 status={storageStatus}
                 usage={storageUsage}
               />
             </div>
 
-            {/* Recent Activity & Expiring Soon */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Activity className="w-5 h-5" />
-                  Recent Activity
-                </h2>
-                <RecentActivityCard activity={recentActivity} />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-orange-600" />
-                  Expiring Soon
-                </h2>
-                <ExpiringSoonCard photos={expiringSoon} />
-              </div>
-            </div>
-
-            {/* Quick Actions Section */}
+            {/* Recent Activity */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <QuickAction
-                  title="Manage Apps"
-                  description="Create and manage photobooth installations"
-                  icon={<Plus className="w-5 h-5 text-purple-600" />}
-                  onClick={() => navigate('/admin/apps')}
-                />
-                <QuickAction
-                  title="Photo Gallery"
-                  description="View and manage uploaded photos"
-                  icon={<Images className="w-5 h-5 text-blue-600" />}
-                  onClick={() => navigate('/admin/gallery')}
-                />
-                <QuickAction
-                  title="Device Status"
-                  description="Monitor connected devices"
-                  icon={<Smartphone className="w-5 h-5 text-green-600" />}
-                  onClick={() => navigate('/admin/apps')}
-                />
-              </div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <Activity className="w-5 h-5" />
+                Recent Activity
+              </h2>
+              <RecentActivityCard activity={recentActivity} />
             </div>
           </div>
         )}
@@ -307,85 +249,35 @@ function StatCard({ title, value, icon, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-lg border border-gray-200 p-6 cursor-pointer portal-card ${onClick ? '' : 'cursor-default'}`}
+      className={`bg-white rounded-xl border border-gray-200 p-6 cursor-pointer portal-card shadow-sm hover:shadow-md transition-shadow ${onClick ? '' : 'cursor-default'}`}
     >
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-gray-500 text-sm font-medium">{title}</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{title}</p>
         {icon}
       </div>
-      <p className="text-3xl font-semibold text-gray-900">{value}</p>
-    </div>
-  );
-}
-
-function QuickAction({ title, description, icon, onClick }) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer portal-card"
-    >
-      <div className="flex items-center gap-3 mb-2">
-        {icon}
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      </div>
-      <p className="text-gray-500 mt-1 text-sm">{description}</p>
+      <p className="text-3xl font-bold text-gray-900">{value}</p>
     </div>
   );
 }
 
 function RecentActivityCard({ activity }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       {activity.length === 0 ? (
         <p className="text-gray-500 text-sm">No recent activity</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {activity.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 text-sm">
-              <div className="w-2 h-2 rounded-full bg-purple-600" />
-              <div className="flex-1">
+            <div key={item.id} className="flex items-start gap-3 text-sm">
+              <div className="w-2 h-2 rounded-full bg-purple-600 mt-2 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
                 <p className="text-gray-900 font-medium">Photo uploaded</p>
-                <p className="text-gray-500 text-xs">
-                  {item.apps?.name} - {item.devices?.device_name || 'Unknown device'}
+                <p className="text-gray-500 text-xs mt-0.5">
+                  {item.apps?.name} • {item.devices?.device_name || 'Unknown device'}
                 </p>
               </div>
-              <p className="text-gray-400 text-xs">
+              <p className="text-gray-400 text-xs flex-shrink-0">
                 {new Date(item.created_at).toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ExpiringSoonCard({ photos }) {
-  const getTimeRemaining = (createdAt) => {
-    const created = new Date(createdAt);
-    const deletionTime = new Date(created.getTime() + 3 * 24 * 60 * 60 * 1000);
-    const diff = deletionTime - new Date();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    return `${hours}h`;
-  };
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      {photos.length === 0 ? (
-        <p className="text-gray-500 text-sm">No photos expiring soon</p>
-      ) : (
-        <div className="space-y-3">
-          {photos.map((photo) => (
-            <div key={photo.id} className="flex items-center gap-3 text-sm">
-              <AlertTriangle className="w-4 h-4 text-orange-600" />
-              <div className="flex-1">
-                <p className="text-gray-900 font-medium">{photo.session_id}</p>
-                <p className="text-gray-500 text-xs">
-                  {photo.apps?.name}
-                </p>
-              </div>
-              <p className="text-orange-600 text-xs font-medium">
-                {getTimeRemaining(photo.created_at)}
               </p>
             </div>
           ))}
@@ -405,7 +297,7 @@ function StorageCard({ status, usage }) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Storage Usage</h3>
         <div className="flex items-center gap-2 text-sm">
@@ -433,22 +325,22 @@ function StorageCard({ status, usage }) {
       <div className="space-y-3">
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Used</span>
-          <span className="font-medium text-gray-900">{formatBytes(usage.used)}</span>
+          <span className="font-semibold text-gray-900">{formatBytes(usage.used)}</span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
-            className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+            className="bg-purple-600 h-2.5 rounded-full transition-all duration-300"
             style={{ width: `${Math.min(usage.percentage, 100)}%` }}
           />
         </div>
         
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Total</span>
-          <span className="font-medium text-gray-900">{formatBytes(usage.total)}</span>
+          <span className="font-semibold text-gray-900">{formatBytes(usage.total)}</span>
         </div>
         
-        <div className="text-right text-sm text-gray-500">
+        <div className="text-right text-sm text-gray-500 font-medium">
           {usage.percentage}% used
         </div>
       </div>
