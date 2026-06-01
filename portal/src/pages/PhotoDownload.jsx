@@ -135,15 +135,23 @@ export default function PhotoDownload() {
           <p className="text-gray-600 mb-8">
             {error}. Photos uploaded daily to our Facebook page.
           </p>
-          <a
-            href="https://facebook.com/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 font-bold hover:bg-gray-800 transition border-2 border-gray-900 transform hover:scale-105"
-          >
-            <ExternalLink className="w-5 h-5" />
-            Visit Our Facebook Page
-          </a>
+          <div className="space-y-4">
+            <a
+              href="https://facebook.com/monoboothph"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 font-bold hover:bg-gray-800 transition border-2 border-gray-900 transform hover:scale-105 w-full justify-center"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Visit Our Facebook Page
+            </a>
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 font-semibold hover:bg-gray-50 transition border-2 border-gray-200 transform hover:scale-105 w-full justify-center"
+            >
+              Return to Home
+            </a>
+          </div>
         </div>
       </div>
     );
