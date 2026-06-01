@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { calcCanvasWidth } from '../../lib/canvasCompositor.js';
 import { simulatePrint } from '../../lib/printerTransports/simulate.js';
+import { BleClient } from '@capacitor-community/bluetooth-le';
 
 const TRANSPORTS = [
   { value: 'simulate', label: 'Simulate (Test Mode)', color: 'text-yellow-300' },
@@ -19,6 +20,28 @@ export default function PrinterSettings() {
   const [testing, setTesting] = useState(false);
 
   const canvasPx = calcCanvasWidth(printer.dpi, printer.paperWidthMm);
+
+  async function requestBluetoothPermission() {
+    try {
+      // Check if Bluetooth is enabled and has permission
+      await BleClient.initialize();
+      return true;
+    } catch (err) {
+      console.error('Bluetooth permission error:', err);
+      return false;
+    }
+  }
+
+  async function handleTransportChange(transport) {
+    if (transport === 'bluetooth') {
+      const hasPermission = await requestBluetoothPermission();
+      if (!hasPermission) {
+        setTestStatus('Bluetooth permission denied. Please enable Bluetooth in device settings.');
+        return;
+      }
+    }
+    updateSettings('printer.transport', transport);
+  }
 
   async function handleTestPrint() {
     setTesting(true);
@@ -41,7 +64,7 @@ export default function PrinterSettings() {
           {TRANSPORTS.map(t => (
             <button
               key={t.value}
-              onClick={() => updateSettings('printer.transport', t.value)}
+              onClick={() => handleTransportChange(t.value)}
               className={`px-3 py-2.5 rounded-xl border text-sm text-left transition-colors ${
                 printer.transport === t.value
                   ? 'bg-md-secondary-container border-md-secondary text-md-on-secondary-container'
