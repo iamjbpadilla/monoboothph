@@ -90,8 +90,8 @@ const TEMPLATES = [
         </div>
         <div className="mt-3 flex justify-center">
           <div className="w-full h-5 flex items-end justify-center gap-0.5">
-            {[2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -125,9 +125,9 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
-            {[3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -162,9 +162,9 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
-            {[2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -202,9 +202,9 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
-            {[4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2,1,4,1,2,1,3,1,2].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -244,9 +244,9 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
-            {[1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
@@ -286,9 +286,9 @@ const TEMPLATES = [
           </div>
         </div>
         <div className="mt-3 flex justify-center">
-          <div className="w-full h-8 flex items-end justify-center gap-0.5">
-            {[3,1,2,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3,1,4,1,2,1,3].map((width, i) => (
-              <div key={i} className="bg-gray-900" style={{ width: `${width}px`, height: '100%' }} />
+          <div className="w-full h-5 flex items-end justify-center gap-0.5">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="bg-gray-900" style={{ width: `${Math.random() > 0.5 ? 2 : 1}px`, height: '100%' }} />
             ))}
           </div>
         </div>
