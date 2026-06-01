@@ -109,14 +109,14 @@ export default function PhotoDownload() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
             className="w-24 h-24 mx-auto mb-4 object-contain invert animate-pulse"
           />
-          <p className="text-lg text-gray-500">Loading your photo...</p>
+          <p className="text-lg text-gray-300">Loading your photo...</p>
         </div>
       </div>
     );
@@ -124,15 +124,15 @@ export default function PhotoDownload() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border-2 border-gray-200 p-10 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-gray-800 border-2 border-gray-700 p-10 text-center">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
             className="w-16 h-16 mx-auto mb-6 object-contain invert"
           />
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Photo Not Found</h2>
-          <p className="text-gray-600 mb-8">
+          <h2 className="text-2xl font-bold text-white mb-4">Photo Not Found</h2>
+          <p className="text-gray-300 mb-8">
             {error}. Photos uploaded daily to our Facebook page.
           </p>
           <div className="space-y-4">
@@ -147,7 +147,7 @@ export default function PhotoDownload() {
             </a>
             <a
               href="/"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 font-semibold hover:bg-gray-50 transition border-2 border-gray-200 transform hover:scale-105 w-full justify-center"
+              className="inline-flex items-center gap-2 bg-gray-700 text-white px-8 py-4 font-semibold hover:bg-gray-600 transition border-2 border-gray-600 transform hover:scale-105 w-full justify-center"
             >
               Return to Home
             </a>
@@ -158,9 +158,9 @@ export default function PhotoDownload() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col p-4 md:p-8">
+    <div className="min-h-screen bg-gray-900 flex flex-col p-4 md:p-8">
       {/* Header branding */}
-      <div className="flex flex-col items-center gap-1 py-6 border-b-2 border-gray-200">
+      <div className="flex flex-col items-center gap-1 py-6 border-b-2 border-gray-700">
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
@@ -170,10 +170,10 @@ export default function PhotoDownload() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-2xl w-full mx-auto py-12">
-        <div className="bg-white border-2 border-gray-200 p-6 w-full relative min-h-[200px]">
+        <div className="bg-white border-2 border-gray-700 p-6 w-full relative min-h-[200px]">
           {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-none animate-spin" />
+              <div className="w-8 h-8 border-2 border-gray-600 border-t-white rounded-none animate-spin" />
             </div>
           )}
           <img
@@ -187,13 +187,13 @@ export default function PhotoDownload() {
         
         {/* Guide text */}
         <div className="text-center space-y-2">
-          <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
-            <div className="w-8 h-8 border-2 border-gray-200 flex items-center justify-center">
+          <p className="text-sm text-gray-300 flex items-center justify-center gap-2">
+            <div className="w-8 h-8 border-2 border-gray-700 flex items-center justify-center">
               <Camera className="w-4 h-4 text-gray-400" />
             </div>
             Long-press on photo to save to gallery
           </p>
-          <p className="text-xs text-gray-500">or use the button below</p>
+          <p className="text-xs text-gray-400">or use the button below</p>
         </div>
         
         <button
@@ -205,17 +205,17 @@ export default function PhotoDownload() {
           {downloading ? 'Downloading...' : 'Download'}
         </button>
 
-        <p className="text-xs text-gray-500">
-          Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-gray-600'}`}>
+        <p className="text-xs text-gray-400">
+          Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-400' : 'text-gray-300'}`}>
             {getTimeUntilDeletion(photo.created_at)}
           </span>
         </p>
       </div>
 
       {/* Footer branding */}
-      <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-200">
-        <p className="text-sm font-bold text-gray-900 tracking-wider">MONO BOOTH PH</p>
-        <p className="text-[10px] text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
+      <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-700">
+        <p className="text-sm font-bold text-white tracking-wider">MONO BOOTH PH</p>
+        <p className="text-[10px] text-gray-400 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>
   );
