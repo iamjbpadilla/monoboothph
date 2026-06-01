@@ -53,6 +53,12 @@ const PACKAGES = [
     price: "₱4,000",
     description: "High-volume corporate activations, custom layouts"
   },
+  {
+    name: "The All-Day",
+    duration: "8 Hours",
+    price: "₱6,500",
+    description: "Full-day events, maximum coverage"
+  },
 ];
 
 const INCLUSIONS = [
@@ -115,7 +121,7 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">Pricing Packages</h2>
           <p className="text-gray-600 text-center mb-12">Private Events & Celebrations (Hourly Packages)</p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {PACKAGES.map((pkg, index) => (
               <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
