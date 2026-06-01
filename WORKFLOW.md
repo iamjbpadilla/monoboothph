@@ -6,13 +6,26 @@
 1. **All testing must be done locally** - No production testing
 2. **Windsurf only for code editing** - No deployment operations
 3. **GitHub CLI for git operations** - All commits/pushes via GitHub CLI
-4. **Manual deployment only** - No auto-deploy to Netlify
+4. **Manual deployment only** - No auto-deploy to Vercel
 
 ### Deployment Rules
 1. **Manual approval required** - Deploy only after explicit user confirmation
-2. **GitHub CLI → Netlify** - Deployment triggered after pushing via GitHub CLI
+2. **GitHub CLI → Vercel** - Deployment triggered after pushing via GitHub CLI
 3. **No CI/CD auto-deploy** - Disable automatic deployments
 4. **Local dev server verification** - Must test locally before any deployment
+
+## GitHub CLI Setup
+
+### First-time Authentication
+```bash
+gh auth login
+```
+Follow the prompts to authenticate with your GitHub account.
+
+### Create New Repository
+```bash
+gh repo create monoboothph --public --source=. --remote=origin
+```
 
 ## Local Testing Procedures
 
@@ -53,19 +66,18 @@ git commit -m "Your commit message"
 git push origin main
 ```
 
-### Step 3: Manual Netlify Deploy
-1. Open Netlify dashboard
-2. Select "monoboothph" site
-3. Click "Deploy site"
-4. Select "Manual deploy"
-5. Choose branch to deploy
-6. Wait for build to complete
-7. Verify deployment at https://monoboothph.netlify.app
+### Step 3: Manual Vercel Deploy
+1. Open Vercel dashboard
+2. Select "monoboothph" project
+3. Click "Deployments"
+4. Click "Redeploy" or "Deploy"
+5. Wait for build to complete
+6. Verify deployment at your Vercel URL
 
-**Netlify Configuration:**
-- Base directory: `portal`
+**Vercel Configuration:**
+- Root directory: `portal`
 - Build command: `npm run build`
-- Publish directory: `dist`
+- Output directory: `dist`
 - Auto-deploy: Disabled (manual only)
 
 ## Project Structure
@@ -73,7 +85,7 @@ git push origin main
 ```
 mono-booth-ph/                    # GitHub repository (whole project)
 ├── src/                          # Main app (kiosk)
-├── portal/                       # Admin portal (deployed to Netlify)
+├── portal/                       # Admin portal (deployed to Vercel)
 │   ├── src/
 │   │   ├── pages/
 │   │   │   ├── Gallery.jsx
@@ -83,12 +95,12 @@ mono-booth-ph/                    # GitHub repository (whole project)
 │   │       └── supabase.js
 │   ├── supabase-schema.sql
 │   ├── package.json
-│   └── netlify.toml
+│   └── vercel.json
 ├── android/                      # Android build files
 └── WORKFLOW.md                  # This file
 ```
 
-**Note:** Netlify deploys only the `portal/` subdirectory. The entire project is stored on GitHub.
+**Note:** Vercel deploys only the `portal/` subdirectory. The entire project is stored on GitHub.
 
 ## Supabase Schema
 

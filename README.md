@@ -58,7 +58,7 @@ See [portal/supabase-schema.sql](./portal/supabase-schema.sql) for complete sche
 
 ## Deployment
 
-Deployment is manual only. See [WORKFLOW.md](./WORKFLOW.md) for deployment procedures.
+Deployment is manual only via Vercel. See [WORKFLOW.md](./WORKFLOW.md) for deployment procedures.
 
 ## License
 
