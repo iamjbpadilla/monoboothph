@@ -72,6 +72,16 @@ export async function buildEscPosImage(dataUrl) {
   const feed = feedLines(4);
   const cut = cutPaper();
 
+  // ESC/POS height limit: 2 bytes = max 65,535 pixels
+  const MAX_HEIGHT = 65535;
+  if (imgBytes.length > 0) {
+    // Extract height from the image bytes (stored at positions 6-7 after GS v 0 command)
+    const height = imgBytes[6] | (imgBytes[7] << 8);
+    if (height > MAX_HEIGHT) {
+      console.warn(`Canvas height ${height}px exceeds ESC/POS limit of ${MAX_HEIGHT}px. Print may fail or be truncated.`);
+    }
+  }
+
   const total = init.length + imgBytes.length + feed.length + cut.length;
   const out = new Uint8Array(total);
   let offset = 0;

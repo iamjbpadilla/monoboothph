@@ -8,6 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Footer image support for all templates with 60% width and center alignment
+- Image scale adjuster (1-8) for header and footer images
+- Margin controls for header (bottom margin) and footer (top margin) images
+- Portal dashboard redesign with operational modules (online devices, total prints, recent activity, expiring soon)
+- Animated dot background for portal with smooth hover animations
+- Receipt items enabled by default with randomize option
+- 3-column template preview layout for easy visual comparison
+- Backup/retrieve settings in Android Account tab for easy configuration transfer
+- Download all option in Gallery page for bulk photo downloads
+- Deletion countdown timer on download page showing hours, minutes, seconds until auto-delete
+- Server-side auto-deletion for photos after 3 days using pg_cron
+- QR code modal in Gallery page for testing download functionality
+- Server-side print counter tracking total prints per device
+- Online devices filter in admin portal to show only active devices
+- Photo preview fix in Gallery using public URLs from Supabase storage
+- Download page optimization with loading spinner and Web Share API for mobile gallery save
+- Debug logs display in Account settings tab for on-device troubleshooting
+- Photo upload to Supabase Storage after successful print
+- Dynamic QR code generation linking to download portal for each photo
+- Download portal page for photo retrieval via session ID
+- Account settings tab with pairing status and auto-unpair countdown
+- Server-side auto-unpair timer using pg_cron (hourly cleanup)
+- Real-time device status sync between Android app and admin portal
+- Server-side single-device enforcement trigger per app
+- Long-press guide on download page for saving to gallery
 - Security hardening: Enabled R8/ProGuard for native code obfuscation in release builds
 - Security hardening: Replaced localStorage with Capacitor Preferences for encrypted storage using Android Keystore
 - Guided intro modal for first app launch with 3-step onboarding flow
@@ -30,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced Standby screen entry animation
 
 ### Changed
+- Removed connected app card from Account settings for cleaner UI
+- Changed "Connected to portal" text to just "Connected" for simplicity
 - Updated font files to use correct weight-specific URLs from Google Fonts
 - Fixed Lato font weights (300, 400, 700, 900) - removed non-existent 500/600 weights
 - Permission modal now uses Capacitor Preferences for state persistence

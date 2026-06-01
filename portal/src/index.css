@@ -54,6 +54,57 @@ html, body, #root {
   color: var(--color-md-on-surface, #1C1B1F);
 }
 
+/* ── Animated Dot Background ─────────────────────────────────────────────────── */
+.portal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: radial-gradient(circle, var(--color-md-outline-variant, rgba(103, 80, 164, 0.08)) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  animation: bg-pan 60s linear infinite;
+}
+
+@keyframes bg-pan {
+  0% { background-position: 0 0; }
+  100% { background-position: 48px 48px; }
+}
+
+/* ── Smooth Hover Animations ─────────────────────────────────────────────────── */
+.portal-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px -8px rgba(103, 80, 164, 0.15);
+}
+
+.portal-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(103, 80, 164, 0.2);
+}
+
+.portal-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px -2px rgba(103, 80, 164, 0.15);
+}
+
+.portal-input {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal-input:focus {
+  transform: scale(1.01);
+  box-shadow: 0 0 0 3px rgba(103, 80, 164, 0.1);
+}
+
 /* ── MD3 Motion System ─────────────────────────────────────────────────── */
 :root {
   --md-sys-motion-duration-short1:  50ms;

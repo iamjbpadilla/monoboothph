@@ -1,16 +1,65 @@
-# React + Vite
+# Snap & Roll - Mono Booth PH
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A photobooth kiosk application with admin portal for event management.
 
-Currently, two official plugins are available:
+## Development Workflow
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**IMPORTANT: All development must follow the workflow rules documented in [WORKFLOW.md](./WORKFLOW.md)**
 
-## React Compiler
+### Core Rules
+- **All testing must be done locally** - No production testing
+- **Windsurf only for code editing** - No deployment operations
+- **GitHub Desktop for git operations** - All commits/pushes via GitHub Desktop
+- **Manual deployment only** - No auto-deploy to Netlify
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+For detailed workflow procedures, see [WORKFLOW.md](./WORKFLOW.md)
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+mono-booth-ph/
+├── src/                    # Main app (kiosk)
+├── portal/                 # Admin portal
+├── android/                # Android build files
+└── WORKFLOW.md            # Development workflow guide
+```
+
+## Quick Start
+
+### Portal (Admin)
+```bash
+cd portal
+npm install
+npm run dev
+```
+
+### App (Kiosk)
+```bash
+npm install
+npm run dev
+```
+
+## Tech Stack
+
+- React + Vite
+- Supabase (Database & Storage)
+- Capacitor (Mobile)
+- TailwindCSS
+- Lucide Icons
+
+## Supabase Schema
+
+- **apps**: Photobooth installations/events
+- **devices**: Individual kiosk devices
+- **photos**: Uploaded photos from kiosks
+- **admin_users**: Portal admin users
+
+See [portal/supabase-schema.sql](./portal/supabase-schema.sql) for complete schema definition.
+
+## Deployment
+
+Deployment is manual only. See [WORKFLOW.md](./WORKFLOW.md) for deployment procedures.
+
+## License
+
+MIT

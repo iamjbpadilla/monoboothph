@@ -10,8 +10,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <BrowserRouter>
+      <div className="portal-bg" />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/download" element={<Landing />} />
         <Route path="/download/:sessionId" element={<PhotoDownload />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route

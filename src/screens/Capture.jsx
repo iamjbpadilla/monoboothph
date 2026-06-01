@@ -18,6 +18,31 @@ const RETAKE_MESSAGES = [
   'Smiling storage check…',
   'Recharging photons…',
   'Straightening the backdrop…',
+  // --- NEW FUN & WITTY ADDITIONS ---
+  'Searching for the perfect lighting…',
+  'Un-blinking the pixels…',
+  'Booting up the smile-o-meter…',
+  'Tuning the laughter engine…',
+  'Checking if your hair looks awesome (it does!)…',
+  'Shaking up the digital confetti…',
+  'Polishing the sparkle pixels…',
+  'Loading maximum photogenic energy…',
+  'Double-checking the awesome levels…',
+  'Inflating the digital balloons…',
+  'Ironing out the background wrinkles…',
+  'Waking up the camera sensor…',
+  'Calculating the perfect camera angle…',
+  'Sprinkling extra magic on the lens…',
+  'Sending the bad photo to the recycle bin…',
+  'Asking the camera nicely to take another one…',
+  'Preparing the hype-machine…',
+  'Gearing up for round two…',
+  'Scanning for epic poses…',
+  'Dusting off the lens caps…',
+  'Adding a pinch of awesome…',
+  'Upgrading your smile resolution…',
+  'Checking the vibe levels… 100%!',
+  'Resetting the countdown timer…',
 ];
 
 const POSE_SUGGESTIONS = [
@@ -41,6 +66,41 @@ const POSE_SUGGESTIONS = [
   'Raise your eyebrows!',
   'Put hands on hips!',
   'Make a goofy expression!',
+  // --- NEW FUN & WITTY ADDITIONS ---
+  'Pretend you just won a gold medal!',
+  'Do your best secret agent look!',
+  'Freeze! Like a statue!',
+  'High five the person next to you!',
+  'Show off your invisible muscles!',
+  'Pretend you are walking against the wind!',
+  'The floor is lava! Look terrified!',
+  'Point at your friend like they just won a prize!',
+  'Look like you just heard the best joke ever!',
+  'Do the robot dance pose!',
+  'Pretend you are a runway supermodel!',
+  'Hide half your face behind your hands!',
+  'Do a rock star air guitar solo!',
+  'Look like you are thinking really hard!',
+  'Give the camera a cool secret agent nod!',
+  'Pretend you are holding a giant invisible sandwich!',
+  'Make a cute puppy-dog face!',
+  'Act like you just opened the coolest birthday gift!',
+  'Do the classic superhero landing pose!',
+  'Wave like you are on a parade float!',
+  'Salute the captain!',
+  'Pretend you are a ninja hiding in plain sight!',
+  'Lean back and look ultra cool!',
+  'Put your chin on your hand like a deep thinker!',
+  'Do a double thumbs up!',
+  'Make an explosion sign with your hands!',
+  'Pretend you are an opera singer hitting a high note!',
+  'Do a symmetrical mirror pose with a friend!',
+  'Look like a cool detective solving a mystery!',
+  'Give a big, enthusiastic high-five to the air!',
+  'Act like you just discovered a new planet!',
+  'Cup your face in your hands!',
+  'Do a silly karate chop pose!',
+  'Look over your shoulder with a mysterious grin!',
 ];
 
 export default function Capture({ templateKey, onComplete, onBack }) {
@@ -221,10 +281,10 @@ export default function Capture({ templateKey, onComplete, onBack }) {
               {/* "Get Ready" overlay with pose suggestions */}
               {phase === 'get-ready' && status === 'active' && (
                 <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-4 z-20 get-ready-overlay">
-                  <div className="get-ready-text text-white font-black text-2xl drop-shadow-lg">
+                  <div className="get-ready-text text-white font-black text-2xl drop-shadow-lg text-center">
                     {shotIndex === 0 ? 'Get Ready!' : `Shot ${shotIndex + 1}`}
                   </div>
-                  <div className="pose-text text-white font-bold text-3xl drop-shadow-lg animate-pulse">
+                  <div className="pose-text text-white font-bold text-3xl drop-shadow-lg animate-pulse text-center px-8">
                     {POSE_SUGGESTIONS[poseIndex]}
                   </div>
                 </div>

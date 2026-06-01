@@ -36,6 +36,7 @@ export default function Standby({ onStart }) {
   const { settings } = useSettings();
   const { general } = settings;
   const background = PAPERBACKGROUNDS[general.standbyBackground ?? 'plain'] ?? PAPERBACKGROUNDS.plain;
+  const logoScale = general.logoScale || 1.0;
 
   function handleStart() {
     playClick();
@@ -48,19 +49,36 @@ export default function Standby({ onStart }) {
       onClick={handleStart}
       style={{
         transition: 'transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+        ...(general.backgroundImage ? {
+          backgroundImage: `url(${general.backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        } : {}),
       }}
     >
       <div className="flex flex-col items-center gap-6 p-6 text-center">
         {/* Logo / Icon - Material Design 8dp grid spacing */}
         {general.logoBase64 ? (
-          <img src={general.logoBase64} alt="Logo" className="w-28 h-28 object-contain rounded-3xl standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700" />
+          <img 
+            src={general.logoBase64} 
+            alt="Logo" 
+            className="object-contain rounded-3xl standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700"
+            style={{ width: `${112 * logoScale}px`, height: `${112 * logoScale}px` }}
+          />
         ) : general.brandingIcon ? (
-          <div className="w-28 h-28 rounded-[28px] flex items-center justify-center bg-md-primary-container standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <BrandingIcon iconKey={general.brandingIcon} size={52} />
+          <div 
+            className="rounded-[28px] flex items-center justify-center bg-md-primary-container standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700"
+            style={{ width: `${112 * logoScale}px`, height: `${112 * logoScale}px` }}
+          >
+            <BrandingIcon iconKey={general.brandingIcon} size={52 * logoScale} />
           </div>
         ) : (
-          <div className="w-28 h-28 rounded-[28px] flex items-center justify-center bg-md-primary-container standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <Camera size={52} className="text-md-on-primary-container" />
+          <div 
+            className="rounded-[28px] flex items-center justify-center bg-md-primary-container standby-icon-float animate-in fade-in slide-in-from-bottom-8 duration-700"
+            style={{ width: `${112 * logoScale}px`, height: `${112 * logoScale}px` }}
+          >
+            <Camera size={52 * logoScale} className="text-md-on-primary-container" />
           </div>
         )}
 

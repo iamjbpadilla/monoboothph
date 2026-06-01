@@ -1,142 +1,231 @@
 import { useState, useEffect } from 'react';
 import { Preferences } from '@capacitor/preferences';
-import { Device } from '@capacitor/device';
-import { supabase } from '../lib/supabase';
-import { Lock, AlertCircle } from 'lucide-react';
+import { getSupabaseClient, checkSupabaseConnection } from '../lib/supabase';
 
-const PAIRING_EXPIRY_HOURS = 24;
-
-export default function PairingModal({ onPaired }) {
+export default function PairingModal({ onPaired, onClose }) {
   const [pairingCode, setPairingCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [deviceId, setDeviceId] = useState('');
+  const [connectionStatus, setConnectionStatus] = useState('checking'); // checking, connected, error
 
   useEffect(() => {
-    getDeviceId();
+    checkConnection();
   }, []);
 
-  async function getDeviceId() {
-    try {
-      const info = await Device.getId();
-      setDeviceId(info.identifier);
-    } catch (err) {
-      console.error('Failed to get device ID:', err);
-    }
+  async function checkConnection() {
+    setConnectionStatus('checking');
+    const connected = await checkSupabaseConnection();
+    setConnectionStatus(connected ? 'connected' : 'error');
   }
 
-  async function handlePair() {
-    if (!pairingCode.trim() || pairingCode.length !== 6) {
-      setError('Please enter a valid 6-digit pairing code');
-      return;
-    }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!pairingCode.trim()) return;
 
     setLoading(true);
     setError('');
 
     try {
-      // Validate pairing code against Supabase
-      const { data: app, error } = await supabase
-        .from('apps')
-        .select('*')
-        .eq('pairing_code', pairingCode)
-        .single();
-
-      if (error || !app) {
-        setError('Invalid pairing code');
-        setLoading(false);
-        return;
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Supabase not available');
       }
 
-      // Create or update device record
+      // Find app with this pairing code
+      const { data: app, error: appError } = await supabase
+        .from('apps')
+        .select('*')
+        .eq('pairing_code', pairingCode.trim())
+        .single();
+
+      if (appError || !app) {
+        throw new Error('Invalid pairing code');
+      }
+
+      // Check for existing online devices for this app and unpair them
+      const { data: existingDevices } = await supabase
+        .from('devices')
+        .select('*')
+        .eq('app_id', app.id)
+        .eq('status', 'online');
+
+      if (existingDevices && existingDevices.length > 0) {
+        console.log(`Unpairing ${existingDevices.length} existing device(s) for this app`);
+        await supabase
+          .from('devices')
+          .update({ status: 'offline', last_sync: new Date().toISOString() })
+          .eq('app_id', app.id)
+          .eq('status', 'online');
+      }
+
+      // Create device record
+      const deviceId = generateDeviceId();
+      console.log('Registering device:', { app_id: app.id, device_id: deviceId });
+      
       const { data: device, error: deviceError } = await supabase
         .from('devices')
-        .upsert({
-          device_id: deviceId,
+        .insert({
           app_id: app.id,
-          device_name: `Device ${deviceId.slice(0, 8)}`,
+          device_id: deviceId,
+          device_name: `Device ${Date.now()}`,
           status: 'online',
           last_sync: new Date().toISOString(),
         })
         .select()
         .single();
 
-      if (deviceError) throw deviceError;
+      if (deviceError) {
+        console.error('Device registration error:', deviceError);
+        throw new Error(`Device registration failed: ${deviceError.message}`);
+      }
+      
+      if (!device) {
+        throw new Error('Device registration returned no data');
+      }
 
       // Store pairing info locally
-      const expiryTime = Date.now() + (PAIRING_EXPIRY_HOURS * 60 * 60 * 1000);
+      const pairingData = {
+        appId: app.id,
+        deviceId: device.id,
+        appName: app.name,
+        pairingCode: app.pairing_code,
+        pairedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+      };
+
       await Preferences.set({
         key: 'snaproll_pairing',
-        value: JSON.stringify({
-          appId: app.id,
-          deviceId: device.id,
-          pairingCode: app.pairing_code,
-          appName: app.name,
-          pairedAt: new Date().toISOString(),
-          expiresAt: new Date(expiryTime).toISOString(),
-        }),
+        value: JSON.stringify(pairingData),
       });
 
-      onPaired();
+      onPaired(pairingData);
     } catch (err) {
       console.error('Pairing failed:', err);
-      setError('Failed to pair device. Please try again.');
+      setError(err.message || 'Pairing failed. Please try again.');
     } finally {
       setLoading(false);
     }
   }
 
+  function generateDeviceId() {
+    return `dev-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  function handleNumberPad(num) {
+    if (pairingCode.length < 6) {
+      setPairingCode(pairingCode + num);
+    }
+  }
+
+  function handleBackspace() {
+    setPairingCode(pairingCode.slice(0, -1));
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-            <Lock className="w-8 h-8 text-purple-600" />
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4 text-center">Pair with Portal</h2>
+        
+        {/* Connection Status */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          {connectionStatus === 'checking' && (
+            <>
+              <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
+              <span className="text-sm text-gray-600">Checking connection...</span>
+            </>
+          )}
+          {connectionStatus === 'connected' && (
+            <>
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-sm text-green-600">Connected to database</span>
+            </>
+          )}
+          {connectionStatus === 'error' && (
+            <>
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-sm text-red-600">Database unavailable</span>
+            </>
+          )}
+        </div>
+        
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+            {error}
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Pair Your Device</h2>
-          <p className="text-gray-500 text-center mt-2">
-            Enter the 6-digit pairing code from the admin portal
-          </p>
+        )}
+
+        <p className="text-gray-600 mb-4 text-sm text-center">
+          Enter the 6-digit pairing code from the portal
+        </p>
+
+        {/* Pairing Code Display */}
+        <div className="flex justify-center gap-2 mb-6">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className="w-12 h-14 border-2 border-gray-300 rounded-lg flex items-center justify-center text-2xl font-bold bg-gray-50"
+            >
+              {pairingCode[i] || ''}
+            </div>
+          ))}
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <input
-              type="text"
-              value={pairingCode}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                setPairingCode(value);
-                setError('');
-              }}
-              placeholder="000000"
-              className="w-full text-center text-3xl font-mono tracking-widest px-4 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
-              maxLength={6}
-              autoFocus
-            />
-          </div>
-
-          {error && (
-            <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">{error}</span>
-            </div>
-          )}
-
+        {/* Number Pad */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+            <button
+              key={num}
+              type="button"
+              onClick={() => handleNumberPad(num.toString())}
+              className="h-16 text-2xl font-semibold bg-gray-100 hover:bg-gray-200 rounded-lg transition active:scale-95"
+            >
+              {num}
+            </button>
+          ))}
           <button
-            onClick={handlePair}
-            disabled={loading || pairingCode.length !== 6}
-            className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            type="button"
+            onClick={handleBackspace}
+            className="h-16 text-xl font-semibold bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition active:scale-95"
           >
-            {loading ? 'Pairing...' : 'Pair Device'}
+            ⌫
+          </button>
+          <button
+            type="button"
+            onClick={() => handleNumberPad('0')}
+            className="h-16 text-2xl font-semibold bg-gray-100 hover:bg-gray-200 rounded-lg transition active:scale-95"
+          >
+            0
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading || pairingCode.length !== 6}
+            className="h-16 text-xl font-semibold bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? '...' : '✓'}
           </button>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-xs text-gray-400 text-center">
-            Pairing expires after {PAIRING_EXPIRY_HOURS} hours for security
-          </p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition text-sm font-medium"
+          >
+            Skip
+          </button>
+          <button
+            type="button"
+            onClick={checkConnection}
+            className="flex-1 px-4 py-3 text-purple-600 hover:bg-purple-50 rounded-lg transition text-sm font-medium"
+          >
+            Retry Connection
+          </button>
         </div>
+
+        <p className="text-xs text-gray-500 mt-4 text-center">
+          You can pair later from Settings if you skip now.
+        </p>
       </div>
     </div>
   );

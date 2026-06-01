@@ -98,6 +98,36 @@ export const ACCENT_PALETTES = {
     dark:  { primary: '#9575CD', onPrimary: '#311B92', primaryContainer: '#512DA8', onPrimaryContainer: '#EDE7F6' },
     light: { primary: '#673AB7', onPrimary: '#FFFFFF', primaryContainer: '#EDE7F6', onPrimaryContainer: '#311B92' },
   },
+  gray: {
+    label: 'Gray', swatch: '#757575',
+    dark:  { primary: '#BDBDBD', onPrimary: '#212121', primaryContainer: '#9E9E9E', onPrimaryContainer: '#FAFAFA' },
+    light: { primary: '#757575', onPrimary: '#FFFFFF', primaryContainer: '#F5F5F5', onPrimaryContainer: '#212121' },
+  },
+  slate: {
+    label: 'Slate', swatch: '#607D8B',
+    dark:  { primary: '#90A4AE', onPrimary: '#263238', primaryContainer: '#78909C', onPrimaryContainer: '#ECEFF1' },
+    light: { primary: '#607D8B', onPrimary: '#FFFFFF', primaryContainer: '#ECEFF1', onPrimaryContainer: '#263238' },
+  },
+  stone: {
+    label: 'Stone', swatch: '#8D6E63',
+    dark:  { primary: '#A1887F', onPrimary: '#3E2723', primaryContainer: '#795548', onPrimaryContainer: '#EFEBE9' },
+    light: { primary: '#8D6E63', onPrimary: '#FFFFFF', primaryContainer: '#EFEBE9', onPrimaryContainer: '#3E2723' },
+  },
+  zinc: {
+    label: 'Zinc', swatch: '#9E9E9E',
+    dark:  { primary: '#E0E0E0', onPrimary: '#424242', primaryContainer: '#BDBDBD', onPrimaryContainer: '#FAFAFA' },
+    light: { primary: '#9E9E9E', onPrimary: '#FFFFFF', primaryContainer: '#FAFAFA', onPrimaryContainer: '#424242' },
+  },
+  brown: {
+    label: 'Brown', swatch: '#795548',
+    dark:  { primary: '#A1887F', onPrimary: '#3E2723', primaryContainer: '#8D6E63', onPrimaryContainer: '#EFEBE9' },
+    light: { primary: '#795548', onPrimary: '#FFFFFF', primaryContainer: '#EFEBE9', onPrimaryContainer: '#3E2723' },
+  },
+  olive: {
+    label: 'Olive', swatch: '#827717',
+    dark:  { primary: '#A4A629', onPrimary: '#332E08', primaryContainer: '#68650C', onPrimaryContainer: '#F9FBE7' },
+    light: { primary: '#827717', onPrimary: '#FFFFFF', primaryContainer: '#F9FBE7', onPrimaryContainer: '#332E08' },
+  },
 };
 
 /** Apply an accent palette via an injected <style> block that respects data-theme. */

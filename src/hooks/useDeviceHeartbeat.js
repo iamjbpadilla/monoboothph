@@ -1,14 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { Preferences } from '@capacitor/preferences';
-import { supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase';
 
 const HEARTBEAT_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-export function useDeviceHeartbeat() {
+/**
+ * Send periodic heartbeat to Supabase to update device status
+ * Only runs when device is paired
+ */
+export function useDeviceHeartbeat(isPaired) {
   const intervalRef = useRef(null);
   const isOnline = useRef(navigator.onLine);
 
   useEffect(() => {
+    if (!isPaired) return;
+
     const handleOnline = () => {
       isOnline.current = true;
       updateDeviceStatus('online');
@@ -41,7 +47,7 @@ export function useDeviceHeartbeat() {
       // Set to offline when unmounting
       updateDeviceStatus('offline');
     };
-  }, []);
+  }, [isPaired]);
 }
 
 async function updateDeviceStatus(status) {
@@ -50,6 +56,8 @@ async function updateDeviceStatus(status) {
     if (!pairingValue.value) return;
 
     const pairing = JSON.parse(pairingValue.value);
+    const supabase = await getSupabaseClient();
+    if (!supabase) return;
 
     const { error } = await supabase
       .from('devices')

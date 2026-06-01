@@ -1,7 +1,12 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { Preferences } from '@capacitor/preferences';
-import { supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase';
 
+/**
+ * Optional settings sync with Supabase
+ * Only runs when device is paired
+ * Local settings always take priority
+ */
 export function useSupabaseSync(settings, updateSettings) {
   const syncQueue = useRef([]);
   const isOnline = useRef(navigator.onLine);
@@ -31,6 +36,8 @@ export function useSupabaseSync(settings, updateSettings) {
       if (!pairingValue.value) return;
 
       const pairing = JSON.parse(pairingValue.value);
+      const supabase = await getSupabaseClient();
+      if (!supabase) return;
       
       const { data, error } = await supabase
         .from('apps')
@@ -54,6 +61,8 @@ export function useSupabaseSync(settings, updateSettings) {
       if (!pairingValue.value) return;
 
       const pairing = JSON.parse(pairingValue.value);
+      const supabase = await getSupabaseClient();
+      if (!supabase) return;
 
       if (!isOnline.current) {
         syncQueue.current.push({ settings: newSettings, appId: pairing.appId });
@@ -74,6 +83,9 @@ export function useSupabaseSync(settings, updateSettings) {
 
   const processSyncQueue = useCallback(async () => {
     if (!isOnline.current || syncQueue.current.length === 0) return;
+
+    const supabase = await getSupabaseClient();
+    if (!supabase) return;
 
     for (const item of syncQueue.current) {
       try {

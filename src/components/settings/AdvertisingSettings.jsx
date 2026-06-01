@@ -8,9 +8,16 @@ const BACKGROUND_STYLES = {
   'gradient-blue-cyan': 'bg-gradient-to-br from-blue-600 to-cyan-500',
   'gradient-orange-red': 'bg-gradient-to-br from-orange-600 to-red-500',
   'gradient-green-teal': 'bg-gradient-to-br from-green-600 to-teal-500',
+  'gradient-yellow-orange': 'bg-gradient-to-br from-yellow-500 to-orange-500',
+  'gradient-pink-red': 'bg-gradient-to-br from-pink-500 to-red-500',
+  'gradient-indigo-purple': 'bg-gradient-to-br from-indigo-600 to-purple-500',
+  'gradient-teal-blue': 'bg-gradient-to-br from-teal-500 to-blue-600',
   'solid-purple': 'bg-purple-600',
   'solid-blue': 'bg-blue-600',
   'solid-dark': 'bg-gray-900',
+  'solid-black': 'bg-black',
+  'solid-white': 'bg-white',
+  'solid-gray': 'bg-gray-500',
 };
 
 function Section({ title, children }) {
@@ -30,12 +37,32 @@ export default function AdvertisingSettings() {
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
 
   useEffect(() => {
-    if (display.showQR && adConfig.facebookUrl) {
-      QRCode.toDataURL(adConfig.facebookUrl, { width: 120, margin: 1 })
+    if (display.showQR && adConfig.facebookUsername) {
+      const facebookUrl = `https://facebook.com/${adConfig.facebookUsername}`;
+      QRCode.toDataURL(facebookUrl, { width: 120, margin: 1 })
         .then(setQrCodeUrl)
         .catch(console.error);
     }
-  }, [display.showQR, adConfig.facebookUrl]);
+  }, [display.showQR, adConfig.facebookUsername]);
+
+  // Poster wall upload handler
+  function handlePosterWallUpload(e) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    
+    const currentCount = (adConfig.posterWall || []).length;
+    const remainingSlots = 10 - currentCount;
+    const filesToAdd = files.slice(0, remainingSlots);
+    
+    filesToAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const newPoster = { type: 'upload', value: ev.target.result };
+        updateSettings('general.advertising.posterWall', [...(adConfig.posterWall || []), newPoster]);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['gradient-purple-pink'];
   const title = adConfig.title || 'MONO BOOTH PH';
@@ -118,83 +145,121 @@ export default function AdvertisingSettings() {
               placeholder="Professional photobooth services..."
             />
           </div>
+        </div>
+      </Section>
 
+      {/* ── Poster Wall ── */}
+      <Section title="Poster Wall">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant mb-3">
+            <svg className="w-4 h-4 text-md-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-xs text-md-on-surface-variant leading-relaxed">
+              Add 1-10 images via URL or upload. Images will display randomly on the ad screen. QR code stays at bottom.
+            </p>
+          </div>
+          
+          {/* URL Input */}
           <div>
-            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Event Promotion</label>
-            <input
-              type="text"
-              value={adConfig.eventPromotion ?? ''}
-              onChange={e => updateSettings('general.advertising.eventPromotion', e.target.value)}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-              placeholder="Special event or promotion"
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Image URLs (one per line)</label>
+            <textarea
+              value={(adConfig.posterWall || []).filter(p => p.type === 'url').map(p => p.value).join('\n')}
+              onChange={e => {
+                const urls = e.target.value.split('\n').filter(u => u.trim());
+                const uploads = (adConfig.posterWall || []).filter(p => p.type === 'upload');
+                const urlPosters = urls.slice(0, 10 - uploads.length).map(url => ({ type: 'url', value: url }));
+                updateSettings('general.advertising.posterWall', [...uploads, ...urlPosters]);
+              }}
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary resize-none"
+              rows={3}
+              placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
             />
           </div>
+
+          {/* Upload Button */}
+          <div>
+            <label className="flex flex-col items-center gap-2 py-4 cursor-pointer rounded-xl border border-dashed border-md-outline-variant hover:border-md-outline hover:bg-md-surface-container-high transition-colors">
+              <svg className="w-6 h-6 text-md-outline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-sm text-md-on-surface-variant">Upload images</span>
+              <input type="file" accept="image/*" multiple className="hidden" onChange={handlePosterWallUpload} />
+            </label>
+          </div>
+
+          {/* Image Grid */}
+          {(adConfig.posterWall || []).length > 0 && (
+            <div className="mt-3 grid grid-cols-5 gap-2">
+              {(adConfig.posterWall || []).map((poster, idx) => (
+                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-md-outline-variant">
+                  <img src={poster.value} alt={`Poster ${idx + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    onClick={() => {
+                      const updated = adConfig.posterWall.filter((_, i) => i !== idx);
+                      updateSettings('general.advertising.posterWall', updated);
+                    }}
+                    className="absolute top-1 right-1 p-1 rounded-full bg-md-error-container/80 text-md-on-error-container hover:bg-md-error-container transition-colors"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/50 text-white text-[10px]">
+                    {poster.type === 'url' ? 'URL' : 'Upload'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <p className="text-xs text-md-on-surface-variant">
+            {(adConfig.posterWall || []).length}/10 images added
+          </p>
         </div>
       </Section>
 
       {/* ── Social Media ── */}
       <Section title="Social Media">
-        <div className="space-y-2">
-          <input
-            type="text"
-            value={adConfig.facebookUrl ?? ''}
-            onChange={e => updateSettings('general.advertising.facebookUrl', e.target.value)}
-            className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-            placeholder="Facebook URL"
-          />
-          <input
-            type="text"
-            value={adConfig.instagramUrl ?? ''}
-            onChange={e => updateSettings('general.advertising.instagramUrl', e.target.value)}
-            className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-            placeholder="Instagram URL"
-          />
-          <input
-            type="text"
-            value={adConfig.tiktokUrl ?? ''}
-            onChange={e => updateSettings('general.advertising.tiktokUrl', e.target.value)}
-            className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-            placeholder="TikTok URL"
-          />
-        </div>
-      </Section>
-
-      {/* ── Media Carousel ── */}
-      <Section title="Media Carousel">
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-md-on-surface">Show Media Carousel</span>
-            <button
-              role="switch"
-              aria-checked={display.showCarousel ?? false}
-              onClick={() => updateSettings('general.advertising.display.showCarousel', !(display.showCarousel ?? false))}
-              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
-                (display.showCarousel ?? false)
-                  ? 'bg-md-primary'
-                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
-              }`}
-            >
-              <span
-                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
-                  (display.showCarousel ?? false) ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
-                }`}
-              />
-            </button>
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Facebook Username</label>
+            <input
+              type="text"
+              value={adConfig.facebookUsername ?? ''}
+              onChange={e => updateSettings('general.advertising.facebookUsername', e.target.value)}
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
+              placeholder="Facebook username"
+            />
+            {adConfig.facebookUsername && (
+              <p className="text-xs text-md-on-surface-variant mt-1">URL: https://facebook.com/{adConfig.facebookUsername}</p>
+            )}
           </div>
           <div>
-            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Media URLs (one per line)</label>
-            <textarea
-              value={(adConfig.media || []).map(m => m.url).join('\n')}
-              onChange={e => {
-                const urls = e.target.value.split('\n').filter(u => u.trim());
-                const media = urls.map(url => ({ type: url.match(/\.(mp4|webm|mov)$/i) ? 'video' : 'image', url: url.trim() }));
-                updateSettings('general.advertising.media', media);
-              }}
-              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary resize-none"
-              rows={4}
-              placeholder="https://example.com/image1.jpg&#10;https://example.com/video1.mp4"
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Instagram Username</label>
+            <input
+              type="text"
+              value={adConfig.instagramUsername ?? ''}
+              onChange={e => updateSettings('general.advertising.instagramUsername', e.target.value)}
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
+              placeholder="Instagram username"
             />
-            <p className="text-xs text-md-on-surface-variant mt-1">Enter image or video URLs, one per line. Auto-detects type.</p>
+            {adConfig.instagramUsername && (
+              <p className="text-xs text-md-on-surface-variant mt-1">URL: https://instagram.com/{adConfig.instagramUsername}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">TikTok Username</label>
+            <input
+              type="text"
+              value={adConfig.tiktokUsername ?? ''}
+              onChange={e => updateSettings('general.advertising.tiktokUsername', e.target.value)}
+              className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
+              placeholder="TikTok username"
+            />
+            {adConfig.tiktokUsername && (
+              <p className="text-xs text-md-on-surface-variant mt-1">URL: https://tiktok.com/@{adConfig.tiktokUsername}</p>
+            )}
           </div>
         </div>
       </Section>
@@ -238,9 +303,16 @@ export default function AdvertisingSettings() {
                 { value: 'gradient-blue-cyan', label: 'Blue to Cyan Gradient' },
                 { value: 'gradient-orange-red', label: 'Orange to Red Gradient' },
                 { value: 'gradient-green-teal', label: 'Green to Teal Gradient' },
+                { value: 'gradient-yellow-orange', label: 'Yellow to Orange Gradient' },
+                { value: 'gradient-pink-red', label: 'Pink to Red Gradient' },
+                { value: 'gradient-indigo-purple', label: 'Indigo to Purple Gradient' },
+                { value: 'gradient-teal-blue', label: 'Teal to Blue Gradient' },
                 { value: 'solid-purple', label: 'Solid Purple' },
                 { value: 'solid-blue', label: 'Solid Blue' },
-                { value: 'solid-dark', label: 'Solid Dark' }
+                { value: 'solid-dark', label: 'Solid Dark' },
+                { value: 'solid-black', label: 'Solid Black' },
+                { value: 'solid-white', label: 'Solid White' },
+                { value: 'solid-gray', label: 'Solid Gray' }
               ]}
               placeholder="Select background"
             />
@@ -352,10 +424,15 @@ export default function AdvertisingSettings() {
               <p className="text-sm text-white/90 font-medium text-center">{subtitle}</p>
             </div>
 
-            {/* Event Promotion */}
-            {adConfig.eventPromotion && (
-              <div className="mb-4 px-3 py-1.5 rounded-full bg-white/30 backdrop-blur-sm">
-                <p className="text-xs font-semibold text-white">{adConfig.eventPromotion}</p>
+            {/* Poster Wall Preview */}
+            {(adConfig.posterWall || []).length > 0 && (
+              <div className="mb-4 w-full max-w-xs">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-white/10">
+                  <img src={adConfig.posterWall[0].value} alt="Poster" className="w-full h-full object-cover" />
+                  <div className="absolute bottom-2 right-2 px-2 py-1 rounded-full bg-black/50 text-white text-xs">
+                    {(adConfig.posterWall || []).length} images
+                  </div>
+                </div>
               </div>
             )}
 
@@ -369,28 +446,28 @@ export default function AdvertisingSettings() {
             {/* Social media links */}
             {display.showSocial && (
               <div className="flex flex-col gap-2 mb-4 w-full max-w-xs">
-                {adConfig.facebookUrl && (
+                {adConfig.facebookUsername && (
                   <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
-                    <span className="text-xs font-semibold text-white">Facebook</span>
+                    <span className="text-xs font-semibold text-white">@{adConfig.facebookUsername}</span>
                   </div>
                 )}
-                {adConfig.instagramUrl && (
+                {adConfig.instagramUsername && (
                   <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
-                    <span className="text-xs font-semibold text-white">Instagram</span>
+                    <span className="text-xs font-semibold text-white">@{adConfig.instagramUsername}</span>
                   </div>
                 )}
-                {adConfig.tiktokUrl && (
+                {adConfig.tiktokUsername && (
                   <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                     </svg>
-                    <span className="text-xs font-semibold text-white">TikTok</span>
+                    <span className="text-xs font-semibold text-white">@{adConfig.tiktokUsername}</span>
                   </div>
                 )}
               </div>

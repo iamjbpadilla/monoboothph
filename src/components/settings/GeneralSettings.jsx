@@ -90,6 +90,16 @@ export default function GeneralSettings() {
     reader.readAsDataURL(file);
   }
 
+  function handleBackgroundImageUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      updateSettings('general.backgroundImage', ev.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
   useEffect(() => {
     // Fonts are now loaded locally via @font-face in index.html
   }, []);
@@ -224,7 +234,7 @@ export default function GeneralSettings() {
         {/* Accent */}
         <div>
           <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Accent Color</label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
             {Object.entries(ACCENT_PALETTES).map(([key, { label, swatch }]) => {
               const isActive = (general.accent ?? 'purple') === key;
               return (
@@ -232,7 +242,7 @@ export default function GeneralSettings() {
                   key={key}
                   onClick={() => updateSettings('general.accent', key)}
                   title={label}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border-2 transition-all duration-150 ${
+                  className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all duration-150 ${
                     isActive
                       ? 'shadow-sm'
                       : 'border-md-outline-variant bg-md-surface-container hover:bg-md-surface-container-high'
@@ -243,11 +253,11 @@ export default function GeneralSettings() {
                   } : {}}
                 >
                   <div
-                    className="w-6 h-6 rounded-full shadow-sm ring-2 ring-white"
+                    className="w-5 h-5 rounded-full shadow-sm ring-2 ring-white"
                     style={{ backgroundColor: swatch }}
                   />
                   <span
-                    className="text-xs font-semibold"
+                    className="text-[10px] font-medium truncate w-full text-center"
                     style={isActive ? { color: swatch } : {}}
                   >
                     {label}
@@ -285,11 +295,52 @@ export default function GeneralSettings() {
             })}
           </div>
         </div>
+
+        {/* Background Image Upload */}
+        <div>
+          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Custom Background Image</label>
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant mb-3">
+            <Info size={16} className="text-md-primary mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-md-on-surface-variant leading-relaxed">
+              Upload a high-resolution image (1920×1080px recommended, under 5MB). Image will be cropped to fit the screen.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 p-3 rounded-2xl border border-md-outline-variant bg-md-surface-container">
+            {general.backgroundImage ? (
+              <>
+                <img src={general.backgroundImage} alt="Background" className="h-16 w-24 object-cover rounded-xl bg-md-surface" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-md-on-surface truncate">Background uploaded</p>
+                  <p className="text-xs text-md-on-surface-variant">Replaces standby background</p>
+                </div>
+                <div className="flex gap-2">
+                  <label className="cursor-pointer p-2 rounded-full hover:bg-md-surface-container-high text-md-on-surface-variant transition-colors" title="Change">
+                    <Upload size={18} />
+                    <input type="file" accept="image/*" className="hidden" onChange={handleBackgroundImageUpload} />
+                  </label>
+                  <button
+                    onClick={() => updateSettings('general.backgroundImage', null)}
+                    className="p-2 rounded-full hover:bg-md-error-container/30 text-md-error transition-colors"
+                    title="Remove"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <label className="flex-1 flex flex-col items-center gap-2 py-6 cursor-pointer rounded-xl border border-dashed border-md-outline-variant hover:border-md-outline hover:bg-md-surface-container-high transition-colors">
+                <Upload size={24} className="text-md-outline" />
+                <span className="text-sm text-md-on-surface-variant">Upload background image</span>
+                <input type="file" accept="image/*" className="hidden" onChange={handleBackgroundImageUpload} />
+              </label>
+            )}
+          </div>
+        </div>
       </Section>
 
       {/* ── Typography ── */}
       <Section title="Typography">
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {FONT_PAIRS.map((pair) => {
             const isActive = (general.fontPair ?? 'modern') === pair.id;
             return (
@@ -367,6 +418,28 @@ export default function GeneralSettings() {
               </label>
             )}
           </div>
+
+          {/* Logo scaling for standby screen */}
+          {general.logoBase64 && (
+            <div>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Logo Scale (Standby Screen)</label>
+              <div className="flex gap-2">
+                {[1.0, 1.1, 1.2, 1.3, 1.5].map(scale => (
+                  <button
+                    key={scale}
+                    onClick={() => updateSettings('general.logoScale', scale)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      general.logoScale === scale
+                        ? 'bg-md-primary text-md-on-primary'
+                        : 'bg-md-surface-container text-md-on-surface-variant hover:bg-md-surface-container-high'
+                    }`}
+                  >
+                    {scale === 1.0 ? '100%' : `+${Math.round((scale - 1) * 100)}%`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Icon picker — shown when no logo uploaded */}
           {!general.logoBase64 && (

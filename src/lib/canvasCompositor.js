@@ -3,7 +3,7 @@ import { resolveFontPair } from './theme.js';
 // canvasCompositor.js — builds the receipt canvas from frames + settings
 // RULE: 48px minimum margin enforced on all four edges. NO EXCEPTIONS.
 
-const MARGIN = 48;
+const MARGIN = 22;
 
 // Aspect ratios per template slot
 export const SLOT_RATIOS = {
@@ -195,7 +195,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'header':
         if (blocks.header.enabled) {
           if (blocks.header.image) {
-            contentH += Math.min(100, contentWidth * 0.25) + elGap;
+            const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
+            contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
           } else {
             contentH += textH(blocks.header.fontSize, elGap);
             const subtitleText = blocks.header.subtitle || (blocks.header.text ? '' : generalSettings.eventName);
@@ -236,7 +237,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         if (blocks.barcode.enabled) contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
         break;
       case 'footer':
-        if (blocks.footer.enabled) contentH += textH(blocks.footer.fontSize, elGap);
+        if (blocks.footer.enabled) {
+          if (blocks.footer.image) {
+            const scale = (blocks.footer.imageScale || 4) / 4; // 1-8 scale, default 4
+            contentH += Math.min(80, contentWidth * 0.25) * scale + (blocks.footer.imageTopMargin || 16) + elGap;
+          } else {
+            contentH += textH(blocks.footer.fontSize, elGap);
+          }
+        }
         break;
     }
   }
@@ -262,12 +270,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         // If image is uploaded, draw it instead of text
         if (blocks.header.image) {
           const img = await loadImage(blocks.header.image);
-          const imgHeight = Math.min(100, contentWidth * 0.25);
+          const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
+          const baseHeight = Math.min(100, contentWidth * 0.25);
+          const imgHeight = baseHeight * scale;
           const imgWidth = imgHeight * (img.width / img.height);
           const imgX = blocks.header.alignment === 'center' ? x + (contentWidth - imgWidth) / 2 :
                        blocks.header.alignment === 'right' ? x + contentWidth - imgWidth : x;
           ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
-          y += imgHeight + elGap;
+          y += imgHeight + (blocks.header.imageBottomMargin || 16) + elGap;
         } else {
           // Use custom title/subtitle or fall back to defaults
           const titleText = blocks.header.title || blocks.header.text || generalSettings.boothName;
@@ -473,13 +483,27 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       }
       case 'footer': {
         if (!blocks.footer.enabled) break;
-        drawText(ctx, blocks.footer.text, x, y, contentWidth, {
-          fontSize: blocks.footer.fontSize,
-          alignment: blocks.footer.alignment,
-          color: '#000000',
-          fontFamily: fontBody,
-        });
-        y += textH(blocks.footer.fontSize, elGap);
+        
+        // If image is uploaded, draw it instead of text
+        if (blocks.footer.image) {
+          const img = await loadImage(blocks.footer.image);
+          const scale = (blocks.footer.imageScale || 4) / 4; // 1-8 scale, default 4
+          const baseWidth = contentWidth; // Full width
+          const imgWidth = baseWidth * scale;
+          const imgHeight = imgWidth * (img.height / img.width);
+          const imgX = x; // Left aligned for full width
+          y += (blocks.footer.imageTopMargin || 16); // Add top margin
+          ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
+          y += imgHeight + elGap;
+        } else {
+          drawText(ctx, blocks.footer.text, x, y, contentWidth, {
+            fontSize: blocks.footer.fontSize,
+            alignment: blocks.footer.alignment,
+            color: '#000000',
+            fontFamily: fontBody,
+          });
+          y += textH(blocks.footer.fontSize, elGap);
+        }
         break;
       }
     }

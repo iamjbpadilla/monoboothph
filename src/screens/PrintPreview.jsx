@@ -106,13 +106,13 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
       <div className="flex items-center h-16 px-2 flex-shrink-0 bg-md-surface">
         <div className="w-12" />
         <div className="flex-1 text-center">
-          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Print Preview</h2>
+          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Preview</h2>
         </div>
         <div className="w-16" />
       </div>
 
-      {/* Receipt preview — no-scroll, zoom-to-fit */}
-      <div ref={receiptAreaRef} className="flex-1 overflow-hidden min-h-0 flex flex-col items-center px-6 py-5 page-content-enter">
+      {/* Receipt preview — scrollable, zoom-to-fit */}
+      <div ref={receiptAreaRef} className="flex-1 overflow-auto min-h-0 flex flex-col items-center px-6 py-5 page-content-enter">
         <div
           className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl mx-auto w-full preview-receipt-enter ${
             isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'

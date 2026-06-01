@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, Link, Clock, LogOut } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
-import { Preferences } from '@capacitor/preferences';
 import GeneralSettings from './settings/GeneralSettings.jsx';
 import CameraSettings from './settings/CameraSettings.jsx';
 import PrinterSettings from './settings/PrinterSettings.jsx';
 import TemplateSettings from './settings/TemplateSettings.jsx';
 import AboutSettings from './settings/AboutSettings.jsx';
 import AdvertisingSettings from './settings/AdvertisingSettings.jsx';
+import AccountSettings from './settings/AccountSettings.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 
 const TABS = [
   { key: 'general',      label: 'General',      icon: Sliders },
-  { key: 'pairing',      label: 'Pairing',      icon: Link },
   { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
   { key: 'templates',    label: 'Templates',    icon: Layout },
   { key: 'camera',       label: 'Camera',       icon: Camera },
   { key: 'printer',      label: 'Printer',      icon: Printer },
+  { key: 'account',      label: 'Account',      icon: User },
   { key: 'about',        label: 'About',        icon: Info },
 ];
 
 const TAB_MAP = {
-  general: GeneralSettings, pairing: PairingSettings, advertising: AdvertisingSettings, camera: CameraSettings,
-  printer: PrinterSettings, templates: TemplateSettings, about: AboutSettings,
+  general: GeneralSettings, advertising: AdvertisingSettings, camera: CameraSettings,
+  printer: PrinterSettings, templates: TemplateSettings, account: AccountSettings, about: AboutSettings,
 };
 
 export default function SettingsPanel({ currentScreen = 'standby' }) {

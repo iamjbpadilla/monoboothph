@@ -1,19 +1,22 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Preferences } from '@capacitor/preferences';
-import { useSupabaseSync } from '../hooks/useSupabaseSync';
 
 // Font size guide (203 DPI): 20px ≈ 2.5mm, 28px ≈ 3.5mm, 40px ≈ 5mm
 function defaultBlocks() {
   return {
-    header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true },
+    header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true, imageScale: 4, imageBottomMargin: 16 },
     photos:     { enabled: true,  borderStyle: 'thin', borderColor: '#000000', gap: 8 },
     divider:    { enabled: true,  style: 'dashed', thickness: 2, color: '#000000' },
     elementSpacing: 16,
     datetime:   { enabled: true,  format: 'MMM DD, YYYY  HH:mm' },
     customText: { enabled: false, content: '#SnapAndRoll',           fontSize: 28, alignment: 'center' },
-    receiptItems: { enabled: false, items: [], fontSize: 20, showTotal: true, showQty: true, randomize: false },
+    receiptItems: { enabled: true, items: [
+      { name: 'Good Vibes', quantity: 1, price: 999 },
+      { name: 'Bad Decisions', quantity: 2, price: 0 },
+      { name: 'Y2K Energy', quantity: 1, price: 500 }
+    ], fontSize: 20, showTotal: false, showQty: false, randomize: true },
     barcode:    { enabled: true,  value: 'SNAPROLL001', type: 'CODE128', showText: false },
-    footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center' },
+    footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center', image: '/footer.png', imageScale: 4, imageTopMargin: 16 },
     backgroundColor: '#ffffff',
     blockOrder: ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'barcode', 'footer'],
   };
@@ -25,33 +28,28 @@ const DEFAULT_SETTINGS = {
     boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
     logoBase64: null,
+    logoScale: 1.0, // 1.0 = 100%, 1.1 = 110%, 1.2 = 120%, 1.3 = 130%, 1.5 = 150%
     theme: 'light',
     accent: 'purple',
     fontPair: 'modern',
     brandingIcon: null,
     standbyBackground: 'plain',
+    backgroundImage: null, // Custom background image for standby screen
     showAdvertising: true,
     adDuration: 5,
     advertising: {
       title: 'MONO BOOTH PH',
       subtitle: 'Capture Your Best Moments',
       message: 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!',
-      facebookUrl: 'https://facebook.com/monoboothph',
-      instagramUrl: 'https://instagram.com/monoboothph',
-      tiktokUrl: '',
+      facebookUsername: 'monoboothph',
+      instagramUsername: 'monoboothph',
+      tiktokUsername: '',
       phone: '',
       email: '',
-      eventPromotion: '',
-      testimonials: [
-        'Amazing service! Our guests loved the photobooth!',
-        'Professional and fun - highly recommend!',
-        'Best photobooth experience we\'ve had!'
-      ],
-      media: [], // Array of { type: 'image'|'video', url: string }
+      posterWall: [], // Array of { type: 'url'|'upload', value: string } (1-10 images)
       display: {
         showSocial: true,
         showContact: false,
-        showCarousel: false,
         showQR: true,
         showLogo: false,
         backgroundStyle: 'gradient-purple-pink'
@@ -121,20 +119,13 @@ export function SettingsProvider({ children }) {
   const [isDirty, setIsDirty] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const { pullSettings, pushSettings } = useSupabaseSync(settings, (newSettings) => {
-    setSavedSettings(newSettings);
-    setSettings(newSettings);
-  });
-
   useEffect(() => {
     loadSettings().then(loadedSettings => {
       setSavedSettings(loadedSettings);
       setSettings(loadedSettings);
       setLoaded(true);
-      // Pull settings from Supabase after loading local settings
-      pullSettings();
     });
-  }, [pullSettings]);
+  }, []);
 
   const updateSettings = useCallback((path, value) => {
     setSettings(prev => {
@@ -152,9 +143,7 @@ export function SettingsProvider({ children }) {
     await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(settings) });
     setSavedSettings(structuredClone(settings));
     setIsDirty(false);
-    // Push settings to Supabase
-    pushSettings(settings);
-  }, [settings, pushSettings]);
+  }, [settings]);
 
   const discardSettings = useCallback(() => {
     setSettings(structuredClone(savedSettings));

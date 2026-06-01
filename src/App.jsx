@@ -6,6 +6,8 @@ import { Camera } from '@capacitor/camera';
 import { applyAccent, resolveFontPair } from './lib/theme.js';
 import { playTransition } from './hooks/useSound.js';
 import { useDeviceHeartbeat } from './hooks/useDeviceHeartbeat.js';
+import { useDeviceStatusSync } from './hooks/useDeviceStatusSync.js';
+import './lib/logger.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import PermissionModal from './components/PermissionModal.jsx';
 import IntroModal from './components/IntroModal.jsx';
@@ -163,10 +165,13 @@ function PhotoboothApp() {
   const [introCompleted, setIntroCompleted] = useState(false);
   const [appReady, setAppReady] = useState(false);
   const [isPaired, setIsPaired] = useState(false);
-  const [pairingExpiry, setPairingExpiry] = useState(null);
+  const [showPairingModal, setShowPairingModal] = useState(false);
 
   // Start device heartbeat when paired
-  useDeviceHeartbeat();
+  useDeviceHeartbeat(isPaired);
+
+  // Sync device status changes from server
+  useDeviceStatusSync();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -215,7 +220,6 @@ function PhotoboothApp() {
           
           if (now < expiryTime) {
             setIsPaired(true);
-            setPairingExpiry(pairing.expiresAt);
           } else {
             // Pairing expired, clear it
             await Preferences.remove({ key: 'snaproll_pairing' });
@@ -232,33 +236,40 @@ function PhotoboothApp() {
     checkPermissions();
   }, []);
 
-  // Check pairing expiry periodically
+  // Periodic check for pairing expiry
   useEffect(() => {
-    if (!isPaired || !pairingExpiry) return;
-    
-    const checkExpiry = () => {
-      const now = Date.now();
-      const expiry = new Date(pairingExpiry).getTime();
-      
-      if (now >= expiry) {
-        setIsPaired(false);
-        setPairingExpiry(null);
-        Preferences.remove({ key: 'snaproll_pairing' });
+    const interval = setInterval(async () => {
+      try {
+        const pairingValue = await Preferences.get({ key: 'snaproll_pairing' });
+        if (pairingValue.value) {
+          const pairing = JSON.parse(pairingValue.value);
+          const expiryTime = new Date(pairing.expiresAt).getTime();
+          const now = Date.now();
+          
+          if (now >= expiryTime) {
+            // Pairing expired, clear it
+            await Preferences.remove({ key: 'snaproll_pairing' });
+            setIsPaired(false);
+          }
+        }
+      } catch (err) {
+        console.error('Pairing expiry check failed:', err);
       }
-    };
-    
-    const interval = setInterval(checkExpiry, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, [isPaired, pairingExpiry]);
+    }, 60000); // Check every minute
 
-  async function handlePaired() {
-    const pairingValue = await Preferences.get({ key: 'snaproll_pairing' });
-    if (pairingValue.value) {
-      const pairing = JSON.parse(pairingValue.value);
-      setIsPaired(true);
-      setPairingExpiry(pairing.expiresAt);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Show pairing modal when on standby and not paired
+  useEffect(() => {
+    if (!appReady || !introCompleted || !permissionGranted) return;
+    if (isPaired) return;
+    
+    const currentScreen = screens[screens.length - 1]?.name;
+    if (currentScreen === 'standby') {
+      setShowPairingModal(true);
     }
-  }
+  }, [appReady, introCompleted, permissionGranted, isPaired, screens]);
 
   function goStandby() {
     setSelectedTemplate(null);
@@ -296,6 +307,15 @@ function PhotoboothApp() {
     } else {
       goStandby();
     }
+  }
+
+  function handlePaired(pairingData) {
+    setIsPaired(true);
+    setShowPairingModal(false);
+  }
+
+  function handlePairingClose() {
+    setShowPairingModal(false);
   }
 
   function renderScreen(name) {
@@ -366,8 +386,8 @@ function PhotoboothApp() {
           onPermissionDenied={() => setPermissionGranted(false)}
         />
       )}
-      {introCompleted && permissionGranted && !isPaired && (
-        <PairingModal onPaired={handlePaired} />
+      {introCompleted && permissionGranted && !isPaired && screens[screens.length - 1]?.name === 'standby' && showPairingModal && (
+        <PairingModal onPaired={handlePaired} onClose={handlePairingClose} />
       )}
     </div>
   );

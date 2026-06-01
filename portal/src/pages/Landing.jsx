@@ -1,4 +1,4 @@
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Camera, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const HEADLINES = [
@@ -36,7 +36,7 @@ export default function Landing() {
             {headline}
           </p>
           <p className="text-lg text-gray-600">
-            Visit our Facebook page to view and download your photos
+            Please enter your session ID or visit our Facebook page to view and download your photos
           </p>
         </div>
 
@@ -45,11 +45,17 @@ export default function Landing() {
           href="https://facebook.com/monoboothph"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition text-lg"
+          className="inline-flex items-center gap-3 bg-[#1877F2] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#166FE5] transition text-lg portal-button"
         >
           <ExternalLink className="w-5 h-5" />
           Visit @monoboothph on Facebook
         </a>
+
+        {/* Session ID input hint */}
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Camera className="w-4 h-4" />
+          <p>Have a session ID? Add it to the URL: <code className="bg-gray-100 px-2 py-1 rounded">/download/YOUR_SESSION_ID</code></p>
+        </div>
       </div>
 
       {/* Branding footer */}

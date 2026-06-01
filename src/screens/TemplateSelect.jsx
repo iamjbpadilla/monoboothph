@@ -176,7 +176,7 @@ export default function TemplateSelect({ onSelect, onBack }) {
 
                 {/* Preview area */}
                 <div className={`w-full flex-1 flex items-center justify-center py-4 ${isSelected ? 'bg-md-primary-container/60' : 'bg-md-surface-container'}`}>
-                  <div className="w-full max-w-[96px]">
+                  <div className="w-full max-w-[96px] max-h-[200px]">
                     <Preview />
                   </div>
                 </div>

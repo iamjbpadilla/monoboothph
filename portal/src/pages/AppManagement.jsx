@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Copy, Trash2, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Plus, Copy, Trash2, RefreshCw, ArrowLeft, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AppManagement() {
@@ -11,10 +11,48 @@ export default function AppManagement() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newAppName, setNewAppName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredApps = apps.filter(app => 
+    app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.pairing_code.includes(searchQuery)
+  );
 
   useEffect(() => {
     fetchApps();
     fetchDevices();
+
+    // Subscribe to device status changes
+    const subscription = supabase
+      .channel('device-status-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'devices'
+        },
+        (payload) => {
+          if (payload.eventType === 'UPDATE') {
+            setDevices(prev => 
+              prev.map(device => 
+                device.id === payload.new.id ? payload.new : device
+              ).filter(d => d.status === 'online')
+            );
+          } else if (payload.eventType === 'INSERT') {
+            if (payload.new.status === 'online') {
+              setDevices(prev => [payload.new, ...prev]);
+            }
+          } else if (payload.eventType === 'DELETE') {
+            setDevices(prev => prev.filter(device => device.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function fetchApps() {
@@ -38,6 +76,7 @@ export default function AppManagement() {
       const { data, error } = await supabase
         .from('devices')
         .select('*')
+        .eq('status', 'online')
         .order('last_sync', { ascending: false });
 
       if (error) throw error;
@@ -156,19 +195,37 @@ export default function AppManagement() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="text-center py-12 text-gray-500">Loading...</div>
-        ) : apps.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">No apps created yet</p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="text-purple-600 hover:text-purple-700 font-medium"
-            >
-              Create your first app
-            </button>
-          </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <table className="w-full">
+          <>
+            <div className="mb-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search apps by name or pairing code..."
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                />
+              </div>
+            </div>
+            {filteredApps.length === 0 && apps.length > 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                No apps match your search
+              </div>
+            ) : apps.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 mb-4">No apps created yet</p>
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="text-purple-600 hover:text-purple-700 font-medium"
+                >
+                  Create your first app
+                </button>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden portal-card">
+                <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">App Name</th>
@@ -179,7 +236,7 @@ export default function AppManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {apps.map((app) => {
+                {filteredApps.map((app) => {
                   const appDevices = devices.filter(d => d.app_id === app.id);
                   return (
                     <tr key={app.id} className="hover:bg-gray-50">
@@ -199,6 +256,9 @@ export default function AppManagement() {
                                   {device.status}
                                 </span>
                                 <span className="text-gray-600">{device.device_name || device.device_id}</span>
+                                <span className="text-gray-400">
+                                  ({device.print_count || 0} prints)
+                                </span>
                                 {device.last_sync && (
                                   <span className="text-gray-400">
                                     ({new Date(device.last_sync).toLocaleString()})
@@ -242,7 +302,9 @@ export default function AppManagement() {
                 })}
               </tbody>
             </table>
-          </div>
+            </div>
+            )}
+          </>
         )}
       </main>
 

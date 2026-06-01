@@ -277,6 +277,34 @@ function TemplateBlockEditor() {
                 </button>
               )}
             </div>
+            {blocks.header.image && (
+              <>
+                <div>
+                  <label className="block text-xs text-md-on-surface-variant mb-1">Image Scale (1-8)</label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    value={blocks.header.imageScale || 4}
+                    onChange={e => upd('header', 'imageScale', parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                  <div className="text-xs text-md-outline text-center mt-1">{blocks.header.imageScale || 4}</div>
+                </div>
+                <div>
+                  <label className="block text-xs text-md-on-surface-variant mb-1">Bottom Margin (px)</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="32"
+                    value={blocks.header.imageBottomMargin || 16}
+                    onChange={e => upd('header', 'imageBottomMargin', parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                  <div className="text-xs text-md-outline text-center mt-1">{blocks.header.imageBottomMargin || 16}px</div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
@@ -315,6 +343,30 @@ function TemplateBlockEditor() {
             onChange={v => upd('footer', 'text', v)}
             placeholder="Thank you for the memories!"
           />
+          <div>
+            <label className="block text-xs text-md-on-surface-variant mb-1">Footer Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (ev) => upd('footer', 'image', ev.target.result);
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="w-full text-xs text-md-on-surface-variant file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-md-primary file:text-md-on-primary hover:file:bg-md-primary-container"
+            />
+            {blocks.footer.image && (
+              <button
+                onClick={() => upd('footer', 'image', null)}
+                className="mt-2 text-xs text-md-outline hover:text-md-on-surface-variant"
+              >
+                Remove image
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -501,7 +553,7 @@ function TemplateBlockEditor() {
                   const randomItems = wittyItems.sort(() => 0.5 - Math.random()).slice(0, 3);
                   upd('receiptItems', 'items', randomItems);
                 }}
-                className="px-3 py-1.5 rounded-lg bg-md-secondary-container text-md-on-secondary-container text-xs font-medium hover:brightness-110"
+                className="px-3 py-1.5 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110 shadow-sm"
               >
                 🎲 Random Witty Items
               </button>
@@ -633,7 +685,7 @@ export default function TemplateSettings() {
         <div className="text-xs font-medium tracking-widest uppercase text-md-on-surface-variant">
           Template Previews
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {TEMPLATE_TABS.map(t => (
             <div key={t.key}>
               <div className="mb-2 text-sm font-medium text-md-on-surface">
