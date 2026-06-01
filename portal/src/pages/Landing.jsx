@@ -333,8 +333,6 @@ export default function Landing() {
   const [isVisible, setIsVisible] = useState({});
   const [templatesScroll, setTemplatesScroll] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [isAtBottom, setIsAtBottom] = useState(false);
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
@@ -354,25 +352,6 @@ export default function Landing() {
     });
 
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight;
-      const clientHeight = container.clientHeight;
-      
-      setScrollPosition(scrollTop);
-      setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
-    };
-
-    container.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
-
-    return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollTemplates = (direction) => {
@@ -406,9 +385,7 @@ export default function Landing() {
   return (
     <div ref={scrollContainerRef} className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
       {/* Persistent Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 transition-transform duration-300 ${
-        scrollPosition < 50 ? '-translate-y-full' : 'translate-y-0'
-      }`}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
           <img 
             src="/mono-booth-ph.svg" 
@@ -441,7 +418,7 @@ export default function Landing() {
 
       {/* Header */}
       <div id="header" className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-16 md:py-20 text-center animate-fade-in flex-1 flex flex-col justify-center overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-16 md:py-20 text-center animate-fade-in flex-1 flex flex-col justify-center overflow-y-auto scrollbar-hide">
           <div className="mb-8 md:mb-10">
             <img 
               src="/mono-booth-ph.svg" 
@@ -478,7 +455,7 @@ export default function Landing() {
 
       {/* The Workflow */}
       <div id="workflow" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">How It Works</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Three simple steps to your thermal receipt photo booth experience.
@@ -512,7 +489,7 @@ export default function Landing() {
 
       {/* Why MONO BOOTH PH */}
       <div id="features" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">What's Included</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Every booking comes with these premium features at no extra cost.
@@ -543,7 +520,7 @@ export default function Landing() {
 
       {/* Proprietary Technology */}
       <div id="technology" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Our Technology</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Built from the ground up for reliability and performance.
@@ -574,7 +551,7 @@ export default function Landing() {
 
       {/* Print Templates */}
       <div id="templates" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Print Templates</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Choose from our collection of print layouts for your event.
@@ -606,10 +583,10 @@ export default function Landing() {
                   }}
                 >
                   <div className="bg-white transition-all group relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-gray-900 hover:shadow-lg">
-                    <div className="p-3 md:p-4">
+                    <div className="p-3 md:p-4 overflow-hidden">
                       <Preview />
                     </div>
-                    <div className="px-3 md:px-4 pb-4 md:pb-5 space-y-1 md:space-y-2 bg-gray-50">
+                    <div className="px-3 md:px-4 pb-4 md:pb-5 space-y-1 md:space-y-2 bg-gray-50 flex-shrink-0">
                       <h3 className="font-bold text-gray-900 text-sm md:text-base">{label}</h3>
                       <p className="text-gray-600 text-xs md:text-sm leading-tight">{description}</p>
                       <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
@@ -633,7 +610,7 @@ export default function Landing() {
 
       {/* Hourly Packages */}
       <div id="packages" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Hourly Packages</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
@@ -680,7 +657,7 @@ export default function Landing() {
 
       {/* Backup Copy Notice */}
       <div id="backup" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto flex flex-col justify-center">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide flex flex-col justify-center">
           <div className="border-2 border-gray-200 p-6 md:p-10 text-center rounded-lg bg-white">
             <div className="w-16 h-16 md:w-20 md:h-20 border-2 border-gray-200 flex items-center justify-center mx-auto mb-6 rounded-full bg-gray-50">
               <Share2 className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
@@ -706,7 +683,7 @@ export default function Landing() {
 
       {/* Booking & Location */}
       <div id="booking" data-animate className="h-screen snap-start flex flex-col">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-20 md:pt-24 py-12 md:py-20 w-full flex-1 overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">Book Your Event</h2>
           <p className="text-gray-600 mb-8 md:mb-10 text-base md:text-lg leading-relaxed">
             Ready to make your event unforgettable? Get in touch with us.
@@ -780,23 +757,6 @@ export default function Landing() {
           </a>
         </div>
       </div>
-
-      {/* Persistent Footer */}
-      <footer className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 transition-transform duration-300 ${
-        isAtBottom ? 'translate-y-full' : 'translate-y-0'
-      }`}>
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-2 md:py-3 flex items-center justify-between text-xs md:text-sm">
-          <p className="text-gray-600">© 2026 MONO BOOTH PH</p>
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-900 font-bold hover:text-gray-700 transition min-h-[44px] flex items-center"
-          >
-            Book Now
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }
