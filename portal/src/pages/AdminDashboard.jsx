@@ -158,8 +158,8 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white">
+      <nav className="bg-white border-b-2 border-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
@@ -180,13 +180,13 @@ export default function AdminDashboard() {
                   </span>
                 )}
                 {dbStatus === 'connected' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
                     <CheckCircle className="w-3 h-3" />
                     Database Connected
                   </span>
                 )}
                 {dbStatus === 'error' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
                     <XCircle className="w-3 h-3" />
                     Database Error
                   </span>
@@ -216,25 +216,25 @@ export default function AdminDashboard() {
                 <StatCard
                   title="Total Apps"
                   value={stats.apps}
-                  icon={<LayoutDashboard className="w-5 h-5 text-purple-600" />}
+                  icon={<LayoutDashboard className="w-5 h-5 text-gray-900" />}
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
                   title="Active Devices"
                   value={stats.activeDevices}
-                  icon={<Smartphone className="w-5 h-5 text-green-600" />}
+                  icon={<Smartphone className="w-5 h-5 text-gray-900" />}
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
                   title="Total Photos"
                   value={stats.photos}
-                  icon={<Images className="w-5 h-5 text-blue-600" />}
+                  icon={<Images className="w-5 h-5 text-gray-900" />}
                   onClick={() => navigate('/admin/gallery')}
                 />
                 <StatCard
                   title="Total Prints"
                   value={stats.totalPrints}
-                  icon={<Printer className="w-5 h-5 text-orange-600" />}
+                  icon={<Printer className="w-5 h-5 text-gray-900" />}
                 />
               </div>
             </div>
@@ -267,7 +267,7 @@ function StatCard({ title, value, icon, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-xl border border-gray-200 p-6 cursor-pointer portal-card shadow-sm hover:shadow-md transition-shadow ${onClick ? '' : 'cursor-default'}`}
+      className={`bg-white rounded-xl border-2 border-gray-200 p-6 cursor-pointer portal-card shadow-sm hover:shadow-md transition-shadow ${onClick ? '' : 'cursor-default'}`}
     >
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{title}</p>
@@ -287,7 +287,7 @@ function RecentActivityCard({ activity }) {
         <div className="space-y-4">
           {activity.map((item) => (
             <div key={item.id} className="flex items-start gap-3 text-sm">
-              <div className="w-2 h-2 rounded-full bg-purple-600 mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-gray-900 mt-2 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-gray-900 font-medium">Photo uploaded</p>
                 <p className="text-gray-500 text-xs mt-0.5">
@@ -327,14 +327,14 @@ function StorageCard({ status, usage }) {
           )}
           {status === 'connected' && (
             <>
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-green-600">Connected</span>
+              <CheckCircle className="w-4 h-4 text-gray-900" />
+              <span className="text-gray-900">Connected</span>
             </>
           )}
           {status === 'error' && (
             <>
-              <XCircle className="w-4 h-4 text-red-500" />
-              <span className="text-red-600">Error</span>
+              <XCircle className="w-4 h-4 text-gray-900" />
+              <span className="text-gray-900">Error</span>
             </>
           )}
         </div>
@@ -348,7 +348,7 @@ function StorageCard({ status, usage }) {
         
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
-            className="bg-purple-600 h-2.5 rounded-full transition-all duration-300"
+            className="bg-gray-900 h-2.5 rounded-full transition-all duration-300"
             style={{ width: `${Math.min(usage.percentage, 100)}%` }}
           />
         </div>

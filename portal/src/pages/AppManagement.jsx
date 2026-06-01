@@ -162,8 +162,8 @@ export default function AppManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white">
+      <nav className="bg-white border-b-2 border-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export default function AppManagement() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm"
+              className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
             >
               <Plus className="w-4 h-4" />
               New App
@@ -205,7 +205,7 @@ export default function AppManagement() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search apps by name or pairing code..."
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
                 />
               </div>
             </div>
@@ -218,15 +218,15 @@ export default function AppManagement() {
                 <p className="text-gray-500 mb-4">No apps created yet</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="text-purple-600 hover:text-purple-700 font-medium"
+                  className="text-gray-900 hover:text-gray-700 font-medium"
                 >
                   Create your first app
                 </button>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm portal-card">
+              <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
                 <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 border-b-2 border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">App Name</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pairing Code</th>
@@ -250,7 +250,7 @@ export default function AppManagement() {
                             {appDevices.map(device => (
                               <div key={device.id} className="flex items-center gap-2 text-xs">
                                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-medium ${
-                                  device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                                  device.status === 'online' ? 'bg-gray-100 text-gray-900' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                   <span className="w-1.5 h-1.5 rounded-full bg-current" />
                                   {device.status}
@@ -286,7 +286,7 @@ export default function AppManagement() {
                         </button>
                         <button
                           onClick={() => deleteApp(app.id)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-gray-600 hover:text-gray-900"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -305,14 +305,14 @@ export default function AppManagement() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg border-2 border-gray-900">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New App</h2>
             <input
               type="text"
               value={newAppName}
               onChange={(e) => setNewAppName(e.target.value)}
               placeholder="App name (e.g., Wedding Reception)"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
               autoFocus
             />
             <div className="flex gap-3 justify-end">
@@ -325,7 +325,7 @@ export default function AppManagement() {
               <button
                 onClick={createApp}
                 disabled={creating || !newAppName.trim()}
-                className="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
+                className="px-4 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
               >
                 {creating ? 'Creating...' : 'Create'}
               </button>

@@ -274,8 +274,8 @@ export default function Gallery() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white">
+      <nav className="bg-white border-b-2 border-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
@@ -297,7 +297,7 @@ export default function Gallery() {
               {/* View Toggle */}
               <button
                 onClick={() => setViewMode(viewMode === 'table' ? 'grid' : 'table')}
-                className="p-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                className="p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
                 title={viewMode === 'table' ? 'Grid View' : 'List View'}
               >
                 {viewMode === 'table' ? <Grid className="w-5 h-5" /> : <List className="w-5 h-5" />}
@@ -308,12 +308,12 @@ export default function Gallery() {
                 <button
                   onClick={downloadAllPhotos}
                   disabled={downloadingAll}
-                  className="relative p-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="relative p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title="Download all photos"
                 >
                   <Download className="w-5 h-5" />
                   {downloadingAll && (
-                    <span className="absolute -top-1 -right-1 bg-white text-purple-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    <span className="absolute -top-1 -right-1 bg-white text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                       {downloadProgress.current}
                     </span>
                   )}
@@ -325,11 +325,11 @@ export default function Gallery() {
                 <button
                   onClick={handleBulkDelete}
                   disabled={deleting}
-                  className="relative p-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="relative p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title={`Delete ${selectedPhotos.size} selected`}
                 >
                   <Trash2 className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 bg-white text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  <span className="absolute -top-1 -right-1 bg-white text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                     {selectedPhotos.size}
                   </span>
                 </button>
@@ -339,7 +339,7 @@ export default function Gallery() {
                 <button
                   onClick={() => setShowDeleteAllConfirm(true)}
                   disabled={deletingAll}
-                  className="p-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title="Delete all photos"
                 >
                   <Trash2 className="w-5 h-5" />
@@ -351,7 +351,7 @@ export default function Gallery() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm portal-card">
+        <div className="bg-white rounded-xl border-2 border-gray-200 p-6 mb-6 shadow-sm portal-card">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
@@ -365,14 +365,14 @@ export default function Gallery() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by session ID..."
-                className="pl-9 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm w-64"
+                className="pl-9 pr-4 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm w-64"
               />
             </div>
             
             <select
               value={selectedApp}
               onChange={(e) => setSelectedApp(e.target.value)}
-              className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
             >
               <option value="all">All Apps</option>
               {apps.map(app => (
@@ -383,7 +383,7 @@ export default function Gallery() {
             <select
               value={selectedDevice}
               onChange={(e) => setSelectedDevice(e.target.value)}
-              className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
             >
               <option value="all">All Devices</option>
               {devices.map(device => (
@@ -396,14 +396,14 @@ export default function Gallery() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
               />
               <span className="text-gray-400">to</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-sm"
+                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
               />
               {(startDate || endDate) && (
                 <button
@@ -435,7 +435,7 @@ export default function Gallery() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {paginatedPhotos.map((photo, index) => (
-              <div key={photo.id} className="relative group bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow portal-card cursor-pointer" onClick={() => openPreview(photo, index)}>
+              <div key={photo.id} className="relative group bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow portal-card cursor-pointer" onClick={() => openPreview(photo, index)}>
                 <div className="aspect-square relative">
                   <img
                     src={photo.publicUrl}
@@ -486,7 +486,7 @@ export default function Gallery() {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-2 rounded-xl border border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
@@ -497,7 +497,7 @@ export default function Gallery() {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 px-3 py-2 rounded-xl border border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />
@@ -506,9 +506,9 @@ export default function Gallery() {
           )}
           </>
         ) : (
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm portal-card">
+          <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 border-b-2 border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     <input
@@ -541,7 +541,7 @@ export default function Gallery() {
                         type="checkbox"
                         checked={selectedPhotos.has(photo.id)}
                         onChange={() => togglePhotoSelection(photo.id)}
-                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -563,7 +563,7 @@ export default function Gallery() {
                       {new Date(photo.timestamp).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-gray-600'}`}>
+                      <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-gray-900' : 'text-gray-600'}`}>
                         {getTimeUntilDeletion(photo.created_at)}
                       </span>
                     </td>
@@ -652,7 +652,7 @@ export default function Gallery() {
               </button>
               <button
                 onClick={() => downloadPhoto(previewPhoto)}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -663,7 +663,7 @@ export default function Gallery() {
                   handleBulkDelete();
                   closePreview();
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -678,8 +678,8 @@ export default function Gallery() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-red-100 rounded-full">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
+              <div className="p-3 bg-gray-100 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-gray-900" />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete All Photos</h3>
@@ -698,7 +698,7 @@ export default function Gallery() {
                   <button
                     onClick={handleDeleteAll}
                     disabled={deletingAll}
-                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {deletingAll ? (
                       <>
