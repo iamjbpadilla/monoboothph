@@ -450,24 +450,25 @@ export default function Landing() {
           Choose from our collection of print layouts for your event.
         </p>
         
-        <div className="relative py-12">
+        <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
           {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
             <div 
               key={key}
-              className={`absolute left-0 right-0 transition-all duration-500 ease-out ${
+              className={`flex-shrink-0 snap-center transition-all duration-500 ease-out ${
                 isVisible['templates'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ 
-                transitionDelay: `${index * 150}ms`,
-                transform: `translateX(${index * 20}px) translateY(${index * 15}px) rotate(${index * 2}deg)`,
-                zIndex: TEMPLATES.length - index
+                transitionDelay: `${index * 100}ms`,
+                width: '280px'
               }}
             >
-              <div className="bg-white border-2 border-gray-200 p-4 shadow-lg hover:shadow-xl transition-shadow max-w-xs mx-auto">
-                <Preview />
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <h3 className="font-bold text-gray-900 text-lg mb-1">{label}</h3>
-                  <p className="text-gray-600 text-sm mb-2">{description}</p>
+              <div className="bg-white border-2 border-gray-200 p-4 shadow-lg hover:shadow-xl hover:border-gray-900 transition-all group">
+                <div className="bg-gray-50 p-3 mb-4">
+                  <Preview />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+                  <p className="text-gray-600 text-sm">{description}</p>
                   <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
                 </div>
               </div>
