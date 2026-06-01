@@ -10,6 +10,7 @@ export default function PhotoDownload() {
   const [error, setError] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [showImage, setShowImage] = useState(false);
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function PhotoDownload() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain animate-pulse"
+            className="w-24 h-24 mx-auto mb-4 object-contain animate-pulse brightness-50"
           />
           <p className="text-lg text-gray-800">Loading your photo...</p>
         </div>
@@ -164,7 +165,7 @@ export default function PhotoDownload() {
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
-          className="w-12 h-12 object-contain grayscale brightness-50"
+          className="w-12 h-12 object-contain brightness-50"
         />
       </div>
 
@@ -180,8 +181,11 @@ export default function PhotoDownload() {
           <img
             src={photo.publicUrl}
             alt="Your photo"
-            className={`w-full transition-all duration-700 ease-out ${imageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
-            onLoad={() => setImageLoading(false)}
+            className={`w-full transition-all duration-700 ease-out ${!showImage ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+            onLoad={() => {
+              setImageLoading(false);
+              setTimeout(() => setShowImage(true), 2000);
+            }}
           />
         </div>
         
