@@ -230,7 +230,7 @@ export default function Landing() {
       <div id="packages" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Hourly Packages</h2>
         <p className="text-gray-600 mb-12 text-lg leading-relaxed">
-          All packages include unlimited physical prints, custom receipt branding, instant full-color digital downloads, live event gallery access, and professional operators.
+          Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
         </p>
         
         <div className="grid md:grid-cols-2 gap-6 mb-8">
