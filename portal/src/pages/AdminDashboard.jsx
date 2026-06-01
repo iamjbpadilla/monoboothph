@@ -5,7 +5,7 @@ import { LayoutDashboard, Plus, Images, Smartphone, LogOut, CheckCircle, XCircle
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ apps: 0, devices: 0, photos: 0, totalPrints: 0 });
+  const [stats, setStats] = useState({ apps: 0, activeDevices: 0, photos: 0, totalPrints: 0 });
   const [loading, setLoading] = useState(true);
   const [dbStatus, setDbStatus] = useState('checking'); // checking, connected, error
   const [storageStatus, setStorageStatus] = useState('checking'); // checking, connected, error
@@ -62,24 +62,41 @@ export default function AdminDashboard() {
       // Supabase free tier: 1GB = 1073741824 bytes
       const totalBytes = 1073741824;
       
-      // List all files in photos bucket to calculate usage
-      const { data: files, error } = await supabase.storage.from('photos').list('', {
-        limit: 1000,
-        sortBy: { column: 'created_at', order: 'asc' }
-      });
-      
-      if (error) {
-        console.error('Error fetching storage usage:', error);
-        return;
-      }
-      
-      // Calculate total used bytes
+      // List all files in photos bucket with pagination
       let usedBytes = 0;
-      if (files) {
-        for (const file of files) {
-          if (file.metadata?.size) {
-            usedBytes += file.metadata.size;
+      let hasMore = true;
+      let offset = 0;
+      const limit = 1000;
+      
+      while (hasMore) {
+        const { data: files, error } = await supabase.storage.from('photos').list('', {
+          limit: limit,
+          offset: offset,
+          sortBy: { column: 'created_at', order: 'asc' }
+        });
+        
+        if (error) {
+          console.error('Error fetching storage usage:', error);
+          return;
+        }
+        
+        // Calculate total used bytes from this batch
+        if (files) {
+          for (const file of files) {
+            if (file.metadata?.size) {
+              usedBytes += file.metadata.size;
+            }
           }
+        }
+        
+        // Check if there are more files
+        hasMore = files && files.length === limit;
+        offset += limit;
+        
+        // Safety limit to prevent infinite loops
+        if (offset > 10000) {
+          console.warn('Storage usage calculation stopped at safety limit');
+          break;
         }
       }
       
@@ -97,10 +114,11 @@ export default function AdminDashboard() {
 
   async function fetchStats() {
     try {
-      const [appsCount, devicesCount, photosCount, devicesWithPrints] = await Promise.all([
+      const [appsCount, devicesCount, photosCount, onlineDevicesCount, devicesWithPrints] = await Promise.all([
         supabase.from('apps').select('*', { count: 'exact', head: true }),
         supabase.from('devices').select('*', { count: 'exact', head: true }),
         supabase.from('photos').select('*', { count: 'exact', head: true }),
+        supabase.from('devices').select('*', { count: 'exact', head: true }).eq('status', 'online'),
         supabase.from('devices').select('print_count'),
       ]);
 
@@ -108,7 +126,7 @@ export default function AdminDashboard() {
 
       setStats({
         apps: appsCount.count || 0,
-        devices: devicesCount.count || 0,
+        activeDevices: onlineDevicesCount.count || 0,
         photos: photosCount.count || 0,
         totalPrints: totalPrints,
       });
@@ -158,19 +176,19 @@ export default function AdminDashboard() {
                 {dbStatus === 'checking' && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    DB: Checking
+                    Checking...
                   </span>
                 )}
                 {dbStatus === 'connected' && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
                     <CheckCircle className="w-3 h-3" />
-                    DB: OK
+                    Database Connected
                   </span>
                 )}
                 {dbStatus === 'error' && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
                     <XCircle className="w-3 h-3" />
-                    DB: Error
+                    Database Error
                   </span>
                 )}
               </div>
@@ -202,8 +220,8 @@ export default function AdminDashboard() {
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
-                  title="Total Devices"
-                  value={stats.devices}
+                  title="Active Devices"
+                  value={stats.activeDevices}
                   icon={<Smartphone className="w-5 h-5 text-green-600" />}
                   onClick={() => navigate('/admin/apps')}
                 />
