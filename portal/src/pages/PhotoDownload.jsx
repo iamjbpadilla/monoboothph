@@ -109,12 +109,12 @@ export default function PhotoDownload() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain invert animate-pulse"
+            className="w-24 h-24 mx-auto mb-4 object-contain animate-pulse"
           />
           <p className="text-lg text-gray-300">Loading your photo...</p>
         </div>
@@ -124,12 +124,12 @@ export default function PhotoDownload() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-800 border-2 border-gray-700 p-10 text-center">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-gray-900 border-2 border-gray-800 p-10 text-center">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-16 h-16 mx-auto mb-6 object-contain invert"
+            className="w-16 h-16 mx-auto mb-6 object-contain"
           />
           <h2 className="text-2xl font-bold text-white mb-4">Photo Not Found</h2>
           <p className="text-gray-300 mb-8">
@@ -158,22 +158,22 @@ export default function PhotoDownload() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col p-4 md:p-8">
+    <div className="min-h-screen bg-black flex flex-col p-4 md:p-8">
       {/* Header branding */}
-      <div className="flex flex-col items-center gap-1 py-6 border-b-2 border-gray-700">
+      <div className="flex flex-col items-center gap-1 py-6 border-b-2 border-gray-800">
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
-          className="w-12 h-12 object-contain invert"
+          className="w-12 h-12 object-contain"
         />
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-2xl w-full mx-auto py-12">
-        <div className="bg-white border-2 border-gray-700 p-6 w-full relative min-h-[200px]">
+        <div className="bg-white border-2 border-gray-800 p-6 w-full relative min-h-[200px] rounded-lg">
           {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-gray-600 border-t-white rounded-none animate-spin" />
+              <div className="w-8 h-8 border-2 border-gray-600 border-t-white rounded-full animate-spin" />
             </div>
           )}
           <img
@@ -188,7 +188,7 @@ export default function PhotoDownload() {
         {/* Guide text */}
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-300 flex items-center justify-center gap-2">
-            <div className="w-8 h-8 border-2 border-gray-700 flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-gray-800 flex items-center justify-center">
               <Camera className="w-4 h-4 text-gray-400" />
             </div>
             Long-press on photo to save to gallery
@@ -199,7 +199,7 @@ export default function PhotoDownload() {
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-gray-900 transform hover:scale-105"
+          className="inline-flex items-center justify-center gap-2 bg-white text-black px-10 py-5 font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-white transform hover:scale-105"
         >
           <Download className="w-6 h-6" />
           {downloading ? 'Downloading...' : 'Download'}
@@ -213,7 +213,7 @@ export default function PhotoDownload() {
       </div>
 
       {/* Footer branding */}
-      <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-700">
+      <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-800">
         <p className="text-sm font-bold text-white tracking-wider">MONO BOOTH PH</p>
         <p className="text-[10px] text-gray-400 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
