@@ -416,8 +416,8 @@ export default function Landing() {
       </nav>
 
       {/* Header */}
-      <div id="header" className="min-h-screen snap-start flex items-center justify-center pt-20 md:pt-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 text-center animate-fade-in">
+      <div id="header" className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 text-center animate-fade-in flex-1 flex flex-col justify-center overflow-y-auto">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH logo - Thermal receipt photo booth service in Kabankalan City" 
@@ -445,8 +445,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* The Workflow */}
-      <div id="workflow" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="workflow" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10 leading-tight">Unique Thermal Print Experience</h2>
           <div className="space-y-5 md:space-y-6">
             {WORKFLOW.map((item, index) => (
@@ -476,8 +476,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Why MONO BOOTH PH */}
-      <div id="features" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="features" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10 leading-tight">Photo Booth Packages & Rates</h2>
           <ul className="space-y-5 md:space-y-6">
             {FEATURES.map((feature, index) => (
@@ -504,8 +504,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Proprietary Technology */}
-      <div id="technology" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="technology" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10 leading-tight">Proprietary Locally-Built Kiosk App</h2>
           <ul className="space-y-5 md:space-y-6">
             {TECHNOLOGY.map((tech, index) => (
@@ -532,8 +532,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Print Templates */}
-      <div id="templates" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="templates" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4 leading-tight">Print Templates</h2>
           <p className="text-gray-600 mb-6 md:mb-12 text-base md:text-lg leading-relaxed">
             Choose from our collection of print layouts for your event.
@@ -589,8 +589,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Hourly Packages */}
-      <div id="packages" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="packages" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4 leading-tight">Hourly Packages</h2>
           <p className="text-gray-600 mb-6 md:mb-12 text-base md:text-lg leading-relaxed">
             Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
@@ -636,8 +636,8 @@ export default function Landing() {
       </div>
 
       {/* Backup Copy Notice */}
-      <div id="backup" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="backup" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto flex flex-col justify-center">
           <div className="border-2 border-gray-200 p-6 md:p-10 text-center">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 leading-tight">Missed Your Download?</h2>
             <p className="text-gray-600 mb-6 md:mb-8 text-base md:text-lg leading-relaxed">
@@ -659,8 +659,8 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Booking & Location */}
-      <div id="booking" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+      <div id="booking" data-animate className="h-screen snap-start flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full flex-1 overflow-y-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10 leading-tight">Booking & Location</h2>
           <ul className="space-y-5 md:space-y-6 mb-8 md:mb-10">
             <li className={`flex gap-4 md:gap-6 items-start transition-all duration-700 ease-out ${
