@@ -1,5 +1,5 @@
 import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const WORKFLOW = [
   {
@@ -333,6 +333,9 @@ export default function Landing() {
   const [isVisible, setIsVisible] = useState({});
   const [templatesScroll, setTemplatesScroll] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -351,6 +354,25 @@ export default function Landing() {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight;
+      const clientHeight = container.clientHeight;
+      
+      setScrollPosition(scrollTop);
+      setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollTemplates = (direction) => {
@@ -382,9 +404,11 @@ export default function Landing() {
   };
 
   return (
-    <div className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
+    <div ref={scrollContainerRef} className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
       {/* Persistent Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <header className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 transition-transform duration-300 ${
+        scrollPosition < 50 ? '-translate-y-full' : 'translate-y-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
           <img 
             src="/mono-booth-ph.svg" 
@@ -707,7 +731,9 @@ export default function Landing() {
       </div>
 
       {/* Persistent Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200">
+      <footer className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 transition-transform duration-300 ${
+        isAtBottom ? 'translate-y-full' : 'translate-y-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4 md:px-6 py-2 md:py-3 flex items-center justify-between text-xs md:text-sm">
           <p className="text-gray-600">© 2026 MONO BOOTH PH</p>
           <a
