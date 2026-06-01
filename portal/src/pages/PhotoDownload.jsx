@@ -114,7 +114,7 @@ export default function PhotoDownload() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain animate-pulse"
+            className="w-24 h-24 mx-auto mb-4 object-contain grayscale brightness-75 animate-pulse"
           />
           <p className="text-lg text-gray-300">Loading your photo...</p>
         </div>
@@ -129,10 +129,10 @@ export default function PhotoDownload() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-16 h-16 mx-auto mb-6 object-contain"
+            className="w-16 h-16 mx-auto mb-6 object-contain grayscale brightness-75"
           />
-          <h2 className="text-2xl font-bold text-white mb-4">Photo Not Found</h2>
-          <p className="text-gray-300 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Photo Not Found</h2>
+          <p className="text-gray-600 mb-8">
             {error}. Photos uploaded daily to our Facebook page.
           </p>
           <div className="space-y-4">
@@ -164,7 +164,7 @@ export default function PhotoDownload() {
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
-          className="w-12 h-12 object-contain"
+          className="w-12 h-12 object-contain grayscale brightness-75"
         />
       </div>
 
@@ -187,26 +187,26 @@ export default function PhotoDownload() {
         
         {/* Guide text */}
         <div className="text-center space-y-2">
-          <p className="text-sm text-gray-300 flex items-center justify-center gap-2">
+          <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
             <div className="w-8 h-8 border-2 border-gray-800 flex items-center justify-center">
               <Camera className="w-4 h-4 text-gray-400" />
             </div>
             Long-press on photo to save to gallery
           </p>
-          <p className="text-xs text-gray-400">or use the button below</p>
+          <p className="text-xs text-gray-500">or use the button below</p>
         </div>
         
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="inline-flex items-center justify-center gap-2 bg-white text-black px-10 py-5 font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-white transform hover:scale-105"
+          className="inline-flex items-center justify-center gap-2 bg-gray-100 text-gray-900 px-10 py-5 font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-gray-100 transform hover:scale-105"
         >
           <Download className="w-6 h-6" />
           {downloading ? 'Downloading...' : 'Download'}
         </button>
 
-        <p className="text-xs text-gray-400">
-          Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-400' : 'text-gray-300'}`}>
+        <p className="text-xs text-gray-500">
+          Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-gray-600'}`}>
             {getTimeUntilDeletion(photo.created_at)}
           </span>
         </p>
@@ -214,8 +214,8 @@ export default function PhotoDownload() {
 
       {/* Footer branding */}
       <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-800">
-        <p className="text-sm font-bold text-white tracking-wider">MONO BOOTH PH</p>
-        <p className="text-[10px] text-gray-400 tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-sm font-bold text-gray-900 tracking-wider">MONO BOOTH PH</p>
+        <p className="text-[10px] text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>
   );
