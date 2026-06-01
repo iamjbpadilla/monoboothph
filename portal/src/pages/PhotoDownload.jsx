@@ -30,7 +30,7 @@ export default function PhotoDownload() {
         .from('photos')
         .select('*')
         .eq('session_id', sessionId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
