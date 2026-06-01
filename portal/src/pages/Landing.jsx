@@ -365,8 +365,28 @@ export default function Landing() {
 
   return (
     <div className="w-full h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory bg-white">
+      {/* Persistent Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          <img 
+            src="/mono-booth-ph.svg" 
+            alt="MONO BOOTH PH logo" 
+            className="w-10 h-10 object-contain invert"
+          />
+          <a
+            href="https://m.me/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 text-sm font-bold hover:bg-gray-800 transition border-2 border-gray-900"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Book Now
+          </a>
+        </div>
+      </header>
+
       {/* Navigation Dots */}
-      <nav className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
+      <nav className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex">
         {['header', 'workflow', 'features', 'technology', 'templates', 'packages', 'backup', 'booking'].map((section) => (
           <a
             key={section}
@@ -378,28 +398,28 @@ export default function Landing() {
       </nav>
 
       {/* Header */}
-      <div id="header" className="min-h-screen snap-start flex items-center justify-center">
+      <div id="header" className="min-h-screen snap-start flex items-center justify-center pt-20">
         <div className="max-w-4xl mx-auto px-6 py-20 text-center animate-fade-in">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH logo - Thermal receipt photo booth service in Kabankalan City" 
-            className="w-20 h-20 object-contain invert mx-auto mb-10"
+            className="w-16 h-16 md:w-20 md:h-20 object-contain invert mx-auto mb-8 md:mb-10"
           />
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6 tracking-tight">
             MONO BOOTH PH | Thermal Receipt Photo Booth in Kabankalan City
           </h1>
-          <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-3xl text-gray-800 leading-relaxed mb-6 md:mb-8 max-w-2xl mx-auto">
             No proof without @monoboothph. Show 'em the receipts.
           </p>
           <a
             href="https://m.me/monoboothph"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
             Book Your Event Now
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
           </a>
         </div>
       </div>
@@ -407,27 +427,27 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* The Workflow */}
-      <div id="workflow" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">Unique Thermal Print Experience</h2>
-          <div className="space-y-6">
+      <div id="workflow" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10">Unique Thermal Print Experience</h2>
+          <div className="space-y-4 md:space-y-6">
             {WORKFLOW.map((item, index) => (
               <div 
                 key={index} 
-                className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
                   isVisible['workflow'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="flex items-center gap-4 w-20 flex-shrink-0">
-                  <span className="text-gray-300 font-mono text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
-                  <div className="w-10 h-10 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors">
-                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{item.icon}</span>
+                <div className="flex items-center gap-2 md:gap-4 w-16 md:w-20 flex-shrink-0">
+                  <span className="text-gray-300 font-mono text-sm md:text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
+                  <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors">
+                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-sm md:text-base">{item.icon}</span>
                   </div>
                 </div>
                 <div className="flex-1 pt-1">
-                  <p className="font-bold text-gray-900 text-lg mb-1">{item.title}</p>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  <p className="font-bold text-gray-900 text-base md:text-lg mb-1">{item.title}</p>
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -438,24 +458,24 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Why MONO BOOTH PH */}
-      <div id="features" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">Photo Booth Packages & Rates</h2>
-          <ul className="space-y-6">
+      <div id="features" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10">Photo Booth Packages & Rates</h2>
+          <ul className="space-y-4 md:space-y-6">
             {FEATURES.map((feature, index) => (
               <li 
                 key={index} 
-                className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
                   isVisible['features'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{feature.icon}</span>
+                <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-sm md:text-base">{feature.icon}</span>
                 </div>
                 <div className="flex-1 pt-1">
-                  <p className="font-bold text-gray-900 text-lg mb-1">{feature.title}</p>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <p className="font-bold text-gray-900 text-base md:text-lg mb-1">{feature.title}</p>
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">{feature.description}</p>
                 </div>
               </li>
             ))}
@@ -466,24 +486,24 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Proprietary Technology */}
-      <div id="technology" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">Proprietary Locally-Built Kiosk App</h2>
-          <ul className="space-y-6">
+      <div id="technology" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10">Proprietary Locally-Built Kiosk App</h2>
+          <ul className="space-y-4 md:space-y-6">
             {TECHNOLOGY.map((tech, index) => (
               <li 
                 key={index} 
-                className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                className={`flex gap-4 md:gap-6 group items-start transition-all duration-700 ease-out ${
                   isVisible['technology'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{tech.icon}</span>
+                <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                  <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-sm md:text-base">{tech.icon}</span>
                 </div>
                 <div className="flex-1 pt-1">
-                  <p className="font-bold text-gray-900 text-lg mb-1">{tech.title}</p>
-                  <p className="text-gray-600 leading-relaxed">{tech.description}</p>
+                  <p className="font-bold text-gray-900 text-base md:text-lg mb-1">{tech.title}</p>
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">{tech.description}</p>
                 </div>
               </li>
             ))}
@@ -494,22 +514,22 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Print Templates */}
-      <div id="templates" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Print Templates</h2>
-          <p className="text-gray-600 mb-12 text-lg leading-relaxed">
+      <div id="templates" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4">Print Templates</h2>
+          <p className="text-gray-600 mb-8 md:mb-12 text-base md:text-lg leading-relaxed">
             Choose from our collection of print layouts for your event.
           </p>
           
           <div className="relative">
             <button
               onClick={() => scrollTemplates('left')}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-2 z-20 w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             
-            <div id="templates-container" className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+            <div id="templates-container" className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide px-12">
               {TEMPLATES.map(({ key, label, shots, description, preview: Preview }, index) => (
                 <div 
                   key={key}
@@ -518,13 +538,13 @@ export default function Landing() {
                   }`}
                   style={{ 
                     transitionDelay: `${index * 100}ms`,
-                    width: '280px'
+                    width: '240px md:260px'
                   }}
                 >
                   <div className="bg-white transition-all group relative">
                     <Preview />
                     <div className="py-4 space-y-2">
-                      <h3 className="font-bold text-gray-900 text-lg">{label}</h3>
+                      <h3 className="font-bold text-gray-900 text-base md:text-lg">{label}</h3>
                       <p className="text-gray-600 text-sm">{description}</p>
                       <p className="text-gray-500 text-xs font-medium">{shots} photo{shots > 1 ? 's' : ''}</p>
                     </div>
@@ -535,9 +555,9 @@ export default function Landing() {
             
             <button
               onClick={() => scrollTemplates('right')}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-2 z-20 w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
@@ -546,30 +566,30 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Hourly Packages */}
-      <div id="packages" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Hourly Packages</h2>
-          <p className="text-gray-600 mb-12 text-lg leading-relaxed">
+      <div id="packages" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4">Hourly Packages</h2>
+          <p className="text-gray-600 mb-8 md:mb-12 text-base md:text-lg leading-relaxed">
             Every package includes unlimited snap, print & rip, customized header and footer for your brand/event, and full-color downloads via QR code.
           </p>
           
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-8">
             {PACKAGES.map((pkg, index) => (
               <div 
                 key={index} 
-                className={`border-2 border-gray-200 p-8 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
+                className={`border-2 border-gray-200 p-6 md:p-8 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
                   isVisible['packages'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-14 h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
-                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{pkg.icon}</span>
+                <div className="flex items-start gap-3 md:gap-4 mb-4">
+                  <div className="w-12 h-12 md:w-14 md:h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
+                    <span className="text-gray-400 group-hover:text-gray-900 transition-colors text-sm md:text-base">{pkg.icon}</span>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 text-xl mb-1">{pkg.name}</h3>
+                    <h3 className="font-bold text-gray-900 text-lg md:text-xl mb-1">{pkg.name}</h3>
                     <p className="text-gray-600 text-sm mb-2">{pkg.duration}</p>
-                    <p className="text-3xl font-bold text-gray-900">{pkg.price}</p>
+                    <p className="text-2xl md:text-3xl font-bold text-gray-900">{pkg.price}</p>
                   </div>
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">{pkg.bestFor}</p>
@@ -577,7 +597,7 @@ export default function Landing() {
                   href="https://m.me/monoboothph"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm transform hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-3 md:px-6 md:py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm transform hover:scale-105"
                 >
                   Book Now
                   <ArrowRight className="w-4 h-4" />
@@ -586,28 +606,28 @@ export default function Landing() {
             ))}
           </div>
           
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-600 mb-8 text-sm md:text-base">
             <span className="text-gray-400">•</span> <span className="font-bold text-gray-900">Extra Time:</span> ₱1,000 per additional hour.
           </p>
         </div>
       </div>
 
       {/* Backup Copy Notice */}
-      <div id="backup" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <div className="border-2 border-gray-200 p-10 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
-            <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+      <div id="backup" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-16">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <div className="border-2 border-gray-200 p-6 md:p-10 text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Missed Your Download?</h2>
+            <p className="text-gray-600 mb-6 md:mb-8 text-base md:text-lg leading-relaxed">
               All photos are uploaded daily to our Facebook page. Visit us to get your backup copy.
             </p>
             <a
               href="https://facebook.com/monoboothph"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
             >
               Visit Our Facebook Page
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
             </a>
           </div>
         </div>
@@ -616,30 +636,30 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Booking & Location */}
-      <div id="booking" data-animate className="min-h-screen snap-start flex items-center">
-        <div className="max-w-4xl mx-auto px-6 py-20 w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
-          <ul className="space-y-6 mb-10">
-            <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+      <div id="booking" data-animate className="min-h-screen snap-start flex items-center pt-16 pb-20">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 w-full">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-10">Booking & Location</h2>
+          <ul className="space-y-4 md:space-y-6 mb-8 md:mb-10">
+            <li className={`flex gap-4 md:gap-6 items-start transition-all duration-700 ease-out ${
               isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
-              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-gray-400"><Check className="w-5 h-5" /></span>
+              <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-gray-400 text-sm md:text-base"><Check className="w-4 h-4 md:w-5 md:h-5" /></span>
               </div>
               <div className="pt-1">
-                <p className="font-bold text-gray-900 text-lg mb-1">Coverage</p>
-                <p className="text-gray-600">Kabankalan City and beyond</p>
+                <p className="font-bold text-gray-900 text-base md:text-lg mb-1">Coverage</p>
+                <p className="text-gray-600 text-sm md:text-base">Kabankalan City and beyond</p>
               </div>
             </li>
-            <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+            <li className={`flex gap-4 md:gap-6 items-start transition-all duration-700 ease-out ${
               isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`} style={{ transitionDelay: '100ms' }}>
-              <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
+              <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-gray-400 text-sm md:text-base"><MessageCircle className="w-4 h-4 md:w-5 md:h-5" /></span>
               </div>
               <div className="pt-1">
-                <p className="font-bold text-gray-900 text-lg mb-1">Inquiries</p>
-                <p className="text-gray-600">DM via Messenger to check date availability and lock in your schedule.</p>
+                <p className="font-bold text-gray-900 text-base md:text-lg mb-1">Inquiries</p>
+                <p className="text-gray-600 text-sm md:text-base">DM via Messenger to check date availability and lock in your schedule.</p>
               </div>
             </li>
           </ul>
@@ -648,11 +668,11 @@ export default function Landing() {
             href="https://m.me/monoboothph"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 md:px-10 md:py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
             Check Availability
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
           </a>
         </div>
       </div>
@@ -662,6 +682,21 @@ export default function Landing() {
         <p className="text-sm font-bold text-gray-900 tracking-wider mb-2">MONO BOOTH PH</p>
         <p className="text-xs text-gray-500 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
+
+      {/* Persistent Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between text-xs md:text-sm">
+          <p className="text-gray-600">© 2026 MONO BOOTH PH</p>
+          <a
+            href="https://m.me/monoboothph"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-900 font-bold hover:text-gray-700 transition"
+          >
+            Book Now
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
