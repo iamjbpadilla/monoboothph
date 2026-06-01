@@ -11,18 +11,44 @@ export async function bluetoothPrint(imageDataUrl, onStatus) {
     }
     
     onStatus('Requesting Bluetooth device...');
+    // Request device without specifying services to see all available
     const device = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
-      optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb'],
     });
+    
     onStatus('Connecting...');
     const server = await device.gatt.connect();
     
-    onStatus('Getting service...');
-    const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+    onStatus('Discovering services...');
+    // Get all services the device offers
+    const services = await server.getPrimaryServices();
+    console.log('Available services:', services.map(s => s.uuid));
     
-    onStatus('Getting characteristic...');
-    const characteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+    // Try to find a service with a writable characteristic
+    let service = null;
+    let characteristic = null;
+    
+    for (const s of services) {
+      try {
+        const characteristics = await s.getCharacteristics();
+        for (const c of characteristics) {
+          if (c.properties.write || c.properties.writeWithoutResponse) {
+            service = s;
+            characteristic = c;
+            console.log('Found writable characteristic:', c.uuid, 'in service:', s.uuid);
+            break;
+          }
+        }
+        if (characteristic) break;
+      } catch (err) {
+        console.log('Error accessing service:', s.uuid, err);
+        continue;
+      }
+    }
+    
+    if (!service || !characteristic) {
+      throw new Error('No writable Bluetooth characteristic found. Make sure your printer is connected and in printing mode.');
+    }
 
     onStatus('Building print data...');
     const bytes = await buildEscPosImage(imageDataUrl);

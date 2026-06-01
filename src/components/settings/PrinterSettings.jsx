@@ -34,19 +34,34 @@ export default function PrinterSettings() {
       const { transport, wifiIp, wifiPort } = printer;
       const onStatus = msg => setTestStatus(msg);
       
+      // Generate a simple test image
+      const canvas = document.createElement('canvas');
+      canvas.width = 384; // 48mm @ 203dpi
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#000000';
+      ctx.font = '20px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('TEST PRINT', canvas.width / 2, 100);
+      ctx.font = '14px Arial';
+      ctx.fillText('MONO BOOTH PH', canvas.width / 2, 130);
+      const testImageDataUrl = canvas.toDataURL('image/png');
+      
       let result;
       switch (transport) {
         case 'bluetooth':
-          result = await bluetoothPrint(null, onStatus);
+          result = await bluetoothPrint(testImageDataUrl, onStatus);
           break;
         case 'usb':
-          result = await usbPrint(null, onStatus);
+          result = await usbPrint(testImageDataUrl, onStatus);
           break;
         case 'wifi':
-          result = await wifiPrint(null, wifiIp, wifiPort, onStatus);
+          result = await wifiPrint(testImageDataUrl, wifiIp, wifiPort, onStatus);
           break;
         default:
-          result = await simulatePrint(null, onStatus);
+          result = await simulatePrint(testImageDataUrl, onStatus);
       }
       
       setTestStatus(result.message);
