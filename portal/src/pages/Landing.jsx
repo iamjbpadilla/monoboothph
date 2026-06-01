@@ -1,4 +1,5 @@
 import { MessageCircle, ArrowRight, Camera, Printer, Share2, Zap, Smartphone, Palette, Layout, Users, Cpu, Wifi, Clock, Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const WORKFLOW = [
   {
@@ -94,10 +95,31 @@ const PACKAGES = [
 ];
 
 export default function Landing() {
+  const [isVisible, setIsVisible] = useState({});
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('[data-animate]').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="w-full min-h-screen bg-white">
       {/* Header */}
-      <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+      <div className="max-w-4xl mx-auto px-6 py-20 text-center animate-fade-in">
         <img 
           src="/mono-booth-ph.svg" 
           alt="MONO BOOTH PH" 
@@ -113,7 +135,7 @@ export default function Landing() {
           href="https://m.me/monoboothph"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl"
+          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
         >
           <MessageCircle className="w-5 h-5" />
           Book Your Event Now
@@ -124,11 +146,17 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* The Workflow */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div id="workflow" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-10">The Workflow</h2>
         <div className="space-y-6">
           {WORKFLOW.map((item, index) => (
-            <div key={index} className="flex gap-6 group items-start">
+            <div 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['workflow'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
               <div className="flex items-center gap-4 w-20 flex-shrink-0">
                 <span className="text-gray-300 font-mono text-lg group-hover:text-gray-900 transition-colors">{item.step}</span>
                 <div className="w-10 h-10 border-2 border-gray-200 flex items-center justify-center group-hover:border-gray-900 transition-colors">
@@ -147,11 +175,17 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Why MONO BOOTH PH */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div id="features" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-10">Why MONO BOOTH PH?</h2>
         <ul className="space-y-6">
           {FEATURES.map((feature, index) => (
-            <li key={index} className="flex gap-6 group items-start">
+            <li 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['features'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
               <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
                 <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{feature.icon}</span>
               </div>
@@ -167,11 +201,17 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Proprietary Technology */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div id="technology" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-10">Proprietary Technology</h2>
         <ul className="space-y-6">
           {TECHNOLOGY.map((tech, index) => (
-            <li key={index} className="flex gap-6 group items-start">
+            <li 
+              key={index} 
+              className={`flex gap-6 group items-start transition-all duration-700 ease-out ${
+                isVisible['technology'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
               <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
                 <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{tech.icon}</span>
               </div>
@@ -187,7 +227,7 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Hourly Packages */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div id="packages" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Hourly Packages</h2>
         <p className="text-gray-600 mb-12 text-lg leading-relaxed">
           All packages include unlimited physical prints, custom receipt branding, instant full-color digital downloads, live event gallery access, and professional operators.
@@ -195,7 +235,13 @@ export default function Landing() {
         
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {PACKAGES.map((pkg, index) => (
-            <div key={index} className="border-2 border-gray-200 p-8 hover:border-gray-900 transition-colors group">
+            <div 
+              key={index} 
+              className={`border-2 border-gray-200 p-8 hover:border-gray-900 transition-all duration-300 group transform hover:-translate-y-1 ${
+                isVisible['packages'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-14 h-14 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-900 transition-colors">
                   <span className="text-gray-400 group-hover:text-gray-900 transition-colors">{pkg.icon}</span>
@@ -211,7 +257,7 @@ export default function Landing() {
                 href="https://m.me/monoboothph"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm"
+                className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900 text-sm transform hover:scale-105"
               >
                 Book Now
                 <ArrowRight className="w-4 h-4" />
@@ -228,10 +274,12 @@ export default function Landing() {
       <hr className="border-gray-200 max-w-4xl mx-auto" />
 
       {/* Booking & Location */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div id="booking" data-animate className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-10">Booking & Location</h2>
         <ul className="space-y-6 mb-10">
-          <li className="flex gap-6 items-start">
+          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
               <span className="text-gray-400"><Check className="w-5 h-5" /></span>
             </div>
@@ -240,7 +288,9 @@ export default function Landing() {
               <p className="text-gray-600">Kabankalan City and beyond</p>
             </div>
           </li>
-          <li className="flex gap-6 items-start">
+          <li className={`flex gap-6 items-start transition-all duration-700 ease-out ${
+            isVisible['booking'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`} style={{ transitionDelay: '100ms' }}>
             <div className="w-12 h-12 border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
               <span className="text-gray-400"><MessageCircle className="w-5 h-5" /></span>
             </div>
@@ -255,7 +305,7 @@ export default function Landing() {
           href="https://m.me/monoboothph"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl"
+          className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
         >
           <MessageCircle className="w-5 h-5" />
           Check Availability
