@@ -4,7 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 // Font size guide (203 DPI): 20px ≈ 2.5mm, 28px ≈ 3.5mm, 40px ≈ 5mm
 function defaultBlocks() {
   return {
-    header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true, imageScale: 4, imageBottomMargin: 16 },
+    header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true, imageScale: 4, imageBottomMargin: 16, titleSubtitleGap: 8 },
     photos:     { enabled: true,  borderStyle: 'thin', borderColor: '#000000', gap: 8 },
     divider:    { enabled: true,  style: 'dashed', thickness: 2, color: '#000000' },
     elementSpacing: 16,
@@ -23,7 +23,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 15, // bump to force preferences refresh when defaults change
+  _version: 16, // bump to force preferences refresh when defaults change
   general: {
     boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
@@ -57,11 +57,12 @@ const DEFAULT_SETTINGS = {
         showLogo: false,
         backgroundStyle: 'gradient-purple-pink'
       }
-    }
+    },
+    settingsPin: '0000'
   },
   camera: {
     deviceId: '',
-    resolution: 'hd',
+    resolution: 'fhd',
     mirror: true,
   },
   printer: {
@@ -185,4 +186,4 @@ export function useSettings() {
   return ctx;
 }
 
-export { DEFAULT_SETTINGS };
+export { DEFAULT_SETTINGS, defaultBlocks };

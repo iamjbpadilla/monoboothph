@@ -244,14 +244,6 @@ export default function AccountSettings() {
                 </div>
               )}
 
-              {/* Unpair Button */}
-              <button
-                onClick={handleUnpair}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-md-error border border-md-error/40 hover:bg-md-error-container/30 transition-colors"
-              >
-                <Unlink size={18} />
-                Unpair Device
-              </button>
             </div>
           ) : (
             <div className="space-y-4">
@@ -293,51 +285,6 @@ export default function AccountSettings() {
               </button>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Backup/Retrieve Card */}
-      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
-        <div className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant">
-          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Settings Backup</span>
-        </div>
-        <div className="p-4">
-          <div className="space-y-3">
-            <button
-              onClick={handleBackup}
-              disabled={backingUp}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium bg-md-surface-container-high text-md-on-surface hover:bg-md-surface-container-highest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {backingUp ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Backing up...
-                </>
-              ) : (
-                <>
-                  <Download size={18} />
-                  Backup to Cloud
-                </>
-              )}
-            </button>
-            <button
-              onClick={handleRetrieve}
-              disabled={retrieving}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium bg-md-surface-container-high text-md-on-surface hover:bg-md-surface-container-highest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {retrieving ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Retrieving...
-                </>
-              ) : (
-                <>
-                  <Upload size={18} />
-                  Retrieve from Cloud
-                </>
-              )}
-            </button>
-          </div>
         </div>
       </div>
 

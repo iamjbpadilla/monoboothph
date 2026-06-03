@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased] - {date}
+## [Unreleased] - 2026-06-02
 
 ### Added
 - Test Print button under each template preview in Template Settings — prints layout sample using placeholder images via configured transport
@@ -28,13 +28,20 @@
 - "Printed via USB" text no longer shown on success screen after USB print
 
 ### Added
+- Per-block Reset buttons in Template Settings — every block (Header, Footer, Photos, Divider, Date/Time, Custom Text, Receipt Items, Barcode) now has a "Reset" link to restore factory defaults
+- Title-Subtitle Gap slider in Template Settings — configurable spacing (0–32px) between header title and subtitle, default 8px
+- PIN lock gate before Settings panel — 4-digit numeric keypad challenge on standby gear tap; default PIN `0000`; stored locally via Preferences
+- Security tab in Admin Settings — change the settings PIN with current verification
 - Full-screen image carousel in Advertising Settings — dedicated image list (upload/URL) with Scale/Fit/Stretch modes; rotates round-robin on every advertising screen appearance; hides all other ad elements (title, social, QR, poster wall) when enabled
 
 ### Changed
+- Settings > About: removed "How to Use" section
+- Settings > Account: removed manual Unpair button and Settings Backup card (backup/retrieve); auto-unpair countdown timer remains
+- Settings > Camera: default resolution changed to Full HD (1080p)
 - Print-only margin controls in Printer Settings: configurable top margin (0–48px) and bottom multiplier (−3x to 5x) that only affect thermal print output, leaving on-screen previews unchanged
 - Default print top margin increased to 22px, bottom multiplier to 4x
 - Canvas top/bottom margin reduced from 22px to 12px for less blank lead-in on thermal prints
-- Settings version bumped to 15 (forces reset from v14 to apply new print margin and advertising defaults)
+- Settings version bumped to 16 (forces reset from v15 to apply PIN and advertising defaults)
 - Default print settings: Gamma 1.8, Brightness −8, Contrast 64 (tuned for RP30A-UB)
 - Changelog now loaded from external CHANGELOG.md file for easier maintenance
 - Wide Load template - 2x3 landscape layout with 6 photos

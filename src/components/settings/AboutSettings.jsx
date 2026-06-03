@@ -220,29 +220,6 @@ export default function AboutSettings() {
         )}
       </div>
 
-      {/* How to Use */}
-      <div className="rounded-[16px] bg-md-surface-container p-4 space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">How to Use</p>
-        <div className="space-y-2 text-xs text-md-on-surface-variant leading-relaxed">
-          <div className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">1</span>
-            <span>Tap the screen to start</span>
-          </div>
-          <div className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">2</span>
-            <span>Choose your template (Solo, Double, Triple, or Quad)</span>
-          </div>
-          <div className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">3</span>
-            <span>Strike a pose for each photo</span>
-          </div>
-          <div className="flex gap-2">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-md-primary-container text-md-on-primary-container flex items-center justify-center text-[10px] font-semibold">4</span>
-            <span>Preview and print your receipt</span>
-          </div>
-        </div>
-      </div>
-
       {/* Device Info */}
       {deviceInfo && (
         <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">

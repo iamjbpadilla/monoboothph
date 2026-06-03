@@ -128,7 +128,7 @@ export default function CameraSettings() {
           <button
             onClick={() => {
               updateSettings('camera.deviceId', '');
-              updateSettings('camera.resolution', 'hd');
+              updateSettings('camera.resolution', 'fhd');
               updateSettings('camera.mirror', false);
             }}
             className="text-xs text-md-primary hover:text-md-on-primary transition-colors"

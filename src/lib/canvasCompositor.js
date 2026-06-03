@@ -202,6 +202,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             contentH += textH(blocks.header.fontSize, elGap);
             const subtitleText = blocks.header.subtitle || (blocks.header.text ? '' : generalSettings.eventName);
             if (subtitleText) {
+              contentH += (blocks.header.titleSubtitleGap || 8);
               const subFontSize = Math.max(16, Math.round(blocks.header.fontSize * 0.52));
               contentH += textH(subFontSize, elGap);
             }
@@ -313,9 +314,10 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             alignment: blocks.header.alignment,
             fontFamily: fontHeading,
           });
-          y += textH(blocks.header.fontSize, elGap);
+          y += textH(blocks.header.fontSize, 0);
 
           if (subtitleText) {
+            y += (blocks.header.titleSubtitleGap || 8);
             const subFontSize = Math.max(16, Math.round(blocks.header.fontSize * 0.52));
             drawText(ctx, subtitleText, x, y, contentWidth, {
               fontSize: subFontSize,
@@ -325,6 +327,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               fontFamily: fontBody,
             });
             y += textH(subFontSize, elGap);
+          } else {
+            y += elGap;
           }
         }
         break;

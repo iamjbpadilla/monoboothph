@@ -9,6 +9,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AppManagement = lazy(() => import('./pages/AppManagement'));
 const Gallery = lazy(() => import('./pages/Gallery'));
 const Help = lazy(() => import('./pages/Help'));
+const Timeline = lazy(() => import('./pages/Timeline'));
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/timeline" element={<Timeline />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

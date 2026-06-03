@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User, Lock } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
 import GeneralSettings from './settings/GeneralSettings.jsx';
@@ -9,6 +9,8 @@ import TemplateSettings from './settings/TemplateSettings.jsx';
 import AboutSettings from './settings/AboutSettings.jsx';
 import AdvertisingSettings from './settings/AdvertisingSettings.jsx';
 import AccountSettings from './settings/AccountSettings.jsx';
+import SecuritySettings from './settings/SecuritySettings.jsx';
+import PinChallenge from './settings/PinChallenge.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 
@@ -18,13 +20,15 @@ const TABS = [
   { key: 'templates',    label: 'Templates',    icon: Layout },
   { key: 'camera',       label: 'Camera',       icon: Camera },
   { key: 'printer',      label: 'Printer',      icon: Printer },
+  { key: 'security',     label: 'Security',     icon: Lock },
   { key: 'account',      label: 'Account',      icon: User },
   { key: 'about',        label: 'About',        icon: Info },
 ];
 
 const TAB_MAP = {
   general: GeneralSettings, advertising: AdvertisingSettings, camera: CameraSettings,
-  printer: PrinterSettings, templates: TemplateSettings, account: AccountSettings, about: AboutSettings,
+  printer: PrinterSettings, templates: TemplateSettings, security: SecuritySettings,
+  account: AccountSettings, about: AboutSettings,
 };
 
 export default function SettingsPanel({ currentScreen = 'standby' }) {
@@ -33,7 +37,8 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
   const [pendingClose, setPendingClose] = useState(false);
   const [closing, setClosing] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
-  const { isDirty, saveSettings, discardSettings, resetSettings } = useSettings();
+  const [pinOpen, setPinOpen] = useState(false);
+  const { isDirty, saveSettings, discardSettings, resetSettings, settings } = useSettings();
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => { if (!isDirty) setPendingClose(false); }, [isDirty]);
@@ -88,7 +93,7 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
       {/* FAB trigger — badge dot when dirty — only show on standby */}
       {currentScreen === 'standby' && (
         <button
-          onClick={() => { playClick(); setOpen(true); }}
+          onClick={() => { playClick(); setPinOpen(true); }}
           className="fixed top-4 right-4 z-40 w-12 h-12 flex items-center justify-center rounded-2xl bg-md-surface-container-highest text-md-on-surface hover:bg-md-surface-bright shadow-lg"
           style={{ transition: 'background-color 150ms cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
           aria-label="Settings"
@@ -98,6 +103,15 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
             <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-md-primary border-2 border-md-surface-container-highest" />
           )}
         </button>
+      )}
+
+      {/* PIN Challenge */}
+      {pinOpen && (
+        <PinChallenge
+          expectedPin={settings.general.settingsPin || '0000'}
+          onUnlock={() => { setPinOpen(false); setOpen(true); }}
+          onCancel={() => setPinOpen(false)}
+        />
       )}
 
       {/* Fullscreen settings sheet */}

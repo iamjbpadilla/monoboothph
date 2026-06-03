@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronUp, ChevronDown, Printer, CheckCircle, XCircle } from 'lucide-react';
-import { useSettings } from '../../context/SettingsContext.jsx';
+import { useSettings, defaultBlocks } from '../../context/SettingsContext.jsx';
 import { compositeReceipt, SLOT_RATIOS } from '../../lib/canvasCompositor.js';
 import { simulatePrint } from '../../lib/printerTransports/simulate.js';
 import { usbPrint } from '../../lib/printerTransports/usb.js';
@@ -239,9 +239,17 @@ function TemplateBlockEditor() {
               </div>
               <button
                 onClick={() => {
-                  upd('header', 'title', '');
-                  upd('header', 'subtitle', '');
-                  upd('header', 'image', null);
+                  const defs = defaultBlocks();
+                  upd('header', 'text', defs.header.text);
+                  upd('header', 'title', defs.header.title);
+                  upd('header', 'subtitle', defs.header.subtitle);
+                  upd('header', 'image', defs.header.image);
+                  upd('header', 'fontSize', defs.header.fontSize);
+                  upd('header', 'alignment', defs.header.alignment);
+                  upd('header', 'bold', defs.header.bold);
+                  upd('header', 'imageScale', defs.header.imageScale);
+                  upd('header', 'imageBottomMargin', defs.header.imageBottomMargin);
+                  upd('header', 'titleSubtitleGap', defs.header.titleSubtitleGap);
                 }}
                 className="text-xs text-md-outline hover:text-md-on-surface-variant"
                 title="Reset to default"
@@ -263,6 +271,18 @@ function TemplateBlockEditor() {
               onChange={v => upd('header', 'subtitle', v)}
               placeholder="Custom subtitle"
             />
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-1">Title-Subtitle Gap (px)</label>
+              <input
+                type="range"
+                min="0"
+                max="32"
+                value={blocks.header.titleSubtitleGap || 8}
+                onChange={e => upd('header', 'titleSubtitleGap', parseInt(e.target.value))}
+                className="w-full"
+              />
+              <div className="text-xs text-md-outline text-center mt-1">{blocks.header.titleSubtitleGap || 8}px</div>
+            </div>
             <div>
               <label className="block text-xs text-md-on-surface-variant mb-1">Logo Image</label>
               <input
@@ -339,7 +359,15 @@ function TemplateBlockEditor() {
                 </button>
               </div>
               <button
-                onClick={() => upd('footer', 'text', '')}
+                onClick={() => {
+                  const defs = defaultBlocks();
+                  upd('footer', 'text', defs.footer.text);
+                  upd('footer', 'fontSize', defs.footer.fontSize);
+                  upd('footer', 'alignment', defs.footer.alignment);
+                  upd('footer', 'image', defs.footer.image);
+                  upd('footer', 'imageScale', defs.footer.imageScale);
+                  upd('footer', 'imageTopMargin', defs.footer.imageTopMargin);
+                }}
                 className="text-xs text-md-outline hover:text-md-on-surface-variant"
                 title="Reset to default"
               >
@@ -385,20 +413,34 @@ function TemplateBlockEditor() {
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-md-on-surface">Photos</span>
-            <div className="flex gap-1">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => moveBlock('photos', 'up')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move up"
+                >
+                  <ChevronUp size={16} />
+                </button>
+                <button
+                  onClick={() => moveBlock('photos', 'down')}
+                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                  title="Move down"
+                >
+                  <ChevronDown size={16} />
+                </button>
+              </div>
               <button
-                onClick={() => moveBlock('photos', 'up')}
-                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
-                title="Move up"
+                onClick={() => {
+                  const defs = defaultBlocks();
+                  upd('photos', 'borderStyle', defs.photos.borderStyle);
+                  upd('photos', 'borderColor', defs.photos.borderColor);
+                  upd('photos', 'gap', defs.photos.gap);
+                }}
+                className="text-xs text-md-outline hover:text-md-on-surface-variant"
+                title="Reset to default"
               >
-                <ChevronUp size={16} />
-              </button>
-              <button
-                onClick={() => moveBlock('photos', 'down')}
-                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
-                title="Move down"
-              >
-                <ChevronDown size={16} />
+                Reset
               </button>
             </div>
           </div>
@@ -437,6 +479,18 @@ function TemplateBlockEditor() {
                   <ChevronDown size={16} />
                 </button>
               </div>
+              <button
+                onClick={() => {
+                  const defs = defaultBlocks();
+                  upd('divider', 'style', defs.divider.style);
+                  upd('divider', 'thickness', defs.divider.thickness);
+                  upd('divider', 'color', defs.divider.color);
+                }}
+                className="text-xs text-md-outline hover:text-md-on-surface-variant"
+                title="Reset to default"
+              >
+                Reset
+              </button>
             </div>
           </div>
           <div className="flex gap-2 mb-3">
@@ -478,6 +532,16 @@ function TemplateBlockEditor() {
                   <ChevronDown size={16} />
                 </button>
               </div>
+              <button
+                onClick={() => {
+                  const defs = defaultBlocks();
+                  upd('datetime', 'format', defs.datetime.format);
+                }}
+                className="text-xs text-md-outline hover:text-md-on-surface-variant"
+                title="Reset to default"
+              >
+                Reset
+              </button>
             </div>
           </div>
           <TextInput label="Format" value={blocks.datetime.format} onChange={v => upd('datetime', 'format', v)} placeholder="MMM DD, YYYY HH:mm" />
@@ -504,6 +568,18 @@ function TemplateBlockEditor() {
                   <ChevronDown size={16} />
                 </button>
               </div>
+              <button
+                onClick={() => {
+                  const defs = defaultBlocks();
+                  upd('customText', 'content', defs.customText.content);
+                  upd('customText', 'fontSize', defs.customText.fontSize);
+                  upd('customText', 'alignment', defs.customText.alignment);
+                }}
+                className="text-xs text-md-outline hover:text-md-on-surface-variant"
+                title="Reset to default"
+              >
+                Reset
+              </button>
             </div>
           </div>
           <TextInput label="Content" value={blocks.customText.content} onChange={v => upd('customText', 'content', v)} placeholder="#MONOSTUDIOPH" />
@@ -532,6 +608,20 @@ function TemplateBlockEditor() {
                 <ChevronDown size={16} />
               </button>
             </div>
+            <button
+              onClick={() => {
+                const defs = defaultBlocks();
+                upd('receiptItems', 'items', defs.receiptItems.items);
+                upd('receiptItems', 'fontSize', defs.receiptItems.fontSize);
+                upd('receiptItems', 'showTotal', defs.receiptItems.showTotal);
+                upd('receiptItems', 'showQty', defs.receiptItems.showQty);
+                upd('receiptItems', 'randomize', defs.receiptItems.randomize);
+              }}
+              className="text-xs text-md-outline hover:text-md-on-surface-variant"
+              title="Reset to default"
+            >
+              Reset
+            </button>
           </div>
         </div>
         {blocks.receiptItems.enabled && (
@@ -660,6 +750,18 @@ function TemplateBlockEditor() {
                 <ChevronDown size={16} />
               </button>
             </div>
+            <button
+              onClick={() => {
+                const defs = defaultBlocks();
+                upd('barcode', 'value', defs.barcode.value);
+                upd('barcode', 'type', defs.barcode.type);
+                upd('barcode', 'showText', defs.barcode.showText);
+              }}
+              className="text-xs text-md-outline hover:text-md-on-surface-variant"
+              title="Reset to default"
+            >
+              Reset
+            </button>
           </div>
         </div>
         <div className="flex gap-3 items-center">
