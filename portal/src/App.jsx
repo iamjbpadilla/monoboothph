@@ -10,6 +10,7 @@ const AppManagement = lazy(() => import('./pages/AppManagement'));
 const Gallery = lazy(() => import('./pages/Gallery'));
 const Help = lazy(() => import('./pages/Help'));
 const Timeline = lazy(() => import('./pages/Timeline'));
+const Marketing = lazy(() => import('./pages/Marketing'));
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
             }
           />
           <Route path="/timeline" element={<Timeline />} />
+          <Route
+            path="/marketing"
+            element={
+              <ProtectedRoute>
+                <Marketing />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/about" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
