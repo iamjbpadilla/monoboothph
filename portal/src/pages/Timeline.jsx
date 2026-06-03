@@ -44,7 +44,7 @@ const PHASES = [
     description: 'Field testing at select events. We are looking for beta partners — the booth is free for your event. Just cover transport.',
     icon: 'Rocket',
     ctaLabel: 'Message us for a free beta slot',
-    ctaUrl: 'https://m.me/monoboothph',
+    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27m%20interested%20in%20the%20free%20beta%20slot%20for%20MONO%20BOOTH%20PH.',
   },
   {
     title: 'Public Launch',
@@ -53,7 +53,7 @@ const PHASES = [
     description: 'Open for bookings. Full event coverage with unlimited prints and instant digital downloads. Book early to secure your date.',
     icon: 'PartyPopper',
     ctaLabel: 'Book your event early',
-    ctaUrl: 'https://m.me/monoboothph',
+    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27d%20like%20to%20book%20MONO%20BOOTH%20PH%20for%20my%20event.',
   },
 ];
 
