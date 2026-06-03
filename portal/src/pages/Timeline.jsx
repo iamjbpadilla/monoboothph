@@ -44,7 +44,7 @@ const PHASES = [
     description: 'Field testing at select events. We are looking for beta partners — the booth is free for your event. Just cover transport.',
     icon: 'Rocket',
     ctaLabel: 'Message us for a free beta slot',
-    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27m%20interested%20in%20the%20free%20beta%20slot%20for%20MONO%20BOOTH%20PH.',
+    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27m%20interested%20in%20the%20free%20beta%20slot%20for%20MONO%20BOOTH%20PH.%20What%20dates%20are%20available%20and%20what%27s%20included%3F',
   },
   {
     title: 'Public Launch',
@@ -53,7 +53,7 @@ const PHASES = [
     description: 'Open for bookings. Full event coverage with unlimited prints and instant digital downloads. Book early to secure your date.',
     icon: 'PartyPopper',
     ctaLabel: 'Book your event early',
-    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27d%20like%20to%20book%20MONO%20BOOTH%20PH%20for%20my%20event.',
+    ctaUrl: 'https://m.me/monoboothph?text=Hi!%20I%27d%20like%20to%20book%20MONO%20BOOTH%20PH%20for%20my%20event.%20Can%20we%20talk%20dates%20and%20packages%3F',
   },
 ];
 
@@ -76,14 +76,14 @@ function TimelineItem({ phase, index }) {
       <div className="flex flex-col items-center shrink-0 w-8">
         <div className="relative">
           {completed ? (
-            <CheckCircle2 className="w-6 h-6 text-gray-900" strokeWidth={2} />
+            <CheckCircle2 className="w-6 h-6 text-black" strokeWidth={2} />
           ) : inProgress ? (
             <span className="relative flex h-6 w-6">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-40"></span>
-              <CircleDot className="relative inline-flex rounded-full w-6 h-6 text-gray-900" strokeWidth={2} />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-40"></span>
+              <CircleDot className="relative inline-flex rounded-full w-6 h-6 text-black" strokeWidth={2} />
             </span>
           ) : (
-            <CircleDot className="w-6 h-6 text-gray-300" strokeWidth={2} />
+            <CircleDot className="w-6 h-6 text-black/30" strokeWidth={2} />
           )}
         </div>
         {index < PHASES.length - 1 && (
@@ -94,20 +94,20 @@ function TimelineItem({ phase, index }) {
       {/* Right column: content */}
       <div className="pb-8">
         <div className="flex items-center gap-3 mb-1">
-          <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{phase.date}</span>
+          <span className="text-xs font-bold text-black uppercase tracking-wider">{phase.date}</span>
           {inProgress && (
-            <span className="text-[10px] font-bold bg-gray-900 text-white px-2 py-0.5 uppercase tracking-wider">
+            <span className="text-[10px] font-bold bg-black text-white px-2 py-0.5 uppercase tracking-wider">
               In Progress
             </span>
           )}
         </div>
-        <h3 className="font-bold text-lg text-gray-900 mb-1 flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4 text-gray-400" strokeWidth={2} />}
+        <h3 className="font-bold text-lg text-black mb-1 flex items-center gap-2">
+          {Icon && <Icon className="w-4 h-4 text-black/50" strokeWidth={2} />}
           {phase.title}
         </h3>
-        <p className="text-sm text-gray-600 leading-relaxed max-w-lg">{phase.description}</p>
+        <p className="text-sm text-gray-500 leading-relaxed max-w-lg">{phase.description}</p>
         {phase.statusNote && (
-          <p className="text-xs text-gray-400 mt-1.5 italic">
+          <p className="text-xs text-black/50 mt-1.5 italic">
             {phase.statusNote} — {phase.lastUpdated}
           </p>
         )}
@@ -116,7 +116,7 @@ function TimelineItem({ phase, index }) {
             href={phase.ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-sm bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900"
+            className="mt-4 inline-flex items-center gap-2 text-sm bg-black text-white px-6 py-3 font-semibold hover:opacity-90 transition border-2 border-black"
           >
             <MessageCircle className="w-4 h-4" />
             {phase.ctaLabel}
@@ -142,7 +142,7 @@ export default function Timeline() {
         <div className="text-center mb-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition"
+            className="inline-flex items-center gap-2 text-sm text-black hover:opacity-70 transition"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to home
@@ -156,14 +156,14 @@ export default function Timeline() {
             heroRef.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 tracking-tight text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-3 tracking-tight text-center">
             Project Timeline
           </h1>
-          <p className="text-gray-600 max-w-xl mx-auto text-center">
+          <p className="text-gray-500 max-w-xl mx-auto text-center">
             Where we are now and where we are headed.
           </p>
-          <p className="text-gray-600 max-w-xl mx-auto text-center mt-1">
-            Building <span className="font-bold text-gray-900">MONO BOOTH PH</span> from the ground up.
+          <p className="text-gray-500 max-w-xl mx-auto text-center mt-1">
+            Building <span className="font-bold text-black">MONO BOOTH PH</span> from the ground up.
           </p>
         </div>
 

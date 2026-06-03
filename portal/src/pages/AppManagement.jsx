@@ -163,27 +163,27 @@ export default function AppManagement() {
 
   return (
     <div className="min-h-screen bg-white">
-      <nav className="bg-white border-b-2 border-gray-900">
+      <nav className="bg-white border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/admin/dashboard')}
-                className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-lg transition"
+                className="text-black hover:bg-gray-100 p-2 rounded-lg transition"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <img 
                 src="/mono-booth-ph.svg" 
                 alt="MONO BOOTH PH" 
-                className="w-8 h-8 object-contain invert"
+                className="w-8 h-8 object-contain"
               />
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">Apps</span>
+              <span className="text-black/50">/</span>
+              <span className="text-black">Apps</span>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+              className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm"
             >
               <Plus className="w-4 h-4" />
               New App
@@ -194,31 +194,34 @@ export default function AppManagement() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading...</div>
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-10 h-10 border-2 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+            <p className="text-sm text-gray-500 font-medium">Loading...</p>
+          </div>
         ) : (
           <>
             <div className="mb-6">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black/50" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search apps by name or pairing code..."
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
                 />
               </div>
             </div>
             {filteredApps.length === 0 && apps.length > 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-black">
                 No apps match your search
               </div>
             ) : apps.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">No apps created yet</p>
+                <p className="text-black mb-4">No apps created yet</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="text-gray-900 hover:text-gray-700 font-medium"
+                  className="text-black hover:underline font-medium"
                 >
                   Create your first app
                 </button>
@@ -226,13 +229,13 @@ export default function AppManagement() {
             ) : (
               <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
                 <table className="w-full">
-              <thead className="bg-gray-50 border-b-2 border-gray-200">
+              <thead className="bg-white border-b-2 border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">App Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pairing Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Devices</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">App Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Pairing Code</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Devices</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Created</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-black uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -240,53 +243,53 @@ export default function AppManagement() {
                   const appDevices = devices.filter(d => d.app_id === app.id);
                   return (
                     <tr key={app.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{app.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-black">{app.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <code className="text-sm font-mono text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg">{app.pairing_code}</code>
+                        <code className="text-sm font-mono text-black bg-gray-100 px-2.5 py-1 rounded-lg">{app.pairing_code}</code>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                         {appDevices.length > 0 ? (
                           <div className="space-y-1.5">
                             {appDevices.map(device => (
                               <div key={device.id} className="flex items-center gap-2 text-xs">
                                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-medium ${
-                                  device.status === 'online' ? 'bg-gray-100 text-gray-900' : 'bg-gray-100 text-gray-600'
+                                  device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                   <span className="w-1.5 h-1.5 rounded-full bg-current" />
                                   {device.status}
                                 </span>
-                                <span className="text-gray-600">{device.device_name || device.device_id}</span>
-                                <span className="text-gray-400">
+                                <span className="text-black">{device.device_name || device.device_id}</span>
+                                <span className="text-black/50">
                                   ({device.print_count || 0} prints)
                                 </span>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <span className="text-gray-400">No devices</span>
+                          <span className="text-black/50">No devices</span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                         {new Date(app.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                         <button
                           onClick={() => copyToClipboard(app.pairing_code)}
-                          className="text-gray-600 hover:text-gray-900 mr-3"
+                          className="text-gray-500 hover:text-black mr-3 transition"
                           title="Copy code"
                         >
                           <Copy className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => regeneratePairingCode(app.id)}
-                          className="text-gray-600 hover:text-gray-900 mr-3"
+                          className="text-gray-500 hover:text-black mr-3 transition"
                           title="Regenerate code"
                         >
                           <RefreshCw className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => deleteApp(app.id)}
-                          className="text-gray-600 hover:text-gray-900"
+                          className="text-gray-500 hover:text-red-600 transition"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -305,27 +308,27 @@ export default function AppManagement() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg border-2 border-gray-900">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New App</h2>
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg border-2 border-black">
+            <h2 className="text-xl font-semibold text-black mb-4">Create New App</h2>
             <input
               type="text"
               value={newAppName}
               onChange={(e) => setNewAppName(e.target.value)}
               placeholder="App name (e.g., Wedding Reception)"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
               autoFocus
             />
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition text-sm font-medium"
+                className="px-4 py-2 text-black hover:bg-gray-100 rounded-xl transition text-sm font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={createApp}
                 disabled={creating || !newAppName.trim()}
-                className="px-4 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
+                className="px-4 py-2 bg-black text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
               >
                 {creating ? 'Creating...' : 'Create'}
               </button>

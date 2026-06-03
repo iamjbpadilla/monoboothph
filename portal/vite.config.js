@@ -4,4 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    sourcemap: false,
+    chunkSizeWarningLimit: 2000,
+    rolldownOptions: {
+      output: {
+        codeSplitting: true,
+      },
+    },
+  },
 })

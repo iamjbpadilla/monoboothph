@@ -5,8 +5,9 @@
 ### Added
 - Portal landing page: scroll reveal animations via IntersectionObserver (`useInView` hook)
 - New `/timeline` page with monochrome vertical project roadmap (5 phases: Idea → App Dev → Enclosure → Beta → Public Launch)
-- Timeline page linked from landing footer
-- Portal footer: "Project Timeline" navigation link
+- New `/about` page with brand story, how-it-works steps, build origin, Messenger contact, realistic print layout previews (header, dividers, receipt items, barcode, footer), feature highlights, event type tags, and expandable FAQ
+- Timeline page linked from About page
+- Portal footer: "About" navigation link (replaced "Project Timeline")
 
 ### Changed
 - Portal landing page: lead with tagline and CTA, removed prices from package cards

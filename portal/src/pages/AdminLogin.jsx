@@ -55,42 +55,42 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-sm p-8 border-2 border-gray-900 portal-card">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-sm p-8 border-2 border-black portal-card">
         <div className="text-center mb-8">
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain invert"
+            className="w-24 h-24 mx-auto mb-4 object-contain"
           />
-          <p className="text-gray-500 text-sm">Admin Portal</p>
+          <p className="text-black text-sm">Admin Portal</p>
         </div>
         
         {error && (
-          <div className="bg-gray-100 border border-gray-900 text-gray-900 px-4 py-3 rounded-lg mb-6 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-gray-700 mb-2 text-sm font-medium">Email</label>
+            <label className="block text-black mb-2 text-sm font-medium">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
               placeholder="admin@example.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2 text-sm font-medium">Password</label>
+            <label className="block text-black mb-2 text-sm font-medium">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
               placeholder="••••••••"
               required
             />
@@ -99,7 +99,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-black text-white py-2.5 rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

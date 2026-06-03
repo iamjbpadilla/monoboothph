@@ -159,34 +159,34 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-white">
-      <nav className="bg-white border-b-2 border-gray-900">
+      <nav className="bg-white border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
               <img 
                 src="/mono-booth-ph.svg" 
                 alt="MONO BOOTH PH" 
-                className="w-8 h-8 object-contain invert"
+                className="w-8 h-8 object-contain"
               />
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">Dashboard</span>
+              <span className="text-black/50">/</span>
+              <span className="text-black">Dashboard</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 {dbStatus === 'checking' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Checking...
                   </span>
                 )}
                 {dbStatus === 'connected' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
                     <CheckCircle className="w-3 h-3" />
                     Database Connected
                   </span>
                 )}
                 {dbStatus === 'error' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
                     <XCircle className="w-3 h-3" />
                     Database Error
                   </span>
@@ -194,14 +194,14 @@ export default function AdminDashboard() {
               </div>
               <button
                 onClick={() => navigate('/admin/help')}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
+                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
               >
                 <HelpCircle className="w-4 h-4" />
                 Help
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
+                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -213,42 +213,45 @@ export default function AdminDashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading...</div>
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-10 h-10 border-2 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+            <p className="text-sm text-gray-500 font-medium">Loading...</p>
+          </div>
         ) : (
           <div className="space-y-8">
             {/* Stats Section */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Overview</h2>
+              <h2 className="text-xl font-semibold text-black mb-6">Overview</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                   title="Total Apps"
                   value={stats.apps}
-                  icon={<LayoutDashboard className="w-5 h-5 text-gray-900" />}
+                  icon={<LayoutDashboard className="w-5 h-5 text-black" />}
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
                   title="Active Devices"
                   value={stats.activeDevices}
-                  icon={<Smartphone className="w-5 h-5 text-gray-900" />}
+                  icon={<Smartphone className="w-5 h-5 text-black" />}
                   onClick={() => navigate('/admin/apps')}
                 />
                 <StatCard
                   title="Total Photos"
                   value={stats.photos}
-                  icon={<Images className="w-5 h-5 text-gray-900" />}
+                  icon={<Images className="w-5 h-5 text-black" />}
                   onClick={() => navigate('/admin/gallery')}
                 />
                 <StatCard
                   title="Total Prints"
                   value={stats.totalPrints}
-                  icon={<Printer className="w-5 h-5 text-gray-900" />}
+                  icon={<Printer className="w-5 h-5 text-black" />}
                 />
               </div>
             </div>
 
             {/* Storage Section */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Storage</h2>
+              <h2 className="text-xl font-semibold text-black mb-6">Storage</h2>
               <StorageCard
                 status={storageStatus}
                 usage={storageUsage}
@@ -257,7 +260,7 @@ export default function AdminDashboard() {
 
             {/* Recent Activity */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-black mb-6 flex items-center gap-2">
                 <Activity className="w-5 h-5" />
                 Recent Activity
               </h2>
@@ -280,7 +283,7 @@ function StatCard({ title, value, icon, onClick }) {
         <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{title}</p>
         {icon}
       </div>
-      <p className="text-3xl font-bold text-gray-900">{value}</p>
+      <p className="text-3xl font-bold text-black">{value}</p>
     </div>
   );
 }
@@ -289,15 +292,15 @@ function RecentActivityCard({ activity }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       {activity.length === 0 ? (
-        <p className="text-gray-500 text-sm">No recent activity</p>
+        <p className="text-black text-sm">No recent activity</p>
       ) : (
         <div className="space-y-4">
           {activity.map((item) => (
             <div key={item.id} className="flex items-start gap-3 text-sm">
-              <div className="w-2 h-2 rounded-full bg-gray-900 mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-black mt-2 flex-shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900 font-medium">Photo uploaded</p>
-                <p className="text-gray-500 text-xs mt-0.5">
+                <p className="text-black font-medium">Photo uploaded</p>
+                <p className="text-black text-xs mt-0.5">
                   {item.apps?.name} • {item.devices?.device_name || 'Unknown device'}
                 </p>
               </div>
@@ -324,24 +327,24 @@ function StorageCard({ status, usage }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Storage Usage</h3>
+        <h3 className="text-lg font-semibold text-black">Storage Usage</h3>
         <div className="flex items-center gap-2 text-sm">
           {status === 'checking' && (
             <>
-              <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
-              <span className="text-gray-400">Checking...</span>
+              <Loader2 className="w-4 h-4 text-yellow-600 animate-spin" />
+              <span className="text-yellow-600">Checking...</span>
             </>
           )}
           {status === 'connected' && (
             <>
-              <CheckCircle className="w-4 h-4 text-gray-900" />
-              <span className="text-gray-900">Connected</span>
+              <CheckCircle className="w-4 h-4 text-green-600" />
+              <span className="text-green-600">Connected</span>
             </>
           )}
           {status === 'error' && (
             <>
-              <XCircle className="w-4 h-4 text-gray-900" />
-              <span className="text-gray-900">Error</span>
+              <XCircle className="w-4 h-4 text-red-600" />
+              <span className="text-red-600">Error</span>
             </>
           )}
         </div>
@@ -349,20 +352,20 @@ function StorageCard({ status, usage }) {
       
       <div className="space-y-3">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Used</span>
-          <span className="font-semibold text-gray-900">{formatBytes(usage.used)}</span>
+          <span className="text-gray-500">Used</span>
+          <span className="font-semibold text-black">{formatBytes(usage.used)}</span>
         </div>
         
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
-            className="bg-gray-900 h-2.5 rounded-full transition-all duration-300"
+            className="bg-black h-2.5 rounded-full transition-all duration-300"
             style={{ width: `${Math.min(usage.percentage, 100)}%` }}
           />
         </div>
         
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Total</span>
-          <span className="font-semibold text-gray-900">{formatBytes(usage.total)}</span>
+          <span className="text-gray-500">Total</span>
+          <span className="font-semibold text-black">{formatBytes(usage.total)}</span>
         </div>
         
         <div className="text-right text-sm text-gray-500 font-medium">

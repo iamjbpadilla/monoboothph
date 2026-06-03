@@ -10,10 +10,7 @@ export default function useInView(options = {}) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.unobserve(el);
-        }
+        setIsInView(entry.isIntersecting);
       },
       { threshold: 0.1, ...options }
     );

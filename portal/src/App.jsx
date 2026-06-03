@@ -15,7 +15,11 @@ function App() {
   return (
     <BrowserRouter>
       <div className="portal-bg" />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-white">
+          <div className="w-10 h-10 border-2 border-gray-200 border-t-black rounded-full animate-spin" />
+        </div>
+      }>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/download" element={<Navigate to="/" replace />} />
@@ -54,6 +58,7 @@ function App() {
             }
           />
           <Route path="/timeline" element={<Timeline />} />
+          <Route path="/about" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

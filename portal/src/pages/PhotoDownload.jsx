@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Download, ExternalLink, Camera, MessageCircle, ArrowRight } from 'lucide-react';
+import { Download, ExternalLink, Camera } from 'lucide-react';
 
 export default function PhotoDownload() {
   const { sessionId } = useParams();
@@ -107,114 +107,106 @@ export default function PhotoDownload() {
     return `${hours}h ${minutes}m ${seconds}s`;
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <img 
-            src="/mono-booth-ph.svg" 
-            alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain grayscale brightness-0 animate-pulse"
-          />
-          <p className="text-lg text-gray-800">Loading your photo...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border-2 border-gray-300 p-10 text-center">
-          <img 
-            src="/mono-booth-ph.svg" 
-            alt="MONO BOOTH PH" 
-            className="w-16 h-16 mx-auto mb-6 object-contain"
-          />
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Photo Not Found</h2>
-          <p className="text-gray-700 mb-8">
-            {error}. Photos uploaded daily to our Facebook page.
-          </p>
-          <div className="space-y-4">
-            <a
-              href="https://facebook.com/monoboothph"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 font-bold hover:bg-gray-800 transition border-2 border-gray-900 transform hover:scale-105 w-full justify-center"
-            >
-              <ExternalLink className="w-5 h-5" />
-              Visit Our Facebook Page
-            </a>
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 bg-gray-800 text-white px-8 py-4 font-semibold hover:bg-gray-700 transition border-2 border-gray-800 transform hover:scale-105 w-full justify-center"
-            >
-              Return to Home
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col p-4 md:p-8">
       {/* Header branding */}
       <div className="flex flex-col items-center gap-1 py-6 border-b-2 border-gray-300">
-        <img 
-          src="/mono-booth-ph.svg" 
-          alt="MONO BOOTH PH" 
+        <img
+          src="/mono-booth-ph.svg"
+          alt="MONO BOOTH PH"
           className="w-12 h-12 object-contain grayscale brightness-0"
         />
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-2xl w-full mx-auto py-12">
-        <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden shadow-lg">
-          {imageLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
-              <div className="w-12 h-12 border-3 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4" />
-              <p className="text-sm text-gray-500 font-medium">Loading your photo...</p>
-            </div>
-          )}
-          <img
-            src={photo.publicUrl}
-            alt="Your photo"
-            className={`w-full transition-all duration-700 ease-out ${imageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
-            onLoad={() => setImageLoading(false)}
-          />
-        </div>
-        
-        {/* Guide text */}
-        <div className="text-center space-y-2">
-          <p className="text-sm text-gray-800 flex items-center justify-center gap-2">
-            <div className="w-8 h-8 border-2 border-gray-300 flex items-center justify-center">
-              <Camera className="w-4 h-4 text-gray-600" />
-            </div>
-            Long-press on photo to save to gallery
-          </p>
-          <p className="text-xs text-gray-600">or use the button below</p>
-        </div>
-        
-        <button
-          onClick={handleDownload}
-          disabled={downloading}
-          className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-gray-900 transform hover:scale-105"
-        >
-          <Download className="w-6 h-6" />
-          {downloading ? 'Downloading...' : 'Download'}
-        </button>
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-12 h-12 border-3 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+            <p className="text-sm text-gray-500 font-medium">Loading your photo...</p>
+          </div>
+        )}
 
-        <p className="text-xs text-gray-600">
-          Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-gray-800'}`}>
-            {getTimeUntilDeletion(photo.created_at)}
-          </span>
-        </p>
+        {error && (
+          <div className="bg-white border-2 border-gray-300 p-10 text-center w-full rounded-lg shadow-lg">
+            <img
+              src="/mono-booth-ph.svg"
+              alt="MONO BOOTH PH"
+              className="w-16 h-16 mx-auto mb-6 object-contain"
+            />
+            <h2 className="text-2xl font-bold text-black mb-4">Photo Not Found</h2>
+            <p className="text-gray-700 mb-8">
+              {error}. Photos uploaded daily to our Facebook page.
+            </p>
+            <div className="space-y-4 max-w-xs mx-auto">
+              <a
+                href="https://facebook.com/monoboothph"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 font-bold hover:opacity-90 transition border-2 border-black transform hover:scale-105 w-full justify-center"
+              >
+                <ExternalLink className="w-5 h-5" />
+                Visit Our Facebook Page
+              </a>
+              <a
+                href="/"
+                className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 font-semibold hover:opacity-90 transition border-2 border-black transform hover:scale-105 w-full justify-center"
+              >
+                Return to Home
+              </a>
+            </div>
+          </div>
+        )}
+
+        {!loading && !error && photo && (
+          <>
+            <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden shadow-lg">
+              {imageLoading && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
+                  <div className="w-12 h-12 border-3 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+                  <p className="text-sm text-gray-500 font-medium">Loading your photo...</p>
+                </div>
+              )}
+              <img
+                src={photo.publicUrl}
+                alt="Your photo"
+                className={`w-full transition-all duration-700 ease-out ${imageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+                onLoad={() => setImageLoading(false)}
+              />
+            </div>
+
+            {/* Guide text */}
+            <div className="text-center space-y-2">
+              <p className="text-sm text-black flex items-center justify-center gap-2">
+                <div className="w-8 h-8 border-2 border-gray-300 flex items-center justify-center">
+                  <Camera className="w-4 h-4 text-gray-600" />
+                </div>
+                Long-press on photo to save to gallery
+              </p>
+              <p className="text-xs text-gray-600">or use the button below</p>
+            </div>
+
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="inline-flex items-center justify-center gap-2 bg-black text-white px-10 py-5 font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full max-w-xs border-2 border-black transform hover:scale-105"
+            >
+              <Download className="w-6 h-6" />
+              {downloading ? 'Downloading...' : 'Download'}
+            </button>
+
+            <p className="text-xs text-gray-600">
+              Auto-delete in: <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-black'}`}>
+                {getTimeUntilDeletion(photo.created_at)}
+              </span>
+            </p>
+          </>
+        )}
       </div>
 
       {/* Footer branding */}
       <div className="flex flex-col items-center gap-1 py-6 border-t-2 border-gray-300">
-        <p className="text-sm font-bold text-gray-900 tracking-wider">MONO BOOTH PH</p>
+        <p className="text-sm font-bold text-black tracking-wider">MONO BOOTH PH</p>
         <p className="text-[10px] text-gray-600 tracking-widest uppercase">No proof without @monoboothph</p>
       </div>
     </div>

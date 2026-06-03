@@ -275,29 +275,29 @@ export default function Gallery() {
 
   return (
     <div className="min-h-screen bg-white">
-      <nav className="bg-white border-b-2 border-gray-900">
+      <nav className="bg-white border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/admin/dashboard')}
-                className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-lg transition"
+                className="text-black hover:bg-gray-100 p-2 rounded-lg transition"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <img 
                 src="/mono-booth-ph.svg" 
                 alt="MONO BOOTH PH" 
-                className="w-8 h-8 object-contain invert"
+                className="w-8 h-8 object-contain"
               />
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">Gallery</span>
+              <span className="text-black/50">/</span>
+              <span className="text-black">Gallery</span>
             </div>
             <div className="flex items-center gap-2">
               {/* View Toggle */}
               <button
                 onClick={() => setViewMode(viewMode === 'table' ? 'grid' : 'table')}
-                className="p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                className="p-2.5 bg-black text-white rounded-lg hover:opacity-90 transition hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
                 title={viewMode === 'table' ? 'Grid View' : 'List View'}
               >
                 {viewMode === 'table' ? <Grid className="w-5 h-5" /> : <List className="w-5 h-5" />}
@@ -308,12 +308,12 @@ export default function Gallery() {
                 <button
                   onClick={downloadAllPhotos}
                   disabled={downloadingAll}
-                  className="relative p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="relative p-2.5 bg-black text-white rounded-lg hover:opacity-90 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title="Download all photos"
                 >
                   <Download className="w-5 h-5" />
                   {downloadingAll && (
-                    <span className="absolute -top-1 -right-1 bg-white text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                       {downloadProgress.current}
                     </span>
                   )}
@@ -325,11 +325,11 @@ export default function Gallery() {
                 <button
                   onClick={handleBulkDelete}
                   disabled={deleting}
-                  className="relative p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="relative p-2.5 bg-black text-white rounded-lg hover:opacity-90 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title={`Delete ${selectedPhotos.size} selected`}
                 >
                   <Trash2 className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 bg-white text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                     {selectedPhotos.size}
                   </span>
                 </button>
@@ -339,7 +339,7 @@ export default function Gallery() {
                 <button
                   onClick={() => setShowDeleteAllConfirm(true)}
                   disabled={deletingAll}
-                  className="p-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
+                  className="p-2.5 bg-black text-white rounded-lg hover:opacity-90 transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm hover:shadow-md"
                   title="Delete all photos"
                 >
                   <Trash2 className="w-5 h-5" />
@@ -354,25 +354,25 @@ export default function Gallery() {
         <div className="bg-white rounded-xl border-2 border-gray-200 p-6 mb-6 shadow-sm portal-card">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Filters:</span>
+              <Filter className="w-4 h-4 text-black" />
+              <span className="text-sm font-semibold text-black uppercase tracking-wide">Filters:</span>
             </div>
             
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black/50" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by session ID..."
-                className="pl-9 pr-4 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm w-64"
+                className="pl-9 pr-4 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm w-64"
               />
             </div>
             
             <select
               value={selectedApp}
               onChange={(e) => setSelectedApp(e.target.value)}
-              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
             >
               <option value="all">All Apps</option>
               {apps.map(app => (
@@ -383,7 +383,7 @@ export default function Gallery() {
             <select
               value={selectedDevice}
               onChange={(e) => setSelectedDevice(e.target.value)}
-              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+              className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
             >
               <option value="all">All Devices</option>
               {devices.map(device => (
@@ -396,14 +396,14 @@ export default function Gallery() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
               />
-              <span className="text-gray-400">to</span>
+              <span className="text-black/50">to</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
+                className="px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
               />
               {(startDate || endDate) && (
                 <button
@@ -411,7 +411,7 @@ export default function Gallery() {
                     setStartDate('');
                     setEndDate('');
                   }}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                  className="p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-lg transition"
                   title="Clear date filter"
                 >
                   <XCircle className="w-4 h-4" />
@@ -419,17 +419,20 @@ export default function Gallery() {
               )}
             </div>
 
-            <div className="ml-auto text-sm text-gray-500 font-medium">
+            <div className="ml-auto text-sm text-black font-medium">
               {filteredPhotos.length} photos
             </div>
           </div>
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading...</div>
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-10 h-10 border-2 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+            <p className="text-sm text-gray-500 font-medium">Loading...</p>
+          </div>
         ) : filteredPhotos.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No photos found</p>
+            <p className="text-black">No photos found</p>
           </div>
         ) : viewMode === 'grid' ? (
           <>
@@ -451,14 +454,14 @@ export default function Gallery() {
                       className="p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-sm"
                       title="Show QR Code"
                     >
-                      <QrCode className="w-4 h-4 text-gray-800" />
+                      <QrCode className="w-4 h-4 text-black" />
                     </button>
                     <button
                       onClick={() => downloadPhoto(photo)}
                       className="p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-sm"
                       title="Download"
                     >
-                      <Download className="w-4 h-4 text-gray-800" />
+                      <Download className="w-4 h-4 text-black" />
                     </button>
                     <button
                       onClick={() => {
@@ -473,8 +476,8 @@ export default function Gallery() {
                   </div>
                 </div>
                 <div className="p-3">
-                  <p className="text-xs font-medium text-gray-900 truncate" title={photo.session_id}>{photo.session_id}</p>
-                  <p className="text-[10px] text-gray-500 mt-1">{new Date(photo.timestamp).toLocaleDateString()}</p>
+                  <p className="text-xs font-medium text-black truncate" title={photo.session_id}>{photo.session_id}</p>
+                  <p className="text-[10px] text-black mt-1">{new Date(photo.timestamp).toLocaleDateString()}</p>
                 </div>
               </div>
             ))}
@@ -486,18 +489,18 @@ export default function Gallery() {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </button>
-              <span className="text-sm text-gray-600 font-medium">
+              <span className="text-sm text-black font-medium">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-gray-300 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />
@@ -508,9 +511,9 @@ export default function Gallery() {
         ) : (
           <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b-2 border-gray-200">
+              <thead className="bg-white border-b-2 border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">
                     <input
                       type="checkbox"
                       checked={selectedPhotos.size === paginatedPhotos.length && paginatedPhotos.length > 0}
@@ -521,16 +524,16 @@ export default function Gallery() {
                           setSelectedPhotos(new Set());
                         }
                       }}
-                      className="rounded border-gray-300 text-gray-600 focus:ring-gray-500"
+                      className="rounded border-gray-300 text-black focus:ring-black"
                     />
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Preview</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Session ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">App</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Device</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Auto-delete</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Preview</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Session ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">App</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Device</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Auto-delete</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-black uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -541,7 +544,7 @@ export default function Gallery() {
                         type="checkbox"
                         checked={selectedPhotos.has(photo.id)}
                         onChange={() => togglePhotoSelection(photo.id)}
-                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                        className="rounded border-black text-black focus:ring-black"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -554,30 +557,30 @@ export default function Gallery() {
                         }}
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                       <code className="text-xs">{photo.session_id}</code>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{photo.apps?.name || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{photo.devices?.device_name || photo.devices?.device_id || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{photo.apps?.name || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{photo.devices?.device_name || photo.devices?.device_id || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                       {new Date(photo.timestamp).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-gray-900' : 'text-gray-600'}`}>
+                      <span className={`font-mono ${getTimeUntilDeletion(photo.created_at) === 'Expired' ? 'text-red-600' : 'text-gray-500'}`}>
                         {getTimeUntilDeletion(photo.created_at)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <button
                         onClick={() => showQRCode(photo)}
-                        className="text-gray-600 hover:text-gray-900 mr-3"
+                        className="text-gray-500 hover:text-black mr-3 transition"
                         title="Show QR Code"
                       >
                         <QrCode className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => downloadPhoto(photo)}
-                        className="text-gray-600 hover:text-gray-900 mr-3"
+                        className="text-gray-500 hover:text-black mr-3 transition"
                         title="Download"
                       >
                         <Download className="w-4 h-4" />
@@ -587,7 +590,7 @@ export default function Gallery() {
                           setSelectedPhotos(new Set([photo.id]));
                           handleBulkDelete();
                         }}
-                        className="text-red-600 hover:text-red-700"
+                        className="text-gray-500 hover:text-red-600 transition"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -606,7 +609,7 @@ export default function Gallery() {
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
           <button
             onClick={closePreview}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition"
+            className="absolute top-4 right-4 text-white hover:opacity-70 transition"
           >
             <XCircle className="w-8 h-8" />
           </button>
@@ -614,7 +617,7 @@ export default function Gallery() {
           <button
             onClick={() => navigatePreview(-1)}
             disabled={previewIndex === 0}
-            className="absolute left-4 text-white hover:text-gray-300 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute left-4 text-white hover:opacity-70 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-12 h-12" />
           </button>
@@ -622,7 +625,7 @@ export default function Gallery() {
           <button
             onClick={() => navigatePreview(1)}
             disabled={previewIndex === paginatedPhotos.length - 1}
-            className="absolute right-4 text-white hover:text-gray-300 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute right-4 text-white hover:opacity-70 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-12 h-12" />
           </button>
@@ -635,24 +638,24 @@ export default function Gallery() {
             />
             <div className="mt-4 text-center text-white">
               <p className="text-lg font-semibold">{previewPhoto.session_id}</p>
-              <p className="text-sm text-gray-300 mt-1">
+              <p className="text-sm text-white/50 mt-1">
                 {previewPhoto.apps?.name || '-'} • {previewPhoto.devices?.device_name || previewPhoto.devices?.device_id || '-'}
               </p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-white/50 mt-1">
                 {new Date(previewPhoto.timestamp).toLocaleString()}
               </p>
             </div>
             <div className="flex gap-3 mt-4">
               <button
                 onClick={() => showQRCode(previewPhoto)}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-100 transition"
               >
                 <QrCode className="w-4 h-4" />
                 QR Code
               </button>
               <button
                 onClick={() => downloadPhoto(previewPhoto)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:opacity-90 transition"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -663,7 +666,7 @@ export default function Gallery() {
                   handleBulkDelete();
                   closePreview();
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -678,12 +681,12 @@ export default function Gallery() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-gray-100 rounded-full">
-                <AlertTriangle className="w-6 h-6 text-gray-900" />
+              <div className="p-3 bg-red-100 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete All Photos</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-black mb-2">Delete All Photos</h3>
+                <p className="text-sm text-black mb-4">
                   Are you sure you want to delete <strong>{filteredPhotos.length}</strong> photos? 
                   This action cannot be undone and will permanently remove all photos from storage.
                 </p>
@@ -691,14 +694,14 @@ export default function Gallery() {
                   <button
                     onClick={() => setShowDeleteAllConfirm(false)}
                     disabled={deletingAll}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition disabled:opacity-50"
+                    className="px-4 py-2 text-sm font-medium text-black bg-gray-100 rounded-lg hover:bg-gray-200 transition disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleDeleteAll}
                     disabled={deletingAll}
-                    className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {deletingAll ? (
                       <>
@@ -721,13 +724,13 @@ export default function Gallery() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">QR Code</h3>
+              <h3 className="text-lg font-semibold text-black">QR Code</h3>
               <button
                 onClick={() => {
                   setQrModalPhoto(null);
                   setQrDataUrl(null);
                 }}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-black/50 hover:text-black"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -736,11 +739,11 @@ export default function Gallery() {
               {qrDataUrl ? (
                 <img src={qrDataUrl} alt="QR Code" className="w-64 h-64" />
               ) : (
-                <div className="w-64 h-64 flex items-center justify-center bg-gray-100 rounded-lg">
-                  <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
+                <div className="w-64 h-64 flex items-center justify-center bg-black rounded-lg">
+                  <div className="w-8 h-8 border-2 border-gray-200 border-t-black rounded-full animate-spin" />
                 </div>
               )}
-              <p className="text-sm text-gray-600 text-center">
+              <p className="text-sm text-black text-center">
                 Scan to download photo from: <br />
                 <code className="text-xs">{qrModalPhoto.session_id}</code>
               </p>
@@ -748,7 +751,7 @@ export default function Gallery() {
                 href={`https://monoboothph.vercel.app/download/${qrModalPhoto.session_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+                className="w-full flex items-center justify-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm"
               >
                 <Download className="w-4 h-4" />
                 Open Download Page
