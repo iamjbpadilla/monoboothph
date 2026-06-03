@@ -61,23 +61,25 @@ export default function Landing() {
           <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-6 max-w-2xl mx-auto">
             Show 'em the receipts.
           </p>
-          <a
-            href="https://m.me/monoboothph"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            <MessageCircle className="w-5 h-5" />
-            Book via Messenger
-            <ArrowRight className="w-5 h-5" />
-          </a>
-          <Link
-            to="/timeline"
-            className="mt-8 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition underline underline-offset-2"
-          >
-            See how we're building it
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex flex-col items-center">
+            <a
+              href="https://m.me/monoboothph"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 font-bold hover:bg-gray-800 transition border-2 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <MessageCircle className="w-5 h-5" />
+              Book via Messenger
+              <ArrowRight className="w-5 h-5" />
+            </a>
+            <Link
+              to="/timeline"
+              className="mt-8 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition underline underline-offset-2"
+            >
+              Where we are now
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </RevealSection>
 
