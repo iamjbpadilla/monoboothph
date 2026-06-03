@@ -114,6 +114,7 @@ function PrintLayoutCard({ index, name, shots, children }) {
 
   useEffect(() => {
     if (!isInView) return;
+    if (window.innerWidth < 768) return;
     const timer = setInterval(() => {
       if (document.visibilityState === 'visible') {
         setCardState(generateState());
@@ -125,13 +126,12 @@ function PrintLayoutCard({ index, name, shots, children }) {
   return (
     <div
       ref={ref}
-      className={`flex flex-col items-center mb-4 transition-all duration-700 ease-out ${
+      className={`flex flex-col items-center break-inside-avoid transition-all duration-700 ease-out ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <div className="break-inside-avoid">
-        <div className="w-full bg-white border-2 border-gray-200 rounded-lg p-3 flex flex-col text-center text-black overflow-hidden transition-all duration-700 ease-out">
+      <div className="w-full bg-white border-2 border-gray-200 rounded-lg p-3 flex flex-col text-center text-black overflow-hidden transition-all duration-700 ease-out">
         <AnimatedBlock show={cardState.showDate}>
           <p className="text-xs text-black/50">JUN 03, 2026  14:30</p>
         </AnimatedBlock>
@@ -160,10 +160,9 @@ function PrintLayoutCard({ index, name, shots, children }) {
         <AnimatedBlock show={cardState.showFooter}>
           <p className="text-xs text-black mt-1">{cardState.footerText}</p>
         </AnimatedBlock>
-        </div>
-        <p className="text-xs font-semibold text-black mt-2">{name}</p>
-        <p className="text-xs text-black">{shots}</p>
       </div>
+      <p className="text-xs font-semibold text-black mt-2">{name}</p>
+      <p className="text-xs text-black">{shots}</p>
     </div>
   );
 }
@@ -459,7 +458,7 @@ export default function Landing() {
       <RevealSection>
         <div className="max-w-4xl mx-auto px-6 py-20">
           <h2 className="text-3xl font-bold text-black mb-6">Pick Your Vibe</h2>
-          <div className="columns-2 md:columns-3 gap-4">
+          <div className="columns-2 md:columns-3 gap-4 space-y-4">
             {/* Tall Order — 6 shots, portrait grid */}
             <PrintLayoutCard index={0} name="Tall Order" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
