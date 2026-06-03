@@ -22,7 +22,7 @@ export default function Gallery() {
   const [qrModalPhoto, setQrModalPhoto] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState(null);
   const [now, setNow] = useState(new Date());
-  const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
+  const [viewMode, setViewMode] = useState('grid'); // 'table' or 'grid'
   const [showDeleteAllConfirm, setShowDeleteAllConfirm] = useState(false);
   const [deletingAll, setDeletingAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -521,7 +521,7 @@ export default function Gallery() {
                           setSelectedPhotos(new Set());
                         }
                       }}
-                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      className="rounded border-gray-300 text-gray-600 focus:ring-gray-500"
                     />
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Preview</th>
@@ -737,7 +737,7 @@ export default function Gallery() {
                 <img src={qrDataUrl} alt="QR Code" className="w-64 h-64" />
               ) : (
                 <div className="w-64 h-64 flex items-center justify-center bg-gray-100 rounded-lg">
-                  <div className="w-8 h-8 border-2 border-gray-300 border-t-purple-600 rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
                 </div>
               )}
               <p className="text-sm text-gray-600 text-center">
@@ -748,7 +748,7 @@ export default function Gallery() {
                 href={`https://monoboothph.vercel.app/download/${qrModalPhoto.session_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm"
+                className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
               >
                 <Download className="w-4 h-4" />
                 Open Download Page

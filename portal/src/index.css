@@ -3,10 +3,10 @@
 /* ── Material Design 3 — Light Theme ───────────────────────────────────────────── */
 :root {
   /* Primary */
-  --color-md-primary:               #6750A4;
+  --color-md-primary:               #3A3A3A;
   --color-md-on-primary:            #FFFFFF;
-  --color-md-primary-container:     #EADDFF;
-  --color-md-on-primary-container:  #21005D;
+  --color-md-primary-container:     #E8E8E8;
+  --color-md-on-primary-container:  #1C1C1C;
   /* Secondary */
   --color-md-secondary:             #625B71;
   --color-md-on-secondary:          #FFFFFF;
@@ -21,21 +21,21 @@
   --color-md-error-container:       #F9DEDC;
   --color-md-on-error-container:    #410E0B;
   /* Surface */
-  --color-md-surface:               #FFFBFE;
-  --color-md-surface-dim:           #DED8E1;
+  --color-md-surface:               #FAFAFA;
+  --color-md-surface-dim:           #DCDCDC;
   --color-md-surface-bright:        #FFFBFE;
   --color-md-surface-container-lowest:  #FFFFFF;
-  --color-md-surface-container-low:     #F7F2FA;
-  --color-md-surface-container:         #F3EDF7;
-  --color-md-surface-container-high:    #ECE6F0;
-  --color-md-surface-container-highest: #E6E0E9;
+  --color-md-surface-container-low:     #F5F5F5;
+  --color-md-surface-container:         #F0F0F0;
+  --color-md-surface-container-high:    #EBEBEB;
+  --color-md-surface-container-highest: #E5E5E5;
   --color-md-on-surface:            #1C1B1F;
   --color-md-on-surface-variant:    #49454F;
   --color-md-inverse-surface:       #313033;
   --color-md-inverse-on-surface:    #F4EFF4;
   /* Outline */
   --color-md-outline:               #79747E;
-  --color-md-outline-variant:       #CAC4D0;
+  --color-md-outline-variant:       #C4C4C4;
   /* Font */
   --font-sans: 'Roboto', system-ui, sans-serif;
   --font-mono: 'Roboto Mono', monospace;
@@ -62,7 +62,7 @@ html, body, #root {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-image: radial-gradient(circle, var(--color-md-outline-variant, rgba(103, 80, 164, 0.08)) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle, var(--color-md-outline-variant, rgba(0, 0, 0, 0.08)) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
   animation: bg-pan 60s linear infinite;
 }
@@ -79,7 +79,7 @@ html, body, #root {
 
 .portal-card:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 24px -8px rgba(103, 80, 164, 0.15);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.12);
 }
 
 .portal-button {
@@ -88,12 +88,12 @@ html, body, #root {
 
 .portal-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(103, 80, 164, 0.2);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.15);
 }
 
 .portal-button:active {
   transform: translateY(0);
-  box-shadow: 0 4px 8px -2px rgba(103, 80, 164, 0.15);
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
 }
 
 .portal-input {
@@ -102,7 +102,7 @@ html, body, #root {
 
 .portal-input:focus {
   transform: scale(1.01);
-  box-shadow: 0 0 0 3px rgba(103, 80, 164, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
 
 /* ── MD3 Motion System ─────────────────────────────────────────────────── */
