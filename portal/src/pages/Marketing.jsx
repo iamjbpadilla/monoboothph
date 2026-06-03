@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import {
   MessageCircle, Camera, Printer, Download, Palette, LayoutGrid, QrCode,
   Shuffle, ArrowLeft, ArrowRight, Touchpad,
