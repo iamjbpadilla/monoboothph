@@ -58,7 +58,7 @@ export default function Landing() {
           <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-0 max-w-2xl mx-auto">
             No proof without @monoboothph.
           </p>
-          <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-2 max-w-2xl mx-auto">
+          <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-6 max-w-2xl mx-auto">
             Show 'em the receipts.
           </p>
           <a
