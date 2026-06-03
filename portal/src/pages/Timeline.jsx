@@ -144,7 +144,7 @@ export default function Timeline() {
             Project Timeline
           </h1>
           <p className="text-gray-600 max-w-xl mx-auto text-center">
-            Where we are now and where we are headed. Building MONO BOOTH PH from the ground up.
+            Where we are now and where we are headed. Building <span className="font-bold text-gray-900">MONO BOOTH PH</span> from the ground up.
           </p>
         </div>
 
