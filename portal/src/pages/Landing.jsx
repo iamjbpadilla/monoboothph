@@ -73,7 +73,7 @@ export default function Landing() {
           </a>
           <Link
             to="/timeline"
-            className="mt-4 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition underline underline-offset-2"
+            className="mt-8 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition underline underline-offset-2"
           >
             See how we're building it
             <ArrowRight className="w-3.5 h-3.5" />

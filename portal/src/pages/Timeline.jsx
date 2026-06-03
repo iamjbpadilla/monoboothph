@@ -53,14 +53,6 @@ const PHASES = [
   },
 ];
 
-const ACTIVITY_LOG = [
-  { date: 'June 2026', description: 'Photo print quality dialed in for thermal paper' },
-  { date: 'May 2026', description: 'Camera capture stable across indoor and outdoor lighting' },
-  { date: 'May 2026', description: 'First clean physical print from the test booth' },
-  { date: 'April 2026', description: 'Multiple photo layout templates ready for any event' },
-  { date: 'March 2026', description: 'Custom branding and advertising screen working smoothly' },
-];
-
 function TimelineItem({ phase, index }) {
   const { ref, isInView } = useInView({ threshold: 0.2 });
   const completed = phase.status === 'completed';
@@ -120,30 +112,6 @@ function TimelineItem({ phase, index }) {
   );
 }
 
-function ActivityLog() {
-  return (
-    <div className="mt-20">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Recent Updates</h2>
-      <div className="max-w-xl mx-auto">
-        {ACTIVITY_LOG.map((entry, index) => (
-          <div key={index} className="flex gap-4">
-            <div className="flex flex-col items-center shrink-0 w-6">
-              <div className="w-2 h-2 rounded-full bg-gray-300 mt-1.5"></div>
-              {index < ACTIVITY_LOG.length - 1 && (
-                <div className="w-px flex-1 bg-gray-100 mt-1 min-h-[24px]"></div>
-              )}
-            </div>
-            <div className="pb-6">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{entry.date}</span>
-              <p className="text-sm text-gray-600 leading-relaxed">{entry.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function Timeline() {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -187,8 +155,6 @@ export default function Timeline() {
           ))}
         </div>
 
-        {/* Activity Log */}
-        <ActivityLog />
       </div>
     </div>
   );
