@@ -1,45 +1,72 @@
 import { useEffect } from 'react';
-import { ArrowLeft, CircleDot, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CircleDot, CheckCircle2, Lightbulb, Monitor, Box, Rocket, PartyPopper } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useInView from '../hooks/useInView';
+
+const ICON_MAP = {
+  Lightbulb,
+  Monitor,
+  Box,
+  Rocket,
+  PartyPopper,
+};
 
 const PHASES = [
   {
     title: 'Idea & Architecture',
     status: 'completed',
     date: 'Q4 2025',
-    description: 'Custom kiosk framework, ESC/POS print pipeline, and offline-first data model designed from scratch.',
+    description: 'The booth concept, print workflow, and data structure designed from scratch.',
+    icon: 'Lightbulb',
   },
   {
     title: 'App Development',
     status: 'in-progress',
     date: 'Q1 2026',
-    description: 'Booth client, photo capture pipeline, and admin portal in active testing. Core features locked, edge-case hardening underway.',
+    description: 'The photo capture, print output, and web portal are in active testing. Core features are stable, final polish underway.',
+    icon: 'Monitor',
+    lastUpdated: 'June 2026',
+    statusNote: 'Testing on real hardware',
   },
   {
     title: 'Hardware Enclosure',
     status: 'in-progress',
     date: 'Q2 2026',
     description: 'Thermal printer housing, camera mount, and transport-ready enclosure being fabricated.',
+    icon: 'Box',
+    lastUpdated: 'June 2026',
+    statusNote: 'Enclosure fabrication started',
   },
   {
     title: 'Beta Launch',
     status: 'upcoming',
     date: 'Q2 2026',
-    description: 'Field testing at select events. Stress-testing print reliability and portal download speed under real load.',
+    description: 'Field testing at select events. Verifying print reliability and photo download speed under real conditions.',
+    icon: 'Rocket',
   },
   {
     title: 'Public Launch',
     status: 'upcoming',
     date: 'Q3 2026',
-    description: 'Open for bookings. Full event coverage with unlimited prints and zero-lag digital downloads.',
+    description: 'Open for bookings. Full event coverage with unlimited prints and instant digital downloads.',
+    icon: 'PartyPopper',
   },
+];
+
+const ACTIVITY_LOG = [
+  { date: 'June 2026', description: 'Photo print quality dialed in for thermal paper' },
+  { date: 'May 2026', description: 'Camera capture stable across indoor and outdoor lighting' },
+  { date: 'May 2026', description: 'First clean physical print from the test booth' },
+  { date: 'April 2026', description: 'Multiple photo layout templates ready for any event' },
+  { date: 'March 2026', description: 'Custom branding and advertising screen working smoothly' },
 ];
 
 function TimelineItem({ phase, index }) {
   const { ref, isInView } = useInView({ threshold: 0.2 });
   const completed = phase.status === 'completed';
   const inProgress = phase.status === 'in-progress';
+
+  const Icon = ICON_MAP[phase.icon];
 
   return (
     <div
@@ -78,8 +105,40 @@ function TimelineItem({ phase, index }) {
             </span>
           )}
         </div>
-        <h3 className="font-bold text-lg text-gray-900 mb-1">{phase.title}</h3>
+        <h3 className="font-bold text-lg text-gray-900 mb-1 flex items-center gap-2">
+          {Icon && <Icon className="w-4 h-4 text-gray-400" strokeWidth={2} />}
+          {phase.title}
+        </h3>
         <p className="text-sm text-gray-600 leading-relaxed max-w-lg">{phase.description}</p>
+        {phase.statusNote && (
+          <p className="text-xs text-gray-400 mt-1.5 italic">
+            {phase.statusNote} — {phase.lastUpdated}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ActivityLog() {
+  return (
+    <div className="mt-20">
+      <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Recent Updates</h2>
+      <div className="max-w-xl mx-auto">
+        {ACTIVITY_LOG.map((entry, index) => (
+          <div key={index} className="flex gap-4">
+            <div className="flex flex-col items-center shrink-0 w-6">
+              <div className="w-2 h-2 rounded-full bg-gray-300 mt-1.5"></div>
+              {index < ACTIVITY_LOG.length - 1 && (
+                <div className="w-px flex-1 bg-gray-100 mt-1 min-h-[24px]"></div>
+              )}
+            </div>
+            <div className="pb-6">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{entry.date}</span>
+              <p className="text-sm text-gray-600 leading-relaxed">{entry.description}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -127,6 +186,9 @@ export default function Timeline() {
             <TimelineItem key={index} phase={phase} index={index} />
           ))}
         </div>
+
+        {/* Activity Log */}
+        <ActivityLog />
       </div>
     </div>
   );
