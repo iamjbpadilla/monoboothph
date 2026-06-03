@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowLeft, CircleDot, CheckCircle2, Lightbulb, Monitor, Box, Rocket, PartyPopper } from 'lucide-react';
+import { ArrowLeft, CircleDot, CheckCircle2, Lightbulb, Monitor, Box, Rocket, PartyPopper, MessageCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useInView from '../hooks/useInView';
 
@@ -41,15 +41,19 @@ const PHASES = [
     title: 'Beta Launch',
     status: 'upcoming',
     date: 'Q2 2026',
-    description: 'Field testing at select events. Verifying print reliability and photo download speed under real conditions.',
+    description: 'Field testing at select events. We are looking for beta partners — the booth is free for your event. Just cover transport.',
     icon: 'Rocket',
+    ctaLabel: 'Message us for a free beta slot',
+    ctaUrl: 'https://m.me/monoboothph',
   },
   {
     title: 'Public Launch',
     status: 'upcoming',
     date: 'Q3 2026',
-    description: 'Open for bookings. Full event coverage with unlimited prints and instant digital downloads.',
+    description: 'Open for bookings. Full event coverage with unlimited prints and instant digital downloads. Book early to secure your date.',
     icon: 'PartyPopper',
+    ctaLabel: 'Book your event early',
+    ctaUrl: 'https://m.me/monoboothph',
   },
 ];
 
@@ -106,6 +110,18 @@ function TimelineItem({ phase, index }) {
           <p className="text-xs text-gray-400 mt-1.5 italic">
             {phase.statusNote} — {phase.lastUpdated}
           </p>
+        )}
+        {phase.ctaUrl && (
+          <a
+            href={phase.ctaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm bg-gray-900 text-white px-6 py-3 font-semibold hover:bg-gray-800 transition border-2 border-gray-900"
+          >
+            <MessageCircle className="w-4 h-4" />
+            {phase.ctaLabel}
+            <ArrowRight className="w-4 h-4" />
+          </a>
         )}
       </div>
     </div>
