@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import {
   MessageCircle, Camera, Printer, Download, Palette, LayoutGrid, QrCode,
-  Shuffle, ArrowLeft, ArrowRight, Touchpad, ChevronDown,
+  Shuffle, ArrowLeft, ArrowRight, Touchpad,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -27,8 +27,42 @@ function generateState(){return{showDate:Math.random()>0.3,showDividerBefore:Mat
 
 async function downloadPng(element,filename,scale=3){
   if(!element)return;
-  const canvas=await html2canvas(element,{scale,backgroundColor:'#ffffff',useCORS:true,logging:false});
-  const link=document.createElement('a');link.download=filename;link.href=canvas.toDataURL('image/png');link.click();
+  let target=element;
+  let tempContainer=null;
+  try{
+    // If element lives inside a CSS-columns container, clone it to a temp
+    // fixed-position div so html2canvas renders it correctly.
+    const inColumn=element.closest('.columns-2,.columns-3,[style*="column-count"]')!==null;
+    if(inColumn){
+      const clone=element.cloneNode(true);
+      tempContainer=document.createElement('div');
+      tempContainer.style.position='fixed';
+      tempContainer.style.left='-9999px';
+      tempContainer.style.top='0';
+      tempContainer.style.width=element.offsetWidth+'px';
+      tempContainer.appendChild(clone);
+      document.body.appendChild(tempContainer);
+      target=clone;
+      await new Promise(r=>requestAnimationFrame(r));
+    }
+    const canvas=await html2canvas(target,{scale,backgroundColor:'#ffffff',useCORS:true,allowTaint:true,logging:false});
+    canvas.toBlob((blob)=>{
+      if(!blob)return;
+      const url=URL.createObjectURL(blob);
+      const link=document.createElement('a');
+      link.download=filename;
+      link.href=url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },'image/png');
+  }catch(err){
+    console.error('Download failed:',err);
+    alert('Download failed: '+err.message);
+  }finally{
+    if(tempContainer)tempContainer.remove();
+  }
 }
 
 function AnimatedBlock({show,children,maxH='max-h-10'}){
