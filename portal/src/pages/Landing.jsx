@@ -125,7 +125,7 @@ function PrintLayoutCard({ index, name, shots, children }) {
   return (
     <div
       ref={ref}
-      className={`flex flex-col items-center break-inside-avoid transition-all duration-700 ease-out ${
+      className={`flex flex-col items-center transition-all duration-700 ease-out ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
@@ -457,7 +457,7 @@ export default function Landing() {
       <RevealSection>
         <div className="max-w-4xl mx-auto px-6 py-20">
           <h2 className="text-3xl font-bold text-black mb-6">Pick Your Vibe</h2>
-          <div className="columns-2 md:columns-3 gap-4 space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {/* Tall Order — 6 shots, portrait grid */}
             <PrintLayoutCard index={0} name="Tall Order" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
