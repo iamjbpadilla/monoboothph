@@ -1,8 +1,23 @@
 # Changelog
 
-## [Unreleased] - 2026-06-02
+## [Unreleased] - 2026-06-03
 
 ### Added
+- Portal landing page: scroll reveal animations via IntersectionObserver (`useInView` hook)
+- New `/timeline` page with monochrome vertical project roadmap (5 phases: Idea → App Dev → Enclosure → Beta → Public Launch)
+- Timeline page linked from landing footer
+- Portal footer: "Project Timeline" navigation link
+
+### Changed
+- Portal landing page: lead with tagline and CTA, removed prices from package cards
+- Portal landing page: compact 2-column feature highlights grid (Check icons + text)
+- Portal landing page: removed "THE MONO ENGINE" proprietary technology section
+- Portal theme: replaced all purple (#6750A4) accents with monochrome grays
+- Portal: updated dot background, hover shadows, and focus rings to neutral black tints
+- Portal Gallery: default view changed from table to grid
+- Portal Gallery: replaced purple UI elements (checkboxes, buttons, spinners) with gray/black
+
+### Fixed
 - Test Print button under each template preview in Template Settings — prints layout sample using placeholder images via configured transport
 - Print All button in Template Settings — prints all 6 templates sequentially with per-template status (spinner → ✓ / ✗) and overall progress counter
 - Native Android USB Host API print plugin (UsbPrinterPlugin.java) replacing broken WebUSB API
