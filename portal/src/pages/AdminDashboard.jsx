@@ -166,7 +166,7 @@ export default function AdminDashboard() {
               <img 
                 src="/mono-booth-ph.svg" 
                 alt="MONO BOOTH PH" 
-                className="w-8 h-8 object-contain"
+                className="w-8 h-8 object-contain brightness-0"
               />
               <span className="text-black/50">/</span>
               <span className="text-black">Dashboard</span>

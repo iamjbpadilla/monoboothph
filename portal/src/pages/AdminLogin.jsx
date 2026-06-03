@@ -60,7 +60,7 @@ export default function AdminLogin() {
           <img 
             src="/mono-booth-ph.svg" 
             alt="MONO BOOTH PH" 
-            className="w-24 h-24 mx-auto mb-4 object-contain"
+            className="w-24 h-24 mx-auto mb-4 object-contain brightness-0"
           />
           <p className="text-black text-sm">Admin Portal</p>
         </div>
