@@ -126,8 +126,8 @@ function PrintLayoutCard({ index, name, shots, children }) {
   return (
     <div
       ref={ref}
-      className={`flex flex-col items-center break-inside-avoid transition-all duration-700 ease-out ${
-        isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+      className={`flex flex-col items-center break-inside-avoid transition-all duration-700 ease-out opacity-100 translate-y-0 ${
+        isInView ? 'md:opacity-100 md:translate-y-0' : 'md:opacity-0 md:translate-y-6'
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
