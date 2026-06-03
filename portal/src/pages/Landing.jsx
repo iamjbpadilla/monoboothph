@@ -99,7 +99,7 @@ export default function Landing() {
             <p className="text-xs text-gray-500 font-semibold mb-4 uppercase tracking-wider text-center">What you get</p>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2">
               {INCLUSIONS.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 text-gray-800">
+                <div key={index} className="flex items-center justify-center gap-2 text-gray-800">
                   <Check className="w-4 h-4 text-gray-900 shrink-0" strokeWidth={2.5} />
                   <span className="text-sm">{item}</span>
                 </div>

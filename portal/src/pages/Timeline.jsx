@@ -96,13 +96,15 @@ export default function Timeline() {
     <div className="w-full min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-16">
         {/* Back link */}
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition mb-12"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
-        </Link>
+        <div className="text-center mb-12">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
+          </Link>
+        </div>
 
         {/* Hero */}
         <div
@@ -111,10 +113,10 @@ export default function Timeline() {
             heroRef.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 tracking-tight text-center">
             Project Timeline
           </h1>
-          <p className="text-gray-600 max-w-xl">
+          <p className="text-gray-600 max-w-xl mx-auto text-center">
             Where we are now and where we are headed. Building MONO BOOTH PH from the ground up.
           </p>
         </div>
