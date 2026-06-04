@@ -28,7 +28,7 @@ export default function Help() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate('/admin/dashboard')}
-              className="flex items-center gap-2 text-black hover:bg-gray-100 px-3 py-2 rounded-lg transition"
+              className="flex items-center gap-2 text-black hover:bg-gray-100 px-3 py-2 transition"
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-semibold">Back to Dashboard</span>
@@ -383,7 +383,7 @@ function GuestGuide({ expandedSections, toggleSection }) {
 
 function Accordion({ id, title, expanded, onToggle, children }) {
   return (
-    <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
+    <div className="border-2 border-gray-200 overflow-hidden">
       <button
         onClick={() => onToggle(id)}
         className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition"

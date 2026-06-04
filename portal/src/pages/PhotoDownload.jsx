@@ -128,7 +128,7 @@ export default function PhotoDownload() {
         )}
 
         {error && (
-          <div className="bg-white border-2 border-gray-300 p-10 text-center w-full rounded-lg shadow-lg">
+          <div className="bg-white border-2 border-gray-300 p-10 text-center w-full shadow-lg">
             <img
               src="/mono-booth-ph.svg"
               alt="MONO BOOTH PH"
@@ -160,7 +160,7 @@ export default function PhotoDownload() {
 
         {!loading && !error && photo && (
           <>
-            <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] rounded-lg overflow-hidden shadow-lg">
+            <div className="bg-white border-2 border-gray-300 p-6 w-full relative min-h-[200px] overflow-hidden shadow-lg">
               {imageLoading && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
                   <div className="w-12 h-12 border-3 border-gray-200 border-t-black rounded-full animate-spin mb-4" />

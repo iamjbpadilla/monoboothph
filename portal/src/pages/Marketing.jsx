@@ -80,7 +80,7 @@ function MarketingPrintLayoutCard({name,shots,children}){
   const handleDownload=()=>downloadPng(cardRef.current,`${name.replace(/\s+/g,'-').toLowerCase()}-preview.png`);
   return(
     <div className="flex flex-col items-center break-inside-avoid">
-      <div ref={cardRef} className="w-full bg-white border-2 border-gray-200 rounded-lg p-3 flex flex-col text-center text-black overflow-hidden">
+      <div ref={cardRef} className="w-full bg-white border-2 border-gray-200 p-3 flex flex-col text-center text-black overflow-hidden">
         <AnimatedBlock show={cardState.showDate}><p className="text-xs text-black/50">JUN 03, 2026 14:30</p></AnimatedBlock>
         <p className="text-sm font-bold leading-tight">{cardState.title}</p>
         <p className="text-xs text-black mb-1">{cardState.subtitle}</p>
@@ -106,7 +106,7 @@ function MarketingPrintLayoutCard({name,shots,children}){
 function MarketingStepCard({icon,number,title,description}){
   const ref=useRef(null);
   return(
-    <div ref={ref} className="border-2 border-gray-200 rounded-lg p-6 flex flex-col items-center text-center bg-white">
+    <div ref={ref} className="border-2 border-gray-200 p-6 flex flex-col items-center text-center bg-white">
       <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4">{icon}</div>
       <div className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold mb-3">{number}</div>
       <h3 className="font-bold text-black mb-2">{title}</h3>
@@ -119,7 +119,7 @@ function MarketingStepCard({icon,number,title,description}){
 function MarketingFeatureCard({icon,title,desc}){
   const ref=useRef(null);
   return(
-    <div ref={ref} className="flex flex-col items-center text-center p-4 border-2 border-gray-100 rounded-lg bg-white">
+    <div ref={ref} className="flex flex-col items-center text-center p-4 border-2 border-gray-200 bg-white">
       {icon}<p className="text-sm font-semibold text-black">{title}</p><p className="text-xs text-gray-500 mt-1">{desc}</p>
       <button onClick={()=>downloadPng(ref.current,`feature-${title.replace(/\s+/g,'-').toLowerCase()}.png`)} className="mt-3 inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 font-bold hover:bg-gray-100 transition border-2 border-black"><Download className="w-3 h-3"/>Download</button>
     </div>
@@ -210,31 +210,31 @@ export default function Marketing(){
           <div className="columns-2 md:columns-3 gap-4 space-y-4">
             <MarketingPrintLayoutCard name="Tall Order" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-black rounded" style={{aspectRatio:'3/4'}}/><div className="bg-black rounded" style={{aspectRatio:'3/4'}}/>
-                <div className="bg-black rounded" style={{aspectRatio:'3/4'}}/><div className="bg-black rounded" style={{aspectRatio:'3/4'}}/>
-                <div className="bg-black rounded" style={{aspectRatio:'3/4'}}/><div className="bg-black rounded" style={{aspectRatio:'3/4'}}/>
+                <div className="bg-black" style={{aspectRatio:'3/4'}}/><div className="bg-black" style={{aspectRatio:'3/4'}}/>
+                <div className="bg-black" style={{aspectRatio:'3/4'}}/><div className="bg-black" style={{aspectRatio:'3/4'}}/>
+                <div className="bg-black" style={{aspectRatio:'3/4'}}/><div className="bg-black" style={{aspectRatio:'3/4'}}/>
               </div>
             </MarketingPrintLayoutCard>
             <MarketingPrintLayoutCard name="Solo Star" shots="1 shot">
-              <div className="w-full bg-black rounded" style={{aspectRatio:'3/4'}}/>
+              <div className="w-full bg-black" style={{aspectRatio:'3/4'}}/>
             </MarketingPrintLayoutCard>
             <MarketingPrintLayoutCard name="Double Take" shots="2 shots">
-              <div className="w-full bg-black rounded" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black rounded mt-1" style={{aspectRatio:'4/3'}}/>
+              <div className="w-full bg-black" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black mt-1" style={{aspectRatio:'4/3'}}/>
             </MarketingPrintLayoutCard>
             <MarketingPrintLayoutCard name="Triple Threat" shots="3 shots">
-              <div className="w-full bg-black rounded" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black rounded mt-0.5" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black rounded mt-0.5" style={{aspectRatio:'4/3'}}/>
+              <div className="w-full bg-black" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black mt-0.5" style={{aspectRatio:'4/3'}}/><div className="w-full bg-black mt-0.5" style={{aspectRatio:'4/3'}}/>
             </MarketingPrintLayoutCard>
             <MarketingPrintLayoutCard name="Wide Load" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-black rounded" style={{aspectRatio:'4/3'}}/><div className="bg-black rounded" style={{aspectRatio:'4/3'}}/>
-                <div className="bg-black rounded" style={{aspectRatio:'4/3'}}/><div className="bg-black rounded" style={{aspectRatio:'4/3'}}/>
-                <div className="bg-black rounded" style={{aspectRatio:'4/3'}}/><div className="bg-black rounded" style={{aspectRatio:'4/3'}}/>
+                <div className="bg-black" style={{aspectRatio:'4/3'}}/><div className="bg-black" style={{aspectRatio:'4/3'}}/>
+                <div className="bg-black" style={{aspectRatio:'4/3'}}/><div className="bg-black" style={{aspectRatio:'4/3'}}/>
+                <div className="bg-black" style={{aspectRatio:'4/3'}}/><div className="bg-black" style={{aspectRatio:'4/3'}}/>
               </div>
             </MarketingPrintLayoutCard>
             <MarketingPrintLayoutCard name="Quad Squad" shots="4 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-black rounded" style={{aspectRatio:'3/4'}}/><div className="bg-black rounded" style={{aspectRatio:'3/4'}}/>
-                <div className="bg-black rounded" style={{aspectRatio:'3/4'}}/><div className="bg-black rounded" style={{aspectRatio:'3/4'}}/>
+                <div className="bg-black" style={{aspectRatio:'3/4'}}/><div className="bg-black" style={{aspectRatio:'3/4'}}/>
+                <div className="bg-black" style={{aspectRatio:'3/4'}}/><div className="bg-black" style={{aspectRatio:'3/4'}}/>
               </div>
             </MarketingPrintLayoutCard>
           </div>

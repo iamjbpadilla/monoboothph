@@ -216,7 +216,7 @@ function GalleryGrid() {
             }`}
             style={{ transitionDelay: `${i * 100}ms` }}
           >
-            <div className="w-full bg-gray-200 rounded aspect-[16/10]" />
+            <div className="w-full bg-gray-200 aspect-[16/10]" />
             <p className="text-xs text-black mt-2 text-center">{label}</p>
           </div>
         ))}
@@ -462,47 +462,47 @@ export default function Landing() {
             {/* Tall Order — 6 shots, portrait grid */}
             <PrintLayoutCard index={0} name="Tall Order" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
               </div>
             </PrintLayoutCard>
             {/* Solo Star — 1 shot, portrait */}
             <PrintLayoutCard index={1} name="Solo Star" shots="1 shot">
-              <div className="w-full bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
+              <div className="w-full bg-gray-200" style={{ aspectRatio: '3/4' }} />
             </PrintLayoutCard>
             {/* Double Take — 2 shots, landscape */}
             <PrintLayoutCard index={2} name="Double Take" shots="2 shots">
-              <div className="w-full bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-              <div className="w-full bg-gray-200 rounded mt-1" style={{ aspectRatio: '4/3' }} />
+              <div className="w-full bg-gray-200" style={{ aspectRatio: '4/3' }} />
+              <div className="w-full bg-gray-200 mt-1" style={{ aspectRatio: '4/3' }} />
             </PrintLayoutCard>
             {/* Triple Threat — 3 shots, landscape */}
             <PrintLayoutCard index={3} name="Triple Threat" shots="3 shots">
-              <div className="w-full bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-              <div className="w-full bg-gray-200 rounded mt-0.5" style={{ aspectRatio: '4/3' }} />
-              <div className="w-full bg-gray-200 rounded mt-0.5" style={{ aspectRatio: '4/3' }} />
+              <div className="w-full bg-gray-200" style={{ aspectRatio: '4/3' }} />
+              <div className="w-full bg-gray-200 mt-0.5" style={{ aspectRatio: '4/3' }} />
+              <div className="w-full bg-gray-200 mt-0.5" style={{ aspectRatio: '4/3' }} />
             </PrintLayoutCard>
             {/* Wide Load — 6 shots, landscape grid */}
             <PrintLayoutCard index={4} name="Wide Load" shots="6 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '4/3' }} />
               </div>
             </PrintLayoutCard>
             {/* Quad Squad — 4 shots, portrait grid */}
             <PrintLayoutCard index={5} name="Quad Squad" shots="4 shots">
               <div className="grid grid-cols-2 gap-1">
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
-                <div className="bg-gray-200 rounded" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
+                <div className="bg-gray-200" style={{ aspectRatio: '3/4' }} />
               </div>
             </PrintLayoutCard>
           </div>

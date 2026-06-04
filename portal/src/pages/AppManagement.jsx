@@ -169,7 +169,7 @@ export default function AppManagement() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/admin/dashboard')}
-                className="text-black hover:bg-gray-100 p-2 rounded-lg transition"
+                className="text-black hover:bg-gray-100 p-2 transition"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -183,7 +183,7 @@ export default function AppManagement() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm"
+              className="flex items-center gap-2 bg-black text-white px-4 py-2 hover:opacity-90 transition text-sm"
             >
               <Plus className="w-4 h-4" />
               New App
@@ -208,7 +208,7 @@ export default function AppManagement() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search apps by name or pairing code..."
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
                 />
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function AppManagement() {
                 </button>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
+              <div className="bg-white border-2 border-gray-200 overflow-hidden shadow-sm portal-card">
                 <table className="w-full">
               <thead className="bg-white border-b-2 border-gray-200">
                 <tr>
@@ -245,14 +245,14 @@ export default function AppManagement() {
                     <tr key={app.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-black">{app.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <code className="text-sm font-mono text-black bg-gray-100 px-2.5 py-1 rounded-lg">{app.pairing_code}</code>
+                        <code className="text-sm font-mono text-black bg-gray-100 px-2.5 py-1">{app.pairing_code}</code>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                         {appDevices.length > 0 ? (
                           <div className="space-y-1.5">
                             {appDevices.map(device => (
                               <div key={device.id} className="flex items-center gap-2 text-xs">
-                                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-medium ${
+                                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 font-medium ${
                                   device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                   <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -308,27 +308,27 @@ export default function AppManagement() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-lg border-2 border-black">
+          <div className="bg-white p-6 max-w-md w-full shadow-lg border-2 border-black">
             <h2 className="text-xl font-semibold text-black mb-4">Create New App</h2>
             <input
               type="text"
               value={newAppName}
               onChange={(e) => setNewAppName(e.target.value)}
               placeholder="App name (e.g., Wedding Reception)"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
+              className="w-full px-4 py-3 border-2 border-gray-200 mb-4 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition text-sm"
               autoFocus
             />
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-black hover:bg-gray-100 rounded-xl transition text-sm font-medium"
+                className="px-4 py-2 text-black hover:bg-gray-100 transition text-sm font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={createApp}
                 disabled={creating || !newAppName.trim()}
-                className="px-4 py-2 bg-black text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
+                className="px-4 py-2 bg-black text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
               >
                 {creating ? 'Creating...' : 'Create'}
               </button>

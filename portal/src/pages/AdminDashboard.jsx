@@ -174,19 +174,19 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 {dbStatus === 'checking' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-yellow-100 text-yellow-700">
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Checking...
                   </span>
                 )}
                 {dbStatus === 'connected' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-green-100 text-green-700">
                     <CheckCircle className="w-3 h-3" />
                     Database Connected
                   </span>
                 )}
                 {dbStatus === 'error' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-red-100 text-red-700">
                     <XCircle className="w-3 h-3" />
                     Database Error
                   </span>
@@ -194,14 +194,14 @@ export default function AdminDashboard() {
               </div>
               <button
                 onClick={() => navigate('/admin/help')}
-                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
+                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 transition text-sm"
               >
                 <HelpCircle className="w-4 h-4" />
                 Help
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 rounded-lg transition text-sm"
+                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 transition text-sm"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -277,7 +277,7 @@ function StatCard({ title, value, icon, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-xl border-2 border-gray-200 p-6 cursor-pointer portal-card shadow-sm hover:shadow-md transition-shadow ${onClick ? '' : 'cursor-default'}`}
+      className={`bg-white border-2 border-gray-200 p-6 cursor-pointer portal-card shadow-sm hover:shadow-md transition-shadow ${onClick ? '' : 'cursor-default'}`}
     >
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{title}</p>
@@ -290,7 +290,7 @@ function StatCard({ title, value, icon, onClick }) {
 
 function RecentActivityCard({ activity }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+    <div className="bg-white border border-gray-200 p-6 shadow-sm">
       {activity.length === 0 ? (
         <p className="text-black text-sm">No recent activity</p>
       ) : (
@@ -325,7 +325,7 @@ function StorageCard({ status, usage }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+    <div className="bg-white border border-gray-200 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-black">Storage Usage</h3>
         <div className="flex items-center gap-2 text-sm">
@@ -356,9 +356,9 @@ function StorageCard({ status, usage }) {
           <span className="font-semibold text-black">{formatBytes(usage.used)}</span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div className="w-full bg-gray-200 h-2.5">
           <div 
-            className="bg-black h-2.5 rounded-full transition-all duration-300"
+            className="bg-black h-2.5 transition-all duration-300"
             style={{ width: `${Math.min(usage.percentage, 100)}%` }}
           />
         </div>
