@@ -290,7 +290,7 @@ function EventTypePills() {
     items.map((tag, i) => (
       <span
         key={tag.label}
-        className={`inline-flex items-center gap-1.5 bg-gray-100 text-black rounded-full px-4 py-1.5 text-sm font-medium cursor-default transition-all duration-300 ease-out hover:bg-gray-200 hover:scale-105 hover:shadow-sm ${
+        className={`inline-flex items-center gap-1.5 bg-gray-100 text-black px-4 py-1.5 text-sm font-medium cursor-default transition-all duration-300 ease-out hover:bg-gray-200 hover:scale-105 hover:shadow-sm ${
           isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
         style={{ transitionDelay: `${(baseDelay + i) * 40}ms` }}
@@ -320,7 +320,7 @@ function EventTypePills() {
 function FAQItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-2 border-gray-200">
+    <div className="border-b border-gray-200">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 text-left"
