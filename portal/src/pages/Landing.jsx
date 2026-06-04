@@ -45,7 +45,7 @@ function StepCard({ index, icon, number, title, description }) {
   return (
     <div
       ref={ref}
-      className={`border-2 border-gray-200 rounded-lg p-6 flex flex-col items-center text-center transition-all duration-700 ease-out ${
+      className={`border-2 border-gray-200 p-6 flex flex-col items-center text-center transition-all duration-700 ease-out ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
       style={{ transitionDelay: `${index * 120}ms` }}
@@ -131,7 +131,7 @@ function PrintLayoutCard({ index, name, shots, children }) {
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <div className="w-full bg-white border-2 border-gray-200 rounded-lg p-3 flex flex-col text-center text-black overflow-hidden transition-all duration-700 ease-out">
+      <div className="w-full bg-white border-2 border-gray-200 p-3 flex flex-col text-center text-black overflow-hidden transition-all duration-700 ease-out">
         <AnimatedBlock show={cardState.showDate}>
           <p className="text-xs text-black/50">JUN 03, 2026  14:30</p>
         </AnimatedBlock>
@@ -184,7 +184,7 @@ function FeatureGrid() {
         {features.map((f, i) => (
           <div
             key={i}
-            className={`flex flex-col items-center text-center p-4 border-2 border-gray-100 rounded-lg transition-all duration-700 ease-out ${
+            className={`flex flex-col items-center text-center p-4 border-2 border-gray-200 transition-all duration-700 ease-out ${
               isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
             style={{ transitionDelay: `${i * 80}ms` }}
@@ -230,7 +230,7 @@ function PackageCard({ index, pkg }) {
   return (
     <div
       ref={ref}
-      className={`border-2 border-gray-200 p-8 hover:border-black transition-all duration-300 group transform hover:-translate-y-1 ${
+      className={`border-2 border-gray-200 p-8 transition-all duration-300 group transform hover:-translate-y-1 ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
       style={{ transitionDelay: `${index * 80}ms` }}
@@ -320,7 +320,7 @@ function EventTypePills() {
 function FAQItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-2 border-gray-200">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 text-left"
