@@ -229,7 +229,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
             if (subtitleText) {
               contentH += (blocks.header.titleSubtitleGap || 8);
-              const subFontSize = Math.max(16, Math.round(blocks.header.fontSize * 0.52));
+              const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
               contentH += textH(subFontSize, elGap);
             }
           }
@@ -337,17 +337,18 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           const titleText = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
           const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
 
+          const titleFontSize = homeScreen.title?.size || blocks.header.fontSize;
           drawText(ctx, titleText, x, y, contentWidth, {
-            fontSize: blocks.header.fontSize,
+            fontSize: titleFontSize,
             bold: blocks.header.bold,
             alignment: blocks.header.alignment,
             fontFamily: fontHeading,
           });
-          y += textH(blocks.header.fontSize, 0);
+          y += textH(titleFontSize, 0);
 
           if (subtitleText) {
             y += (blocks.header.titleSubtitleGap || 8);
-            const subFontSize = Math.max(16, Math.round(blocks.header.fontSize * 0.52));
+            const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
             drawText(ctx, subtitleText, x, y, contentWidth, {
               fontSize: subFontSize,
               bold: false,
