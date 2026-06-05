@@ -61,12 +61,17 @@ function formatDate(fmt) {
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const hours12 = now.getHours() % 12 || 12;
+  const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
   return fmt
     .replace('MMM', months[now.getMonth()])
+    .replace('MM', pad(now.getMonth() + 1))
     .replace('DD', pad(now.getDate()))
     .replace('YYYY', now.getFullYear())
     .replace('HH', pad(now.getHours()))
-    .replace('mm', pad(now.getMinutes()));
+    .replace('h', String(hours12))
+    .replace('mm', pad(now.getMinutes()))
+    .replace('A', ampm);
 }
 
 function drawDivider(ctx, x, y, width, { style = 'solid', thickness = 1, color = '#cccccc' } = {}, gap) {
@@ -128,6 +133,16 @@ function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderC
     const radius = borderStyle === 'rounded' ? 8 : 0;
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = thickness;
+    
+    // Handle dashed/dotted styles
+    if (borderStyle === 'dashed') {
+      ctx.setLineDash([thickness * 4, thickness * 2]);
+    } else if (borderStyle === 'dotted') {
+      ctx.setLineDash([thickness, thickness * 2]);
+    } else {
+      ctx.setLineDash([]);
+    }
+    
     if (radius > 0) {
       ctx.save();
       ctx.beginPath();
@@ -144,7 +159,17 @@ function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderC
       ctx.restore();
       return;
     }
-    ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+    
+    // Handle double border
+    if (borderStyle === 'double') {
+      ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + thickness * 1.5, y + thickness * 1.5, width - thickness * 3, height - thickness * 3);
+    } else {
+      ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+    }
+    
+    ctx.setLineDash([]);
   }
   if (mirror) {
     ctx.save();

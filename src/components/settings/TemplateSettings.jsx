@@ -99,7 +99,7 @@ const TEMPLATE_TABS = [
   { key: '2x3-portrait', label: 'Tall Order', shots: 6 },
 ];
 
-const BORDER_STYLES = ['none', 'thin', 'thick', 'rounded'];
+const BORDER_STYLES = ['none', 'thin', 'thick', 'rounded', 'double', 'dashed', 'dotted'];
 
 function Toggle({ value, onChange }) {
   return (
@@ -414,7 +414,7 @@ function TemplateBlockEditor() {
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-md-on-surface">Photos</span>
+            <span className="text-sm font-medium text-md-on-surface">Photos to borders</span>
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
                 <button

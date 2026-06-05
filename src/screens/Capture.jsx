@@ -295,23 +295,28 @@ export default function Capture({ templateKey, onComplete, onBack }) {
 
               {/* Retake "cleaning" overlay */}
               {phase === 'cleaning' && (
-                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-4 z-20 overlay-fade-in">
-                  <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-                  {homeScreen.title?.text && (
-                    <p className="text-white font-bold text-2xl drop-shadow-lg text-center px-6">
-                      {homeScreen.title.text}
-                    </p>
-                  )}
-                  {homeScreen.subtitle?.enabled && homeScreen.subtitle?.text && (
-                    <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6">
-                      {homeScreen.subtitle.text}
-                    </p>
-                  )}
-                  {capSettings.retakeMessagesEnabled && (
-                    <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6 transition-opacity duration-300">
-                      {RETAKE_MESSAGES[cleanMsgIndex]}
-                    </p>
-                  )}
+                <div className="absolute inset-0 bg-black/60 flex flex-col z-20 overlay-fade-in">
+                  {/* Booth identity — top (follows PrintStatus format) */}
+                  <div className="absolute top-8 flex flex-col items-center gap-0.5">
+                    {homeScreen.title?.text && (
+                      <p className="text-base font-semibold text-white tracking-wide">
+                        {homeScreen.title.text}
+                      </p>
+                    )}
+                    {homeScreen.subtitle?.enabled && homeScreen.subtitle?.text && (
+                      <p className="text-xs text-white/80 tracking-widest uppercase">{homeScreen.subtitle.text}</p>
+                    )}
+                  </div>
+                  
+                  {/* Center content */}
+                  <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                    <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+                    {capSettings.retakeMessagesEnabled && (
+                      <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6 transition-opacity duration-300">
+                        {RETAKE_MESSAGES[cleanMsgIndex]}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 

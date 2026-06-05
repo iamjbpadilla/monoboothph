@@ -167,14 +167,14 @@ export default function TemplateSelect({ onSelect, onBack }) {
 
       {/* MD3 Cards grid */}
       <div className="flex-1 overflow-y-auto px-5 pt-5 pb-6 page-content-enter">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
           {TEMPLATES.map(({ key, label, shots, description, preview: Preview }) => {
             const isSelected = selected === key;
             return (
               <button
                 key={key}
                 onClick={() => { playClick(); setSelected(key); }}
-                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative h-[360px] ${
+                className={`flex flex-col rounded-[28px] overflow-hidden transition-all duration-150 active:scale-[0.97] relative min-h-[320px] max-h-[400px] ${
                   isSelected
                     ? 'bg-md-primary-container ring-2 ring-md-primary scale-[1.02] shadow-lg'
                     : 'bg-md-surface-container-high hover:bg-md-surface-container-highest hover:scale-[1.03] hover:shadow-xl'
@@ -195,7 +195,7 @@ export default function TemplateSelect({ onSelect, onBack }) {
                 </div>
 
                 {/* Card text */}
-                <div className="px-4 py-4 text-center">
+                <div className="px-4 py-4 text-center flex-shrink-0">
                   <div className={`text-base font-semibold ${isSelected ? 'text-md-on-primary-container' : 'text-md-on-surface'}`}>
                     {label}
                   </div>
