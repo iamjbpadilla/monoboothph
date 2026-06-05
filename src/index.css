@@ -2,11 +2,11 @@
 
 /* ── Material Design 3 — Dark Baseline Theme ─────────────────────────────── */
 @theme {
-  /* Primary */
-  --color-md-primary:               #D0BCFF;
-  --color-md-on-primary:            #381E72;
-  --color-md-primary-container:     #4F378B;
-  --color-md-on-primary-container:  #EADDFF;
+  /* Primary - Slate */
+  --color-md-primary:               #94A3B8;
+  --color-md-on-primary:            #FFFFFF;
+  --color-md-primary-container:     #475569;
+  --color-md-on-primary-container:  #E2E8F0;
   /* Secondary */
   --color-md-secondary:             #CCC2DC;
   --color-md-on-secondary:          #332D41;
@@ -43,10 +43,10 @@
 
 /* ── MD3 Light Theme overrides ───────────────────────────────────────────── */
 [data-theme="light"] {
-  --color-md-primary:               #6750A4;
+  --color-md-primary:               #64748B;
   --color-md-on-primary:            #FFFFFF;
-  --color-md-primary-container:     #EADDFF;
-  --color-md-on-primary-container:  #21005D;
+  --color-md-primary-container:     #E2E8F0;
+  --color-md-on-primary-container:  #1E293B;
   --color-md-secondary:             #625B71;
   --color-md-on-secondary:          #FFFFFF;
   --color-md-secondary-container:   #E8DEF8;
