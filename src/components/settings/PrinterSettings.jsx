@@ -241,8 +241,8 @@ export default function PrinterSettings() {
         )}
       </div>
 
-      {/* Print Margins (print-only, does not affect on-screen preview) - HIDDEN */}
-      {/* <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-4">
+      {/* Print Margins (print-only, does not affect on-screen preview) */}
+      <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-4">
         <label className="block text-xs font-semibold text-md-on-surface uppercase tracking-wider">Print Margins</label>
         <p className="text-[10px] text-md-outline leading-relaxed">These only affect the printed output. On-screen previews stay unchanged.</p>
 
@@ -276,7 +276,7 @@ export default function PrinterSettings() {
             Bottom = top {multLabel(printer.printBottomMultiplier ?? 1)}
           </p>
         </div>
-      </div> */}
+      </div>
 
       {/* Print Quality Tester */}
       <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-3">
