@@ -713,13 +713,17 @@ export default function HomeScreenSettings() {
                 <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Logo Scale: {Math.round(homeScreen.logo.scale * 100)}%</label>
                 <input
                   type="range"
-                  min="0.5"
-                  max="1.5"
+                  min="0.2"
+                  max="3.0"
                   step="0.1"
                   value={homeScreen.logo.scale}
                   onChange={e => updateSettings('homeScreen.logo.scale', parseFloat(e.target.value))}
                   className="w-full"
                 />
+                <div className="flex justify-between mt-1">
+                  <span className="text-[10px] text-md-on-surface-variant">20%</span>
+                  <span className="text-[10px] text-md-on-surface-variant">300%</span>
+                </div>
               </div>
             </>
           )}
