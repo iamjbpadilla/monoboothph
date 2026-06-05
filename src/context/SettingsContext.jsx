@@ -24,7 +24,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 18, // bumped from 17: moved resolution/mirror to camera, removed flashEffect, added storageLimitMB, changed printer default to usb
+  _version: 19, // bumped from 18: added bibleVerses block
   homeScreen: {
     background: {
       type: 'preset', // 'preset' | 'color' | 'gradient' | 'image' | 'video'
@@ -241,6 +241,28 @@ function migrateFromV17(saved) {
   return migrated;
 }
 
+function migrateFromV18(saved) {
+  const migrated = { ...saved };
+  migrated._version = 19;
+  
+  // Add bibleVerses block if it doesn't exist
+  if (!migrated.templates.blocks.bibleVerses) {
+    migrated.templates.blocks.bibleVerses = { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center' };
+  }
+  
+  // Add bibleVerses to blockOrder if not present
+  if (migrated.templates.blocks.blockOrder && !migrated.templates.blocks.blockOrder.includes('bibleVerses')) {
+    const barcodeIndex = migrated.templates.blocks.blockOrder.indexOf('barcode');
+    if (barcodeIndex !== -1) {
+      migrated.templates.blocks.blockOrder.splice(barcodeIndex, 0, 'bibleVerses');
+    } else {
+      migrated.templates.blocks.blockOrder.push('bibleVerses');
+    }
+  }
+  
+  return migrated;
+}
+
 async function loadSettings() {
   try {
     const { value } = await Preferences.get({ key: 'snaproll_settings' });
@@ -259,6 +281,14 @@ async function loadSettings() {
     if (saved._version === 17) {
       console.log('[Settings] Migrating from v17 to v18...');
       saved = migrateFromV17(saved);
+      await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(saved) });
+      console.log('[Settings] Migration complete');
+    }
+    
+    // Migration from v18 to v19
+    if (saved._version === 18) {
+      console.log('[Settings] Migrating from v18 to v19...');
+      saved = migrateFromV18(saved);
       await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(saved) });
       console.log('[Settings] Migration complete');
     }
