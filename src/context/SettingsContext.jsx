@@ -15,10 +15,11 @@ function defaultBlocks() {
       { name: 'Bad Decisions', quantity: 2, price: 0 },
       { name: 'Y2K Energy', quantity: 1, price: 500 }
     ], fontSize: 20, showTotal: false, showQty: false, randomize: true },
+    bibleVerses: { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center' },
     barcode:    { enabled: true,  value: '', type: 'CODE128', showText: false },
     footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center', image: '/footer.png', imageScale: 4, imageTopMargin: 16 },
     backgroundColor: '#ffffff',
-    blockOrder: ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'barcode', 'footer'],
+    blockOrder: ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'bibleVerses', 'barcode', 'footer'],
   };
 }
 

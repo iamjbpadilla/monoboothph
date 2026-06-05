@@ -7,6 +7,7 @@ import { usbPrint } from '../../lib/printerTransports/usb.js';
 import { wifiPrint } from '../../lib/printerTransports/wifi.js';
 import { playTear } from '../../hooks/useSound.js';
 import ConfirmDialog from '../ConfirmDialog.jsx';
+import { BIBLE_VERSES, TOPIC_LABELS } from '../../lib/bibleVerses.js';
 
 const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
@@ -204,7 +205,7 @@ function TemplateBlockEditor() {
   const upd = (blockKey, field, value) => updateSettings(`templates.blocks.${blockKey}.${field}`, value);
 
   const moveBlock = (blockKey, direction) => {
-    const currentOrder = blocks.blockOrder || ['header', 'dividerBefore', 'photos', 'dividerAfter', 'datetime', 'customText', 'barcode', 'footer'];
+    const currentOrder = blocks.blockOrder || ['header', 'dividerBefore', 'photos', 'dividerAfter', 'datetime', 'customText', 'receiptItems', 'bibleVerses', 'barcode', 'footer'];
     const currentIndex = currentOrder.indexOf(blockKey);
     if (currentIndex === -1) return;
 
@@ -800,6 +801,102 @@ function TemplateBlockEditor() {
               <span className="text-xs text-md-on-surface-variant">Show Total</span>
               <Toggle value={blocks.receiptItems.showTotal} onChange={v => upd('receiptItems', 'showTotal', v)} />
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bible Verses */}
+      <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm font-medium text-md-on-surface">Bible Verses</span>
+          <div className="flex items-center gap-2">
+            <Toggle value={blocks.bibleVerses.enabled} onChange={v => upd('bibleVerses', 'enabled', v)} />
+            <div className="flex gap-1">
+              <button
+                onClick={() => moveBlock('bibleVerses', 'up')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move up"
+              >
+                <ChevronUp size={16} />
+              </button>
+              <button
+                onClick={() => moveBlock('bibleVerses', 'down')}
+                className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
+                title="Move down"
+              >
+                <ChevronDown size={16} />
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                const defs = defaultBlocks();
+                upd('bibleVerses', 'topic', defs.bibleVerses.topic);
+                upd('bibleVerses', 'fontSize', defs.bibleVerses.fontSize);
+                upd('bibleVerses', 'showReference', defs.bibleVerses.showReference);
+                upd('bibleVerses', 'alignment', defs.bibleVerses.alignment);
+              }}
+              className="text-xs text-md-outline hover:text-md-on-surface-variant"
+              title="Reset to default"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+        {blocks.bibleVerses.enabled && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-2">Topic</label>
+              <select
+                value={blocks.bibleVerses.topic}
+                onChange={e => upd('bibleVerses', 'topic', e.target.value)}
+                className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
+              >
+                <option value="all">All Topics</option>
+                {Object.entries(TOPIC_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-2">Font Size: {blocks.bibleVerses.fontSize}px</label>
+              <input
+                type="range"
+                min="14"
+                max="32"
+                value={blocks.bibleVerses.fontSize}
+                onChange={e => upd('bibleVerses', 'fontSize', parseInt(e.target.value))}
+                className="w-full"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-md-on-surface-variant">Show Reference</span>
+              <Toggle value={blocks.bibleVerses.showReference} onChange={v => upd('bibleVerses', 'showReference', v)} />
+            </div>
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-2">Alignment</label>
+              <select
+                value={blocks.bibleVerses.alignment}
+                onChange={e => upd('bibleVerses', 'alignment', e.target.value)}
+                className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
+              >
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <button
+              onClick={() => {
+                const topic = blocks.bibleVerses.topic || 'love';
+                const verses = topic === 'all' 
+                  ? Object.values(BIBLE_VERSES).flat()
+                  : BIBLE_VERSES[topic] || BIBLE_VERSES.love;
+                const randomVerse = verses[Math.floor(Math.random() * verses.length)];
+                console.log('Random verse:', randomVerse);
+              }}
+              className="w-full px-3 py-2 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110"
+            >
+              🎲 Preview Random Verse
+            </button>
           </div>
         )}
       </div>

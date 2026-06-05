@@ -1,4 +1,5 @@
 import { resolveFontPair } from './theme.js';
+import { getRandomVerse } from './bibleVerses.js';
 
 // canvasCompositor.js — builds the receipt canvas from frames + settings
 // RULE: 48px minimum margin enforced on all four edges. NO EXCEPTIONS.
@@ -259,6 +260,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'receiptItems':
         if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
           contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
+        }
+        break;
+      case 'bibleVerses':
+        if (blocks.bibleVerses.enabled) {
+          contentH += textH(blocks.bibleVerses.fontSize, elGap);
+          if (blocks.bibleVerses.showReference) {
+            contentH += textH(Math.max(14, Math.round(blocks.bibleVerses.fontSize * 0.7)), elGap);
+          }
         }
         break;
       case 'barcode': {
@@ -531,6 +540,34 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         }
 
         y += elGap;
+        break;
+      }
+      case 'bibleVerses': {
+        if (!blocks.bibleVerses.enabled) break;
+        
+        const verse = getRandomVerse(blocks.bibleVerses.topic || 'love');
+        const fontSize = blocks.bibleVerses.fontSize || 20;
+        
+        drawText(ctx, verse.text, x, y, contentWidth, {
+          fontSize: fontSize,
+          alignment: blocks.bibleVerses.alignment || 'center',
+          color: '#000000',
+          fontFamily: fontBody,
+        });
+        y += textH(fontSize, 0);
+        
+        if (blocks.bibleVerses.showReference) {
+          const refFontSize = Math.max(14, Math.round(fontSize * 0.7));
+          drawText(ctx, verse.reference, x, y, contentWidth, {
+            fontSize: refFontSize,
+            alignment: blocks.bibleVerses.alignment || 'center',
+            color: '#666666',
+            fontFamily: fontBody,
+          });
+          y += textH(refFontSize, elGap);
+        } else {
+          y += elGap;
+        }
         break;
       }
       case 'barcode': {
