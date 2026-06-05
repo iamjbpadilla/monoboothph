@@ -15,7 +15,7 @@ function defaultBlocks() {
       { name: 'Bad Decisions', quantity: 2, price: 0 },
       { name: 'Y2K Energy', quantity: 1, price: 500 }
     ], fontSize: 20, showTotal: false, showQty: false, randomize: true },
-    bibleVerses: { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center' },
+    bibleVerses: { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center', currentVerse: null },
     barcode:    { enabled: true,  value: '', type: 'CODE128', showText: false },
     footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center', image: '/footer.png', imageScale: 4, imageTopMargin: 16 },
     backgroundColor: '#ffffff',
@@ -247,7 +247,7 @@ function migrateFromV18(saved) {
   
   // Add bibleVerses block if it doesn't exist
   if (!migrated.templates.blocks.bibleVerses) {
-    migrated.templates.blocks.bibleVerses = { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center' };
+    migrated.templates.blocks.bibleVerses = { enabled: false, topic: 'love', fontSize: 20, showReference: true, alignment: 'center', currentVerse: null };
   }
   
   // Add bibleVerses to blockOrder if not present

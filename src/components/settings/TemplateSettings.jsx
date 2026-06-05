@@ -890,7 +890,7 @@ function TemplateBlockEditor() {
                   ? Object.values(BIBLE_VERSES).flat()
                   : BIBLE_VERSES[topic] || BIBLE_VERSES.love;
                 const randomVerse = verses[Math.floor(Math.random() * verses.length)];
-                console.log('Random verse:', randomVerse);
+                upd('bibleVerses', 'currentVerse', randomVerse);
               }}
               className="w-full px-3 py-2 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110"
             >

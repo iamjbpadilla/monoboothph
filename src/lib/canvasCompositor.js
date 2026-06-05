@@ -545,7 +545,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'bibleVerses': {
         if (!blocks.bibleVerses.enabled) break;
         
-        const verse = getRandomVerse(blocks.bibleVerses.topic || 'love');
+        // Use currentVerse if set (for preview), otherwise randomize (for print)
+        const verse = blocks.bibleVerses.currentVerse || getRandomVerse(blocks.bibleVerses.topic || 'love');
         const fontSize = blocks.bibleVerses.fontSize || 20;
         
         drawText(ctx, verse.text, x, y, contentWidth, {
