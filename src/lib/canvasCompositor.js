@@ -321,7 +321,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           const estimatedLines = Math.ceil(50 / (blocks.bibleVerses.fontSize || 28)); // rough estimate
           contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines + elGap;
           if (blocks.bibleVerses.showReference) {
-            contentH += Math.max(14, Math.round((blocks.bibleVerses.fontSize || 28) * 0.7));
+            contentH += (blocks.bibleVerses.fontSize || 28);
           }
         }
         break;
@@ -620,14 +620,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         y += verseHeight;
         
         if (blocks.bibleVerses.showReference) {
-          const refFontSize = Math.max(14, Math.round(fontSize * 0.7));
           drawText(ctx, verse.reference, x, y, contentWidth, {
-            fontSize: refFontSize,
+            fontSize: fontSize,
             alignment: blocks.bibleVerses.alignment || 'center',
             color: '#666666',
             fontFamily: fontHeading,
           });
-          y += refFontSize + elGap;
+          y += fontSize + elGap;
         } else {
           y += elGap;
         }
