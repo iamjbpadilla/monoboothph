@@ -61,6 +61,20 @@ async function getDeviceId() {
 }
 
 /**
+ * Get device_name from pairing
+ */
+async function getDeviceName() {
+  try {
+    const { value } = await Preferences.get({ key: 'snaproll_pairing' });
+    if (!value) return null;
+    const pairing = JSON.parse(value);
+    return pairing.deviceName || pairing.deviceId?.slice(0, 8) || 'Unknown';
+  } catch {
+    return 'Unknown';
+  }
+}
+
+/**
  * Broadcast a log to Supabase Realtime
  */
 async function broadcastLog(logEntry) {
@@ -146,6 +160,7 @@ export async function captureLog(level, message, errorCode = null, stackTrace = 
     context,
     timestamp: new Date().toISOString(),
     device_id: await getDeviceId(),
+    device_name: await getDeviceName(),
   };
   
   // Broadcast immediately

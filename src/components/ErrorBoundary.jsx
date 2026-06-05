@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
+import { logError } from '../hooks/useLogCapture.js';
 
 class ErrorBoundaryInner extends Component {
   constructor(props) {
@@ -14,6 +15,23 @@ class ErrorBoundaryInner extends Component {
   componentDidCatch(error, errorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
     this.props.showSnackbar(`App Error: ${error.message}`, 20000);
+    
+    // Log to admin dashboard with error handling
+    try {
+      logError(
+        `ErrorBoundary caught: ${error.message}`,
+        'REACT_ERROR',
+        error.stack,
+        { 
+          componentStack: errorInfo.componentStack,
+          errorBoundary: true,
+          location: window.location.href,
+          userAgent: navigator.userAgent
+        }
+      );
+    } catch (logErr) {
+      console.error('Failed to log error to dashboard:', logErr);
+    }
   }
 
   render() {

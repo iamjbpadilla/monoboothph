@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Copy, Trash2, RefreshCw, ArrowLeft, Search } from 'lucide-react';
+import { Plus, Copy, Trash2, RefreshCw, ArrowLeft, Search, Edit2, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AppManagement() {
@@ -12,6 +12,8 @@ export default function AppManagement() {
   const [newAppName, setNewAppName] = useState('');
   const [creating, setCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [editingApp, setEditingApp] = useState(null);
+  const [editAppName, setEditAppName] = useState('');
 
   const filteredApps = apps.filter(app => 
     app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -156,6 +158,38 @@ export default function AppManagement() {
     }
   }
 
+  async function renameApp(appId, newName) {
+    if (!newName.trim()) return;
+
+    try {
+      const { error } = await supabase
+        .from('apps')
+        .update({ name: newName })
+        .eq('id', appId);
+
+      if (error) throw error;
+
+      setApps(apps.map(app => 
+        app.id === appId ? { ...app, name: newName } : app
+      ));
+      setEditingApp(null);
+      setEditAppName('');
+    } catch (err) {
+      console.error('Error renaming app:', err);
+      alert('Failed to rename app');
+    }
+  }
+
+  function startEditing(app) {
+    setEditingApp(app.id);
+    setEditAppName(app.name);
+  }
+
+  function cancelEditing() {
+    setEditingApp(null);
+    setEditAppName('');
+  }
+
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text);
     alert('Copied to clipboard!');
@@ -243,7 +277,46 @@ export default function AppManagement() {
                   const appDevices = devices.filter(d => d.app_id === app.id);
                   return (
                     <tr key={app.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-black">{app.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-black">
+                        {editingApp === app.id ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={editAppName}
+                              onChange={(e) => setEditAppName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') renameApp(app.id, editAppName);
+                                if (e.key === 'Escape') cancelEditing();
+                              }}
+                              className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                              autoFocus
+                            />
+                            <button
+                              onClick={() => renameApp(app.id, editAppName)}
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={cancelEditing}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            {app.name}
+                            <button
+                              onClick={() => startEditing(app)}
+                              className="text-gray-400 hover:text-black transition"
+                              title="Rename"
+                            >
+                              <Edit2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <code className="text-sm font-mono text-black bg-gray-100 px-2.5 py-1">{app.pairing_code}</code>
                       </td>

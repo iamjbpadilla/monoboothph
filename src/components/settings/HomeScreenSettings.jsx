@@ -567,9 +567,9 @@ export default function HomeScreenSettings() {
           </div>
 
           {/* Preset List */}
-          {homeScreen.presets.length > 0 && (
+          {(homeScreen.presets || []).length > 0 && (
             <div className="space-y-2">
-              {homeScreen.presets.map(preset => (
+              {(homeScreen.presets || []).map(preset => (
                 <div
                   key={preset.id}
                   className="flex items-center justify-between px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg"

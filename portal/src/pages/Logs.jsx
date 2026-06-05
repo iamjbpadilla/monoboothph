@@ -8,7 +8,7 @@ export default function Logs() {
   const [logs, setLogs] = useState([]);
   const [filter, setFilter] = useState('all'); // all, error, warn, info, debug
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedApp, setSelectedApp] = useState(null);
+  const [selectedApp, setSelectedApp] = useState('all'); // 'all' or app_id
   const [apps, setApps] = useState([]);
   const [connected, setConnected] = useState(false);
   const channelRef = useRef(null);
@@ -24,8 +24,15 @@ export default function Logs() {
   }, []);
 
   useEffect(() => {
-    if (selectedApp) {
+    if (selectedApp && selectedApp !== 'all') {
       connectToLogsChannel(selectedApp);
+    } else {
+      // Disconnect if 'all' is selected
+      if (channelRef.current) {
+        channelRef.current.unsubscribe();
+        channelRef.current = null;
+        setConnected(false);
+      }
     }
     return () => {
       if (channelRef.current) {
@@ -150,10 +157,11 @@ export default function Logs() {
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-700">App:</label>
               <select
-                value={selectedApp || ''}
+                value={selectedApp}
                 onChange={(e) => setSelectedApp(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
+                <option value="all">All Apps</option>
                 {apps.map(app => (
                   <option key={app.id} value={app.id}>{app.name}</option>
                 ))}
