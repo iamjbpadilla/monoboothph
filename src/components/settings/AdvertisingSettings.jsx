@@ -836,9 +836,10 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
   const [videoError, setVideoError] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [videoDuration, setVideoDuration] = useState(null);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const videoRef = useRef(null);
   const completedRef = useRef(false);
-  const fullScreenIndexRef = useRef(0);
   const useVideoLength = adDuration === 0;
 
   useEffect(() => {
@@ -867,14 +868,12 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
 
   // Prioritize full screen video over image if both are available
   if (fsVideos.length > 0 && !videoError) {
-    const idx = fullScreenIndexRef.current % fsVideos.length;
-    fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsVideos.length;
-    
     return (
       <div className="w-full h-full relative bg-black">
         <video
+          key={currentVideoIndex}
           ref={videoRef}
-          src={fsVideos[idx].value}
+          src={fsVideos[currentVideoIndex].value}
           preload="auto"
           autoPlay
           muted
@@ -903,6 +902,9 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
             if (useVideoLength && !completedRef.current) {
               completedRef.current = true;
               onComplete();
+            } else if (!useVideoLength && fsVideos.length > 1) {
+              // Rotate to next video
+              setCurrentVideoIndex(prev => (prev + 1) % fsVideos.length);
             }
           }}
         />
@@ -921,14 +923,13 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
   
   // Show full screen image if available (and no video)
   if (fsImages.length > 0 && (fsVideos.length === 0 || videoError)) {
-    const idx = fullScreenIndexRef.current % fsImages.length;
-    fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsImages.length;
     const mode = adConfig.fullScreenImageMode || 'scale';
     const objFit = mode === 'fit' ? 'contain' : mode === 'stretch' ? 'fill' : 'cover';
     return (
       <div className="w-full h-full relative bg-black">
         <img
-          src={fsImages[idx].value}
+          key={currentImageIndex}
+          src={fsImages[currentImageIndex].value}
           alt=""
           className="w-full h-full"
           style={{ objectFit: objFit }}
