@@ -10,12 +10,12 @@ function defaultBlocks() {
     elementSpacing: 16,
     datetime:   { enabled: true,  format: 'MMM DD, YYYY  HH:mm' },
     customText: { enabled: false, content: 'MONO BOOTH PH',           fontSize: 28, alignment: 'center' },
-    receiptItems: { enabled: true, items: [
+    receiptItems: { enabled: false, items: [
       { name: 'Good Vibes', quantity: 1, price: 999 },
       { name: 'Bad Decisions', quantity: 2, price: 0 },
       { name: 'Y2K Energy', quantity: 1, price: 500 }
     ], fontSize: 20, showTotal: false, showQty: false, randomize: true },
-    bibleVerses: { enabled: false, topic: 'all', fontSize: 28, showReference: true, alignment: 'center', lastRandomized: 0 },
+    bibleVerses: { enabled: true, topic: 'all', fontSize: 28, showReference: true, alignment: 'center', lastRandomized: 0 },
     barcode:    { enabled: true,  value: '', type: 'CODE128', showText: false },
     footer:     { enabled: true,  text: 'Thank you for the memories!', fontSize: 26, alignment: 'center', image: '/footer.png', imageScale: 4, imageTopMargin: 16 },
     backgroundColor: '#ffffff',
@@ -247,12 +247,22 @@ function migrateFromV18(saved) {
   
   // Add bibleVerses block if it doesn't exist
   if (!migrated.templates.blocks.bibleVerses) {
-    migrated.templates.blocks.bibleVerses = { enabled: false, topic: 'all', fontSize: 28, showReference: true, alignment: 'center', lastRandomized: 0 };
+    migrated.templates.blocks.bibleVerses = { enabled: true, topic: 'all', fontSize: 28, showReference: true, alignment: 'center', lastRandomized: 0 };
   }
   
   // Update bibleVerses topic from old topic-based to new book-based
   if (migrated.templates.blocks.bibleVerses && migrated.templates.blocks.bibleVerses.topic === 'love') {
     migrated.templates.blocks.bibleVerses.topic = 'all';
+  }
+  
+  // Enable bibleVerses by default (previously disabled)
+  if (migrated.templates.blocks.bibleVerses && migrated.templates.blocks.bibleVerses.enabled === false) {
+    migrated.templates.blocks.bibleVerses.enabled = true;
+  }
+  
+  // Disable receiptItems by default (previously enabled)
+  if (migrated.templates.blocks.receiptItems && migrated.templates.blocks.receiptItems.enabled === true) {
+    migrated.templates.blocks.receiptItems.enabled = false;
   }
   
   // Add bibleVerses to blockOrder if not present
