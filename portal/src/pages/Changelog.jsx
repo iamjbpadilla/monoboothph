@@ -209,47 +209,73 @@ export default function Changelog() {
 
   const parsed = parseMarkdown(content);
 
+  const getSectionColor = (section) => {
+    switch (section.toLowerCase()) {
+      case 'added': return 'bg-green-100 text-green-800 border-green-200';
+      case 'changed': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'fixed': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'security': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => navigate('/admin/dashboard')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors font-medium"
           >
             <ArrowLeft size={20} />
             <span>Back to Dashboard</span>
           </button>
           <div className="flex items-center gap-3 mb-2">
-            <FileText className="text-blue-600" size={32} />
-            <h1 className="text-3xl font-bold text-gray-900">Changelog</h1>
+            <div className="p-3 bg-blue-600 rounded-xl">
+              <FileText className="text-white" size={28} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Changelog</h1>
+              <p className="text-gray-600">All notable changes to Snap & Roll</p>
+            </div>
           </div>
-          <p className="text-gray-600">All notable changes to Snap & Roll</p>
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm p-8 prose prose-sm max-w-none">
+        <div className="space-y-6">
           {parsed.map((item, index) => {
             switch (item.type) {
               case 'version':
                 return (
-                  <h2 key={index} className="text-2xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200">
-                    {item.version} {item.date && <span className="text-gray-500 font-normal text-lg ml-2">{item.date}</span>}
-                  </h2>
+                  <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                      <h2 className="text-2xl font-bold text-white">
+                        {item.version}
+                        {item.date && <span className="text-blue-100 font-normal text-lg ml-3">{item.date}</span>}
+                      </h2>
+                    </div>
+                  </div>
                 );
               case 'section':
                 return (
-                  <h3 key={index} className="text-lg font-semibold text-gray-800 mt-6 mb-3">
-                    {item.section}
-                  </h3>
+                  <div key={index} className="mt-6">
+                    <h3 className={`inline-block px-4 py-2 rounded-lg font-semibold text-sm border ${getSectionColor(item.section)}`}>
+                      {item.section}
+                    </h3>
+                  </div>
                 );
               case 'listStart':
-                return <ul key={index} className="list-disc list-inside space-y-1 text-gray-700 ml-4">;
+                return <ul key={index} className="space-y-2 mt-4">;
               case 'listEnd':
                 return </ul>;
               case 'item':
-                return <li key={index}>{item.content}</li>;
+                return (
+                  <li key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
+                    <span className="text-gray-700 leading-relaxed">{item.content}</span>
+                  </li>
+                );
               default:
                 return null;
             }
