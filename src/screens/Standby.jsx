@@ -291,7 +291,7 @@ export default function Standby({ onStart, onOpenSettings }) {
             style={{ 
               width: `${200 * buttonScale}px`,
               height: `${64 * buttonScale}px`,
-              marginTop: `${buttonVerticalOffset}px`,
+              transform: `translateY(${buttonVerticalOffset}px)`,
             }}
           />
         ) : (
@@ -299,8 +299,7 @@ export default function Standby({ onStart, onOpenSettings }) {
             className={`flex items-center justify-center min-h-[64px] px-10 bg-md-primary text-md-on-primary text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl active:shadow-md active:scale-[0.97] standby-cta-pulse animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 ${BUTTON_SHAPES[buttonShape] || BUTTON_SHAPES.pill}`}
             style={{ 
               transition: 'box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
-              transform: `scale(${buttonScale})`,
-              marginTop: `${buttonVerticalOffset}px`,
+              transform: `scale(${buttonScale}) translateY(${buttonVerticalOffset}px)`,
             }}
           >
             {buttonText}
