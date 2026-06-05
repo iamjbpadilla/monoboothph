@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FileText, ArrowLeft } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const CHANGELOG_CONTENT = `# Changelog
@@ -208,51 +208,54 @@ export default function Changelog() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => navigate('/admin/dashboard')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Dashboard</span>
-          </button>
-          <div className="flex items-center gap-3 mb-2">
-            <FileText className="text-blue-600" size={32} />
-            <h1 className="text-3xl font-bold text-gray-900">Changelog</h1>
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/admin/dashboard')}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h1 className="text-xl font-semibold text-gray-900">Changelog</h1>
+            </div>
           </div>
-          <p className="text-gray-600">All notable changes to Snap & Roll</p>
         </div>
+      </div>
 
-        {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          {parsed.map((item, index) => {
-            switch (item.type) {
-              case 'version':
-                return (
-                  <h2 key={index} className="text-2xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200">
-                    {item.version} {item.date && <span className="text-gray-500 font-normal text-lg ml-2">{item.date}</span>}
-                  </h2>
-                );
-              case 'section':
-                return (
-                  <h3 key={index} className="text-lg font-semibold text-gray-800 mt-6 mb-3">
-                    {item.section}
-                  </h3>
-                );
-              case 'list':
-                return (
-                  <ul key={index} className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                    {item.items.map((listItem, idx) => (
-                      <li key={idx}>{listItem}</li>
-                    ))}
-                  </ul>
-                );
-              default:
-                return null;
-            }
-          })}
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="p-8">
+            {parsed.map((item, index) => {
+              switch (item.type) {
+                case 'version':
+                  return (
+                    <h2 key={index} className="text-2xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200">
+                      {item.version} {item.date && <span className="text-gray-500 font-normal text-lg ml-2">{item.date}</span>}
+                    </h2>
+                  );
+                case 'section':
+                  return (
+                    <h3 key={index} className="text-lg font-semibold text-gray-800 mt-6 mb-3">
+                      {item.section}
+                    </h3>
+                  );
+                case 'list':
+                  return (
+                    <ul key={index} className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                      {item.items.map((listItem, idx) => (
+                        <li key={idx}>{listItem}</li>
+                      ))}
+                    </ul>
+                  );
+                default:
+                  return null;
+              }
+            })}
+          </div>
         </div>
       </div>
     </div>
