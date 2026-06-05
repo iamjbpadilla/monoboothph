@@ -865,8 +865,8 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
   const fsImages = adConfig.fullScreenImages || [];
   const fsVideos = adConfig.fullScreenVideos || [];
 
-  // Prioritize video over image if both are enabled
-  if (adConfig.showFullScreenVideo && fsVideos.length > 0 && !videoError) {
+  // Prioritize full screen video over image if both are available
+  if (fsVideos.length > 0 && !videoError) {
     const idx = fullScreenIndexRef.current % fsVideos.length;
     fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsVideos.length;
     
@@ -919,7 +919,8 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
     );
   }
   
-  if (adConfig.showFullScreen && fsImages.length > 0) {
+  // Show full screen image if available (and no video)
+  if (fsImages.length > 0 && (fsVideos.length === 0 || videoError)) {
     const idx = fullScreenIndexRef.current % fsImages.length;
     fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsImages.length;
     const mode = adConfig.fullScreenImageMode || 'scale';
