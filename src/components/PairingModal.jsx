@@ -130,6 +130,13 @@ export default function PairingModal({ onPaired, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[60] bg-gray-50 flex flex-col items-center justify-center p-6 animate-in fade-in duration-200">
+      {/* Branding Header - Outside card */}
+      {!pairingSuccess && (
+        <div className="mb-4 text-center">
+          <h1 className="text-lg font-bold text-black tracking-widest uppercase">MONO BOOTH PH</h1>
+        </div>
+      )}
+
       <div className="w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-700 ease-out">
         {pairingSuccess ? (
           <div className="flex flex-col items-center justify-center py-8">
@@ -139,11 +146,6 @@ export default function PairingModal({ onPaired, onClose }) {
           </div>
         ) : (
           <>
-        {/* Branding Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-lg font-bold text-black tracking-widest uppercase">MONO BOOTH PH</h1>
-        </div>
-
         {/* Header */}
         <div className="flex items-center justify-center mb-6">
           <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
@@ -209,14 +211,16 @@ export default function PairingModal({ onPaired, onClose }) {
             {loading ? '...' : '✓'}
           </button>
         </div>
-
-        {/* Branding Footer */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>
-        </div>
         </>
         )}
       </div>
+
+      {/* Branding Footer - Outside card */}
+      {!pairingSuccess && (
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>
+        </div>
+      )}
 
       {/* Connection Status - Outside card at bottom */}
       {!pairingSuccess && (
