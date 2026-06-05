@@ -202,6 +202,13 @@ function PhotoboothApp() {
     logStep('PERM_CHECK', 'Starting permission check');
     async function checkPermissions() {
       try {
+        // Increment local analytics sessions count on app start
+        const analyticsValue = await Preferences.get({ key: 'snaproll_local_analytics' });
+        const analytics = analyticsValue.value ? JSON.parse(analyticsValue.value) : { printCount: 0, imageUploads: 0, sessions: 0 };
+        analytics.sessions += 1;
+        await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(analytics) });
+        logStep('ANALYTICS', 'Local analytics sessions incremented:', analytics.sessions);
+        
         logStep('PERM_CHECK', 'Fetching preferences');
         const [introValue, permValue, pairingValue] = await Promise.all([
           Preferences.get({ key: 'snaproll_intro_completed' }),
@@ -323,6 +330,13 @@ function PhotoboothApp() {
   }
 
   function handlePrint(dataUrl) {
+    // Increment local analytics print count
+    Preferences.get({ key: 'snaproll_local_analytics' }).then(({ value }) => {
+      const analytics = value ? JSON.parse(value) : { printCount: 0, imageUploads: 0, sessions: 0 };
+      analytics.printCount += 1;
+      Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(analytics) });
+    }).catch(console.error);
+    
     setPrintImageUrl(dataUrl);
     navigateTo('printStatus');
   }

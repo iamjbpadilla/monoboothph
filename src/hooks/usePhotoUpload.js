@@ -84,6 +84,14 @@ export async function uploadPhotoToSupabase(imageDataUrl, sessionId) {
     }
 
     console.log('[Photo Upload] Database record created:', photoData);
+    
+    // Increment local analytics image uploads count
+    const analyticsValue = await Preferences.get({ key: 'snaproll_local_analytics' });
+    const analytics = analyticsValue.value ? JSON.parse(analyticsValue.value) : { printCount: 0, imageUploads: 0, sessions: 0 };
+    analytics.imageUploads += 1;
+    await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(analytics) });
+    console.log('[Photo Upload] Local analytics image uploads incremented:', analytics.imageUploads);
+    
     return photoData;
   } catch (error) {
     console.error('[Photo Upload] Fatal error:', {

@@ -30,24 +30,6 @@ const COLOR_PRESETS = [
   { id: 'color-pink', label: 'Pink', color: '#ec4899' },
 ];
 
-const EXAMPLE_BACKGROUND_IMAGES = [
-  { id: 'example-bg-1', label: 'Abstract Waves', url: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&h=1080&fit=crop' },
-  { id: 'example-bg-2', label: 'Gradient Mesh', url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1920&h=1080&fit=crop' },
-  { id: 'example-bg-3', label: 'Neon Lights', url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1920&h=1080&fit=crop' },
-  { id: 'example-bg-4', label: 'Bokeh Night', url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&h=1080&fit=crop' },
-  { id: 'example-bg-5', label: 'Aurora', url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&h=1080&fit=crop' },
-  { id: 'example-bg-6', label: 'Geometric', url: 'https://images.unsplash.com/photo-1506765275883-d5291a899c44?w=1920&h=1080&fit=crop' },
-];
-
-const EXAMPLE_BACKGROUND_VIDEOS = [
-  { id: 'example-video-1', label: 'Abstract Flow', url: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-white-background-with-blue-light-23657-large.mp4' },
-  { id: 'example-video-2', label: 'Particles', url: 'https://assets.mixkit.co/videos/preview/mixkit-flying-particles-in-a-abstract-structure-23654-large.mp4' },
-  { id: 'example-video-3', label: 'Gradient Waves', url: 'https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-23658-large.mp4' },
-  { id: 'example-video-4', label: 'Light Rays', url: 'https://assets.mixkit.co/videos/preview/mixkit-light-rays-transmission-over-a-dark-background-23656-large.mp4' },
-  { id: 'example-video-5', label: 'Digital Grid', url: 'https://assets.mixkit.co/videos/preview/mixkit-digital-grid-with-rotating-cubes-23655-large.mp4' },
-  { id: 'example-video-6', label: 'Colorful Smoke', url: 'https://assets.mixkit.co/videos/preview/mixkit-colorful-smoke-in-the-air-23653-large.mp4' },
-];
-
 const BUTTON_SHAPES = [
   { id: 'pill', label: 'Pill', class: 'rounded-full' },
   { id: 'rectangle', label: 'Rectangle', class: 'rounded-lg' },
@@ -379,28 +361,6 @@ export default function HomeScreenSettings() {
             <div>
               <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Background Image</label>
               <div className="space-y-3">
-                {/* Example Images */}
-                <div>
-                  <label className="block text-xs text-md-on-surface-variant mb-2">Example Images</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {EXAMPLE_BACKGROUND_IMAGES.map(img => (
-                      <button
-                        key={img.id}
-                        onClick={() => {
-                          updateSettings('homeScreen.background.imageBase64', img.url);
-                        }}
-                        className="aspect-video rounded-lg border-2 border-md-outline-variant overflow-hidden hover:border-md-primary transition-all"
-                        title={img.label}
-                      >
-                        <img
-                          src={img.url}
-                          alt={img.label}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
                 {homeScreen.background.imageBase64 && (
                   <div className="relative">
                     <img
@@ -435,30 +395,6 @@ export default function HomeScreenSettings() {
             <div>
               <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Background Video</label>
               <div className="space-y-3">
-                {/* Example Videos */}
-                <div>
-                  <label className="block text-xs text-md-on-surface-variant mb-2">Example Videos</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {EXAMPLE_BACKGROUND_VIDEOS.map(vid => (
-                      <button
-                        key={vid.id}
-                        onClick={() => {
-                          updateSettings('homeScreen.background.videoBase64', vid.url);
-                        }}
-                        className="aspect-video rounded-lg border-2 border-md-outline-variant overflow-hidden hover:border-md-primary transition-all"
-                        title={vid.label}
-                      >
-                        <video
-                          src={vid.url}
-                          alt={vid.label}
-                          className="w-full h-full object-cover"
-                          muted
-                          loop
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
                 {homeScreen.background.videoBase64 && (
                   <div className="relative">
                     <video
