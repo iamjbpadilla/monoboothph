@@ -147,14 +147,14 @@ export default function PairingModal({ onPaired, onClose }) {
         ) : connectionStatus === 'checking' ? (
           <div className="flex flex-col items-center justify-center py-8">
             <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-6" />
-            <p className="text-lg font-medium text-black">Connecting to database...</p>
+            <p className="text-lg font-medium text-black">Connecting to Portal...</p>
           </div>
         ) : connectionStatus === 'error' ? (
           <div className="flex flex-col items-center justify-center py-8">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
               <RefreshCw className="w-8 h-8 text-red-500" />
             </div>
-            <p className="text-lg font-medium text-black mb-2">Database unavailable</p>
+            <p className="text-lg font-medium text-black mb-2">Portal unavailable</p>
             <p className="text-sm text-gray-500 mb-6 text-center">Please check your internet connection and try again</p>
             <button
               type="button"
@@ -162,7 +162,7 @@ export default function PairingModal({ onPaired, onClose }) {
               className="px-6 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              Connect to Database
+              Connect to Portal
             </button>
           </div>
         ) : (
