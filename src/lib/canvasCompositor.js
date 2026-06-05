@@ -1,5 +1,5 @@
 import { resolveFontPair } from './theme.js';
-import { getRandomVerse } from './bibleVerses.js';
+import { BIBLE_VERSES, getRandomVerse } from './bibleVerses.js';
 
 // canvasCompositor.js — builds the receipt canvas from frames + settings
 // RULE: 48px minimum margin enforced on all four edges. NO EXCEPTIONS.
