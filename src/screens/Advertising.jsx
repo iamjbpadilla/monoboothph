@@ -25,7 +25,9 @@ export default function Advertising({ onComplete }) {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [videoError, setVideoError] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(null);
   const videoRef = useRef(null);
+  const completedRef = useRef(false);
 
   useEffect(() => {
     if (useVideoLength) return; // Don't use timer when using video length
@@ -95,16 +97,25 @@ export default function Advertising({ onComplete }) {
           }}
           onCanPlay={() => {
             setVideoReady(true);
+            // Capture video duration
+            if (videoRef.current && videoRef.current.duration) {
+              setVideoDuration(videoRef.current.duration);
+              console.log('[Advertising] Video duration:', videoRef.current.duration);
+            }
             // Ensure video plays when ready
             if (videoRef.current) {
               videoRef.current.play().catch(err => console.warn('[Advertising] Auto-play failed:', err));
             }
           }}
           onLoadedData={() => setVideoReady(true)}
-          onPlay={() => console.log('[Advertising] Video started playing')}
+          onPlay={() => {
+            console.log('[Advertising] Video started playing');
+            completedRef.current = false;
+          }}
           onEnded={() => {
             console.log('[Advertising] Video ended');
-            if (useVideoLength) {
+            if (useVideoLength && !completedRef.current) {
+              completedRef.current = true;
               onComplete();
             }
           }}

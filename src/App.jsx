@@ -34,7 +34,9 @@ const RETAKE_MESSAGES = [
 
 function CleaningScreen({ onDone }) {
   const { settings } = useSettings();
-  const { boothName, eventName } = settings.general;
+  const homeScreen = settings.homeScreen || {};
+  const titleText = homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH';
+  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || settings.general.eventName) : null;
   const [msgIndex, setMsgIndex] = useState(Math.floor(Math.random() * RETAKE_MESSAGES.length));
 
   useEffect(() => {
@@ -53,10 +55,10 @@ function CleaningScreen({ onDone }) {
       {/* Branding header — large */}
       <div className="absolute top-10 flex flex-col items-center gap-1">
         <p className="text-2xl font-bold text-md-on-surface tracking-wide">
-          {boothName || 'MONO BOOTH PH'}
+          {titleText}
         </p>
-        {eventName && (
-          <p className="text-base text-md-on-surface-variant tracking-widest uppercase">{eventName}</p>
+        {subtitleText && (
+          <p className="text-base text-md-on-surface-variant tracking-widest uppercase">{subtitleText}</p>
         )}
       </div>
 
@@ -77,7 +79,9 @@ function CleaningScreen({ onDone }) {
 
 function ComposingScreen({ onDone }) {
   const { settings } = useSettings();
-  const { boothName, eventName } = settings.general;
+  const homeScreen = settings.homeScreen || {};
+  const titleText = homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH';
+  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || settings.general.eventName) : null;
 
   useEffect(() => {
     const t = setTimeout(onDone, 1600);
@@ -89,10 +93,10 @@ function ComposingScreen({ onDone }) {
       {/* Large branded title */}
       <div className="flex flex-col items-center gap-3 z-10 composing-text">
         <p className="text-4xl font-bold text-md-on-surface tracking-tight">
-          {boothName || 'MONO BOOTH PH'}
+          {titleText}
         </p>
-        {eventName && (
-          <p className="text-xl text-md-on-surface-variant tracking-widest uppercase">{eventName}</p>
+        {subtitleText && (
+          <p className="text-xl text-md-on-surface-variant tracking-widest uppercase">{subtitleText}</p>
         )}
       </div>
 

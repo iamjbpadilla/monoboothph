@@ -226,7 +226,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           } else {
             contentH += textH(blocks.header.fontSize, elGap);
             const homeScreen = generalSettings.homeScreen || {};
-            const subtitleText = blocks.header.subtitle || (blocks.header.text ? '' : (homeScreen.subtitle?.enabled ? homeScreen.subtitle?.text : generalSettings.eventName));
+            const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
             if (subtitleText) {
               contentH += (blocks.header.titleSubtitleGap || 8);
               const subFontSize = Math.max(16, Math.round(blocks.header.fontSize * 0.52));
@@ -330,10 +330,10 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
           y += imgHeight + (blocks.header.imageBottomMargin || 16) + elGap;
         } else {
-          // Use custom title/subtitle or fall back to home screen settings
+          // Always use home screen title/subtitle (template header custom text is ignored)
           const homeScreen = generalSettings.homeScreen || {};
-          const titleText = blocks.header.title || blocks.header.text || homeScreen.title?.text || generalSettings.boothName;
-          const subtitleText = blocks.header.subtitle || (blocks.header.text ? '' : (homeScreen.subtitle?.enabled ? homeScreen.subtitle?.text : generalSettings.eventName));
+          const titleText = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
+          const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
 
           drawText(ctx, titleText, x, y, contentWidth, {
             fontSize: blocks.header.fontSize,
