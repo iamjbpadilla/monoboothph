@@ -48,14 +48,48 @@ function receiptItemsH(fontSize, items, showTotal, gap) {
 }
 
 // --- draw helpers ---
-function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alignment = 'center', color = '#000000', fontFamily = 'sans-serif' } = {}) {
+function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alignment = 'center', color = '#000000', fontFamily = 'sans-serif', wrap = false } = {}) {
   ctx.font = `${bold ? 'bold' : 'normal'} ${fontSize}px '${fontFamily}', sans-serif`;
   ctx.fillStyle = color;
   ctx.textAlign = alignment;
-  const tx = alignment === 'center' ? x + maxWidth / 2
-    : alignment === 'right' ? x + maxWidth
-    : x;
-  ctx.fillText(text, tx, y + fontSize, maxWidth);
+  
+  if (wrap) {
+    // Word wrap text
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    
+    for (const word of words) {
+      const testLine = currentLine + (currentLine ? ' ' : '') + word;
+      const metrics = ctx.measureText(testLine);
+      
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    lines.push(currentLine);
+    
+    // Draw each line
+    let lineY = y;
+    for (const line of lines) {
+      const tx = alignment === 'center' ? x + maxWidth / 2
+        : alignment === 'right' ? x + maxWidth
+        : x;
+      ctx.fillText(line, tx, lineY + fontSize);
+      lineY += fontSize;
+    }
+    
+    return lines.length * fontSize; // Return total height
+  } else {
+    const tx = alignment === 'center' ? x + maxWidth / 2
+      : alignment === 'right' ? x + maxWidth
+      : x;
+    ctx.fillText(text, tx, y + fontSize, maxWidth);
+    return fontSize; // Return single line height
+  }
 }
 
 function formatDate(fmt) {
@@ -283,9 +317,11 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'bibleVerses':
         if (blocks.bibleVerses.enabled) {
           lastEnabledBlock = 'bibleVerses';
-          contentH += textH(blocks.bibleVerses.fontSize, elGap);
+          // Estimate wrapped height (assume ~2-3 lines for long verses)
+          const estimatedLines = Math.ceil(50 / (blocks.bibleVerses.fontSize || 28)); // rough estimate
+          contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines + elGap;
           if (blocks.bibleVerses.showReference) {
-            contentH += textH(Math.max(14, Math.round(blocks.bibleVerses.fontSize * 0.7)), elGap);
+            contentH += Math.max(14, Math.round((blocks.bibleVerses.fontSize || 28) * 0.7));
           }
         }
         break;
@@ -320,7 +356,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImg = await loadImage(blocks.footer.image);
             const fImgWidth = contentWidth * scale;
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
-            contentH += fImgHeight + (blocks.footer.imageTopMargin || 16);
+            contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
           } else {
             contentH += textH(blocks.footer.fontSize, 0);
           }
@@ -570,15 +606,17 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         
         // Always randomize verse for each render (different for each template preview)
         const verse = getRandomVerse(blocks.bibleVerses.topic || 'love');
-        const fontSize = blocks.bibleVerses.fontSize || 20;
+        const fontSize = blocks.bibleVerses.fontSize || 28;
         
-        drawText(ctx, verse.text, x, y, contentWidth, {
+        const verseHeight = drawText(ctx, verse.text, x, y, contentWidth, {
           fontSize: fontSize,
+          bold: true,
           alignment: blocks.bibleVerses.alignment || 'center',
           color: '#000000',
           fontFamily: fontHeading,
+          wrap: true,
         });
-        y += textH(fontSize, 0);
+        y += verseHeight;
         
         if (blocks.bibleVerses.showReference) {
           const refFontSize = Math.max(14, Math.round(fontSize * 0.7));
@@ -588,7 +626,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             color: '#666666',
             fontFamily: fontHeading,
           });
-          y += textH(refFontSize, elGap);
+          y += refFontSize + elGap;
         } else {
           y += elGap;
         }

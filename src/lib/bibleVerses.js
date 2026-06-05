@@ -81,6 +81,8 @@ export function getRandomVerse(topic = 'all') {
     verses = BIBLE_VERSES[topic] || BIBLE_VERSES.love;
   }
   
-  const randomIndex = Math.floor(Math.random() * verses.length);
-  return verses[randomIndex];
+  // Add more randomness by shuffling the array first
+  const shuffled = [...verses].sort(() => Math.random() - 0.5);
+  const randomIndex = Math.floor(Math.random() * shuffled.length);
+  return shuffled[randomIndex];
 }
