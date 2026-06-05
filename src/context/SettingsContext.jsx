@@ -251,7 +251,7 @@ function migrateFromV18(saved) {
   }
   
   // Add bibleVerses to blockOrder if not present
-  if (migrated.templates.blocks.blockOrder && !migrated.templates.blocks.blockOrder.includes('bibleVerses')) {
+  if (migrated.templates.blocks.blockOrder && Array.isArray(migrated.templates.blocks.blockOrder) && !migrated.templates.blocks.blockOrder.includes('bibleVerses')) {
     const barcodeIndex = migrated.templates.blocks.blockOrder.indexOf('barcode');
     if (barcodeIndex !== -1) {
       migrated.templates.blocks.blockOrder.splice(barcodeIndex, 0, 'bibleVerses');
@@ -293,8 +293,8 @@ async function loadSettings() {
       console.log('[Settings] Migration complete');
     }
     
-    // Version mismatch → wipe and use fresh defaults
-    if (saved._version !== DEFAULT_SETTINGS._version) {
+    // Version mismatch → wipe and use fresh defaults (only for unknown versions)
+    if (saved._version < 17 || saved._version > 19) {
       console.warn('[Settings] Version mismatch, resetting to defaults');
       await Preferences.remove({ key: 'snaproll_settings' });
       return DEFAULT_SETTINGS;
