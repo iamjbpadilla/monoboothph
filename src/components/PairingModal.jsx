@@ -249,7 +249,6 @@ export default function PairingModal({ onPaired, onClose }) {
       {/* Branding Footer - Outside card */}
       {!pairingSuccess && (
         <div className="mt-4 flex flex-col items-center gap-0.5">
-          <p className="text-sm font-semibold text-gray-500 tracking-wider">MONO BOOTH PH</p>
           <p className="text-[10px] text-gray-400 tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
           <p className="text-[10px] text-gray-400">📍 Kabankalan City & Beyond</p>
         </div>
