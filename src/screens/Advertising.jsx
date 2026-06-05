@@ -196,6 +196,7 @@ export default function Advertising({ onComplete }) {
                 muted
                 loop
                 playsInline
+                controls={false}
                 className="w-full h-48 object-cover rounded-2xl bg-white/20 backdrop-blur-sm animate-in fade-in duration-500"
               />
             ) : null}
