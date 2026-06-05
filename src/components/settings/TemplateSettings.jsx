@@ -198,6 +198,7 @@ function PresetSelector({ label, value, onChange, presets }) {
 function TemplateBlockEditor() {
   const { settings, updateSettings } = useSettings();
   const blocks = settings.templates.blocks;
+  const homeScreen = settings.homeScreen || {};
 
   const upd = (blockKey, field, value) => updateSettings(`templates.blocks.${blockKey}.${field}`, value);
 
@@ -263,14 +264,14 @@ function TemplateBlockEditor() {
           <div className="space-y-2">
             <TextInput
               label="Title"
-              value={blocks.header.title || ''}
-              onChange={v => upd('header', 'title', v)}
+              value={homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH'}
+              onChange={v => updateSettings('homeScreen.title.text', v)}
               placeholder="Custom title"
             />
             <TextInput
               label="Subtitle"
-              value={blocks.header.subtitle || ''}
-              onChange={v => upd('header', 'subtitle', v)}
+              value={homeScreen.subtitle?.text || settings.general.eventName || 'Receipt Photobooth'}
+              onChange={v => updateSettings('homeScreen.subtitle.text', v)}
               placeholder="Custom subtitle"
             />
             <div>
