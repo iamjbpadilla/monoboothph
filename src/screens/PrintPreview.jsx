@@ -135,6 +135,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
             templateSettings={settings.templates}
             generalSettings={settings.general}
             printerSettings={settings.printer}
+            homeScreenSettings={settings.homeScreen}
             mirrorImages={mirrorImages}
             onCanvasReady={handleCanvasReady}
           />

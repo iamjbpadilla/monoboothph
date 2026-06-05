@@ -182,7 +182,7 @@ function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderC
   }
 }
 
-export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, mirrorImages = false) {
+export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, homeScreenSettings = null, mirrorImages = false) {
   const { dpi, paperWidthMm } = printerSettings;
   const canvasWidth = calcCanvasWidth(dpi, paperWidthMm);
   const contentWidth = canvasWidth - MARGIN * 2;
@@ -225,7 +225,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
           } else {
             contentH += textH(blocks.header.fontSize, elGap);
-            const homeScreen = generalSettings.homeScreen || {};
+            const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
             const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
             if (subtitleText) {
               contentH += (blocks.header.titleSubtitleGap || 8);
@@ -331,7 +331,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           y += imgHeight + (blocks.header.imageBottomMargin || 16) + elGap;
         } else {
           // Always use home screen title/subtitle (template header custom text is ignored)
-          const homeScreen = generalSettings.homeScreen || {};
+          const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
           const titleText = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
           const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
 

@@ -53,6 +53,7 @@ function ReceiptPreview({ templateKey, onCanvasReady }) {
           settings.templates,
           settings.general,
           settings.printer,
+          settings.homeScreen,
         );
         if (myId !== renderIdRef.current) return; // stale — newer render already started
         const el = containerRef.current;
