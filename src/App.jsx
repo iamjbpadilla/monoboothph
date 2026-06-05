@@ -68,7 +68,7 @@ function CleaningScreen({ onDone }) {
       {/* Branding footer */}
       <div className="absolute bottom-8 flex flex-col items-center gap-0.5 animate-in fade-in duration-700 delay-400">
         <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO BOOTH PH</p>
-        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
         <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
@@ -108,7 +108,7 @@ function ComposingScreen({ onDone }) {
       {/* Branding footer */}
       <div className="absolute bottom-8 flex flex-col items-center gap-0.5 z-10 composing-text" style={{ animationDelay: '600ms' }}>
         <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO BOOTH PH</p>
-        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
         <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>

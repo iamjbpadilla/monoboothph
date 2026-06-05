@@ -314,7 +314,7 @@ export default function Advertising({ onComplete }) {
 
         {/* Tagline - 24dp spacing */}
         <div className="flex flex-col gap-1">
-          <p className="text-sm text-white/70 tracking-widest uppercase">No proof without @monoboothph</p>
+          <p className="text-sm text-white/70 tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
           <p className="text-sm text-white/70">📍 Kabankalan City & Beyond</p>
         </div>
       </div>

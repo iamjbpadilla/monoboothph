@@ -344,7 +344,7 @@ export default function Standby({ onStart, onOpenSettings }) {
       {/* Branding footer */}
       <div className="absolute bottom-6 flex flex-col items-center gap-1 animate-in fade-in duration-700 delay-400">
         <p className="text-sm font-semibold text-md-on-surface-variant tracking-wider">MONO BOOTH PH</p>
-        <p className="text-[10px] text-md-outline tracking-widest uppercase">No proof without @monoboothph</p>
+        <p className="text-[10px] text-md-outline tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
         <p className="text-[10px] text-md-on-surface-variant">📍 Kabankalan City & Beyond</p>
       </div>
     </div>
