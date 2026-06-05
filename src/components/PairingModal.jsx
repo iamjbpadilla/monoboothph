@@ -216,7 +216,7 @@ export default function PairingModal({ onPaired, onClose }) {
         <button
           type="button"
           onClick={checkConnection}
-          className="w-full px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out border-2 border-gray-200 flex items-center justify-center gap-2"
+          className="w-full px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
         >
           <RefreshCw className="w-4 h-4" />
           Retry Connection
