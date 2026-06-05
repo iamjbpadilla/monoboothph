@@ -129,7 +129,7 @@ export default function PairingModal({ onPaired, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] bg-gray-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[60] bg-gray-50 flex flex-col items-center justify-center p-6 animate-in fade-in duration-200">
       <div className="w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-700 ease-out">
         {pairingSuccess ? (
           <div className="flex flex-col items-center justify-center py-8">
@@ -142,28 +142,6 @@ export default function PairingModal({ onPaired, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-center mb-6">
           <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
-        </div>
-        
-        {/* Connection Status */}
-        <div className="flex items-center justify-center gap-2 mb-4">
-          {connectionStatus === 'checking' && (
-            <>
-              <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
-              <span className="text-sm text-gray-500">Checking connection...</span>
-            </>
-          )}
-          {connectionStatus === 'connected' && (
-            <>
-              <div className="w-3 h-3 rounded-full bg-black" />
-              <span className="text-sm text-black font-medium">Connected to database</span>
-            </>
-          )}
-          {connectionStatus === 'error' && (
-            <>
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="text-sm text-red-500">Database unavailable</span>
-            </>
-          )}
         </div>
         
         {error && (
@@ -226,18 +204,43 @@ export default function PairingModal({ onPaired, onClose }) {
             {loading ? '...' : '✓'}
           </button>
         </div>
-
-        <button
-          type="button"
-          onClick={checkConnection}
-          className="w-full px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Retry Connection
-        </button>
         </>
         )}
       </div>
+
+      {/* Connection Status - Outside card at bottom */}
+      {!pairingSuccess && (
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <div className="flex items-center justify-center gap-2">
+            {connectionStatus === 'checking' && (
+              <>
+                <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
+                <span className="text-sm text-gray-500">Checking connection...</span>
+              </>
+            )}
+            {connectionStatus === 'connected' && (
+              <>
+                <div className="w-3 h-3 rounded-full bg-black" />
+                <span className="text-sm text-black font-medium">Connected to database</span>
+              </>
+            )}
+            {connectionStatus === 'error' && (
+              <>
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <span className="text-sm text-red-500">Database unavailable</span>
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={checkConnection}
+            className="px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Retry Connection
+          </button>
+        </div>
+      )}
     </div>
   );
 }
