@@ -8,7 +8,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Receipt/Ledger aesthetic rebranding throughout the app
+- Bible Verses design block with all 66 Bible books (Old and New Testament)
+- Bible Verses randomization on each print with topic/book selection
+- Bible Verses word wrapping with template font adoption
+- Bible Verses font size slider (18-48px)
+- Bible Verses reference display toggle
+- Bible Verses alignment options
+- Footer bottom spacing consistency across all templates
+- Independent design block height calculations (no block depends on another)
+- Actual text measurement for Bible Verses height (prevents overflow)
+- Print Margins settings enabled on Printer tab (Top Margin, Bottom Multiplier)
+
+### Changed
+- Bible Verses enabled by default (replaces Receipt Items as default)
+- Receipt Items disabled by default
+- Verse reference size now matches verse text size
+- Default barcode value now uses current title from home screen
+- Removed all SnapAndRoll branding references (now MONO BOOTH PH)
+- Title/Subtitle size sliders now work on receipt layout
+- Date/Time format selection improved
+- "Photos to borders" relabeled to "Border"
+
+### Fixed
+- Footer overflow on template previews (root cause: elGap stripping + Bible Verses underestimation)
+- Barcode not working (empty value fallback now uses title text)
+- Bible Verses height underestimation (was 2 lines, now measures actual wrapped lines)
+- Empty space from disabled design blocks not hidden properly
+- Canvas height now correctly accommodates all enabled blocks without overflow
+
+### Added
 - Monospaced font pairs for ledger aesthetic (IBM Plex Mono, Courier New)
 - "Ledger" font pair (IBM Plex Mono for heading and body)
 - "Receipt" font pair (Courier New for heading and body)
