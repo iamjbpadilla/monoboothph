@@ -82,6 +82,9 @@ const DEFAULT_SETTINGS = {
     backgroundImage: null, // KEPT for backward compatibility
     showAdvertising: true,
     adDuration: 5,
+    settingsIconOpacity: 100, // 10-100, opacity of settings icon on home screen
+    hideSettingsIcon: false, // Hide settings icon, use long press instead
+    longPressDuration: 3000, // 3 seconds long press to open settings
     advertising: {
       title: 'MONO BOOTH PH',
       subtitle: 'Capture Your Best Moments',

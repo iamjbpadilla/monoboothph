@@ -568,6 +568,73 @@ export default function AccountSettings() {
         </div>
       </div>
 
+      {/* Settings Icon Card */}
+      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
+        <div className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant">
+          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Settings Icon</span>
+        </div>
+        <div className="p-4 space-y-4">
+          {/* Hide Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Lock size={18} className="text-md-primary" />
+              <div>
+                <p className="text-sm font-medium text-md-on-surface">Hide Settings Icon</p>
+                <p className="text-xs text-md-on-surface-variant">Use long press on home screen instead</p>
+              </div>
+            </div>
+            <button
+              role="switch"
+              aria-checked={settings.general.hideSettingsIcon ?? false}
+              onClick={() => updateSettings('general.hideSettingsIcon', !(settings.general.hideSettingsIcon ?? false))}
+              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
+                (settings.general.hideSettingsIcon ?? false)
+                  ? 'bg-md-primary'
+                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
+              }`}
+            >
+              <span
+                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
+                  (settings.general.hideSettingsIcon ?? false) ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Opacity Slider - only show if not hidden */}
+          {!settings.general.hideSettingsIcon && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium text-md-on-surface">Icon Opacity</p>
+                <p className="text-xs text-md-primary font-semibold">{settings.general.settingsIconOpacity ?? 100}%</p>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="100"
+                value={settings.general.settingsIconOpacity ?? 100}
+                onChange={e => updateSettings('general.settingsIconOpacity', parseInt(e.target.value))}
+                className="w-full h-2 bg-md-surface-container-highest rounded-lg appearance-none cursor-pointer accent-md-primary"
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-[10px] text-md-on-surface-variant">10%</span>
+                <span className="text-[10px] text-md-on-surface-variant">100%</span>
+              </div>
+            </div>
+          )}
+
+          {/* Long Press Info */}
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant">
+            <AlertCircle size={16} className="text-md-primary mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-md-on-surface-variant leading-relaxed">
+              {settings.general.hideSettingsIcon 
+                ? 'Long press on home screen for 3 seconds to open settings.'
+                : 'You can also long press on home screen for 3 seconds to open settings.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Info Card */}
       <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
         <div className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant">

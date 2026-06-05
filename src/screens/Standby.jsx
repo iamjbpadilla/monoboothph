@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Camera, Sparkles, Heart, Star, PartyPopper, Gift, Music,
   Diamond, Crown, Flame, Zap, Smile, Palette, Flag, Trophy, Cake,
@@ -82,9 +82,34 @@ function getSetting(settings, newPath, oldPath, defaultValue) {
   return defaultValue;
 }
 
-export default function Standby({ onStart }) {
+export default function Standby({ onStart, onOpenSettings }) {
   const { settings } = useSettings();
   const [videoError, setVideoError] = useState(false);
+  const longPressTimerRef = useRef(null);
+  const longPressDuration = settings.general.longPressDuration || 3000;
+  
+  // Long press handler
+  const handleMouseDown = useCallback(() => {
+    longPressTimerRef.current = setTimeout(() => {
+      if (onOpenSettings) {
+        onOpenSettings();
+      }
+    }, longPressDuration);
+  }, [longPressDuration, onOpenSettings]);
+  
+  const handleMouseUp = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
+  
+  const handleMouseLeave = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
   
   // Dual-read settings
   const homeScreen = settings.homeScreen || {};
@@ -182,6 +207,11 @@ export default function Standby({ onStart }) {
     <div
       className={`w-full h-full flex flex-col items-center justify-center select-none cursor-pointer active:scale-[0.99] page-content-enter ${getBackgroundClassName()}`}
       onClick={handleStart}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
       style={{
         transition: 'transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
         ...getBackgroundStyle(),

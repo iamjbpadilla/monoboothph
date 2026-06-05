@@ -158,6 +158,7 @@ function PhotoboothApp() {
   const { settings } = useSettings();
   const { showSnackbar } = useSnackbar();
   const theme = settings.general.theme || 'dark';
+  const openSettingsRef = useRef(null);
 
   logStep('INIT', 'PhotoboothApp component mounting');
 
@@ -346,7 +347,7 @@ function PhotoboothApp() {
   function renderScreen(name) {
     switch (name) {
       case 'standby':
-        return <Standby onStart={() => navigateTo('templateSelect')} />;
+        return <Standby onStart={() => navigateTo('templateSelect')} onOpenSettings={(fn) => { openSettingsRef.current = fn; }} />;
       case 'templateSelect':
         return <TemplateSelect onSelect={handleTemplateSelect} onBack={() => navigateTo('standby')} />;
       case 'capture':
@@ -403,7 +404,7 @@ function PhotoboothApp() {
         </div>
       ))}
 
-      <SettingsPanel currentScreen={screens[screens.length - 1]?.name} />
+      <SettingsPanel currentScreen={screens[screens.length - 1]?.name} onOpen={(fn) => { openSettingsRef.current = fn; }} />
       <IntroModal onComplete={() => setIntroCompleted(true)} />
       {introCompleted && !permissionGranted && (
         <PermissionModal

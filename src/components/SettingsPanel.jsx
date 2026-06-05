@@ -33,7 +33,7 @@ const TAB_MAP = {
   sharing: SharingSettings,
 };
 
-export default function SettingsPanel({ currentScreen = 'standby' }) {
+export default function SettingsPanel({ currentScreen = 'standby', onOpen }) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('homeScreen');
   const [pendingClose, setPendingClose] = useState(false);
@@ -44,6 +44,16 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => { if (!isDirty) setPendingClose(false); }, [isDirty]);
+
+  // Handle external open trigger (e.g., long press)
+  useEffect(() => {
+    if (onOpen) {
+      onOpen(() => {
+        playClick();
+        setPinOpen(true);
+      });
+    }
+  }, [onOpen]);
 
   const ActiveComponent = TAB_MAP[activeTab];
 
@@ -93,11 +103,14 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
   return (
     <>
       {/* FAB trigger — badge dot when dirty — only show on standby */}
-      {currentScreen === 'standby' && (
+      {currentScreen === 'standby' && !settings.general.hideSettingsIcon && (
         <button
           onClick={() => { playClick(); setPinOpen(true); }}
           className="fixed top-4 right-4 z-40 w-12 h-12 flex items-center justify-center rounded-2xl bg-md-surface-container-highest text-md-on-surface hover:bg-md-surface-bright shadow-lg"
-          style={{ transition: 'background-color 150ms cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1)' }}
+          style={{ 
+            transition: 'background-color 150ms cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+            opacity: (settings.general.settingsIconOpacity ?? 100) / 100
+          }}
           aria-label="Settings"
         >
           <Settings size={20} />
