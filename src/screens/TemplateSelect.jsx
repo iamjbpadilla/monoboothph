@@ -90,6 +90,7 @@ const TEMPLATES = [
 
 export default function TemplateSelect({ onSelect, onBack }) {
   const { settings } = useSettings();
+  const homeScreen = settings.homeScreen || {};
   const isDark = settings.general.theme === 'dark';
   const [selected, setSelected] = useState(null);
   const timerRef = useRef(null);
@@ -145,11 +146,23 @@ export default function TemplateSelect({ onSelect, onBack }) {
 
   return (
     <div className="w-full h-full flex flex-col bg-md-surface">
-      {/* MD3 Center-Aligned Top App Bar — no back button */}
-      <div className="relative z-10 flex items-center px-2 h-16 flex-shrink-0 bg-md-surface">
-        <div className="flex-1 text-center">
-          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Choose Template</h2>
-        </div>
+      {/* Header with title/subtitle */}
+      <div className="relative z-10 flex flex-col items-center px-2 pt-4 pb-2 flex-shrink-0 bg-md-surface">
+        {homeScreen.title?.text && (
+          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface text-center">
+            {homeScreen.title.text}
+          </h2>
+        )}
+        {homeScreen.subtitle?.enabled && homeScreen.subtitle?.text && (
+          <p className="text-sm text-md-on-surface-variant text-center mt-1">
+            {homeScreen.subtitle.text}
+          </p>
+        )}
+        {!homeScreen.title?.text && (
+          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface text-center">
+            Choose Template
+          </h2>
+        )}
       </div>
 
       {/* MD3 Cards grid */}
