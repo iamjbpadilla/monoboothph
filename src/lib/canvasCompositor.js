@@ -217,10 +217,12 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
   // ── Compute total height (must mirror drawing order exactly) ──────────────
   let contentH = 0;
+  let lastEnabledBlock = null;
   for (const key of order) {
     switch (key) {
       case 'header':
         if (blocks.header.enabled) {
+          lastEnabledBlock = 'header';
           if (blocks.header.image) {
             const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
             contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
@@ -237,10 +239,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         }
         break;
       case 'dividerBefore':
-        if (blocks.divider.enabled) contentH += dividerH(blocks.divider.thickness, elGap);
+        if (blocks.divider.enabled) {
+          lastEnabledBlock = 'dividerBefore';
+          contentH += dividerH(blocks.divider.thickness, elGap);
+        }
         break;
       case 'photos':
         if (blocks.photos.enabled) {
+          lastEnabledBlock = 'photos';
           if (templateKey === '4grid') {
             contentH += gridH(photoSlotHeight, photoGap, elGap);
           } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
@@ -251,21 +257,32 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         }
         break;
       case 'dividerAfter':
-        if (blocks.divider.enabled) contentH += dividerH(blocks.divider.thickness, elGap);
+        if (blocks.divider.enabled) {
+          lastEnabledBlock = 'dividerAfter';
+          contentH += dividerH(blocks.divider.thickness, elGap);
+        }
         break;
       case 'datetime':
-        if (blocks.datetime.enabled) contentH += textH(DATETIME_FONT, elGap);
+        if (blocks.datetime.enabled) {
+          lastEnabledBlock = 'datetime';
+          contentH += textH(DATETIME_FONT, elGap);
+        }
         break;
       case 'customText':
-        if (blocks.customText.enabled && blocks.customText.content) contentH += textH(blocks.customText.fontSize, elGap);
+        if (blocks.customText.enabled && blocks.customText.content) {
+          lastEnabledBlock = 'customText';
+          contentH += textH(blocks.customText.fontSize, elGap);
+        }
         break;
       case 'receiptItems':
         if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
+          lastEnabledBlock = 'receiptItems';
           contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
         }
         break;
       case 'bibleVerses':
         if (blocks.bibleVerses.enabled) {
+          lastEnabledBlock = 'bibleVerses';
           contentH += textH(blocks.bibleVerses.fontSize, elGap);
           if (blocks.bibleVerses.showReference) {
             contentH += textH(Math.max(14, Math.round(blocks.bibleVerses.fontSize * 0.7)), elGap);
@@ -274,6 +291,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         break;
       case 'barcode': {
         if (blocks.barcode.enabled) {
+          lastEnabledBlock = 'barcode';
           try {
             const JsBarcode = (await import('jsbarcode')).default;
             const tmp = document.createElement('canvas');
@@ -296,6 +314,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       }
       case 'footer': {
         if (blocks.footer.enabled) {
+          lastEnabledBlock = 'footer';
           if (blocks.footer.image) {
             const scale = (blocks.footer.imageScale || 4) / 4;
             const fImg = await loadImage(blocks.footer.image);
@@ -311,8 +330,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
     }
   }
 
-  // Strip the trailing elGap from the last element so top and bottom margins are equal
-  if (contentH > 0) contentH -= elGap;
+  // Strip the trailing elGap from the last enabled element so top and bottom margins are equal
+  if (lastEnabledBlock !== 'footer' && contentH > 0) contentH -= elGap;
   const totalHeight = MARGIN + contentH + MARGIN;
 
   // ── Create canvas ─────────────────────────────────────────────────────────
