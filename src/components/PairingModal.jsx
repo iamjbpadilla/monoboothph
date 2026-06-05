@@ -169,7 +169,7 @@ export default function PairingModal({ onPaired, onClose }) {
           <>
         {/* Header */}
         <div className="flex items-center justify-center mb-6">
-          <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
+          <h2 className="text-2xl font-bold text-black">Connect Your Device</h2>
         </div>
         
         {error && (
