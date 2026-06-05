@@ -160,7 +160,7 @@ export default function HomeScreenSettings() {
             <div>
               <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Preset</label>
               <div className="grid grid-cols-4 gap-2">
-                {PAPERBACKGROUNDS.map(bg => (
+                {Object.values(PAPERBACKGROUNDS).map(bg => (
                   <button
                     key={bg.id}
                     onClick={() => updateSettings('homeScreen.background.presetId', bg.id)}

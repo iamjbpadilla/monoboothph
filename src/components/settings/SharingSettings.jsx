@@ -262,13 +262,13 @@ export default function SharingSettings() {
             This shows all photos captured. Successful uploads can be viewed/downloaded.
           </p>
 
-          {uploads.length === 0 ? (
+          {(uploads || []).length === 0 ? (
             <div className="py-8 text-center text-md-on-surface-variant text-sm">
               No upload history
             </div>
           ) : (
             <div className="space-y-2">
-              {uploads.map(upload => (
+              {(uploads || []).map(upload => (
                 <div
                   key={upload.sessionId}
                   className="flex items-center gap-3 p-3 bg-md-surface-container border border-md-outline-variant rounded-lg"
