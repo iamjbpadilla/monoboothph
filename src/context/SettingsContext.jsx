@@ -9,7 +9,7 @@ function defaultBlocks() {
     divider:    { enabled: true,  style: 'dashed', thickness: 2, color: '#000000' },
     elementSpacing: 16,
     datetime:   { enabled: true,  format: 'MMM DD, YYYY  HH:mm' },
-    customText: { enabled: false, content: '#SnapAndRoll',           fontSize: 28, alignment: 'center' },
+    customText: { enabled: false, content: 'MONO BOOTH PH',           fontSize: 28, alignment: 'center' },
     receiptItems: { enabled: true, items: [
       { name: 'Good Vibes', quantity: 1, price: 999 },
       { name: 'Bad Decisions', quantity: 2, price: 0 },
