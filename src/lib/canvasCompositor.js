@@ -319,9 +319,11 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           lastEnabledBlock = 'bibleVerses';
           // Estimate wrapped height (assume ~2-3 lines for long verses)
           const estimatedLines = Math.ceil(50 / (blocks.bibleVerses.fontSize || 28)); // rough estimate
-          contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines + elGap;
+          contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines;
           if (blocks.bibleVerses.showReference) {
-            contentH += (blocks.bibleVerses.fontSize || 28);
+            contentH += (blocks.bibleVerses.fontSize || 28) + elGap;
+          } else {
+            contentH += elGap;
           }
         }
         break;
