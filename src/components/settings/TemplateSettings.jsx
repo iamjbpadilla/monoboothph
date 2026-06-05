@@ -885,16 +885,13 @@ function TemplateBlockEditor() {
             </div>
             <button
               onClick={() => {
-                const topic = blocks.bibleVerses.topic || 'love';
-                const verses = topic === 'all' 
-                  ? Object.values(BIBLE_VERSES).flat()
-                  : BIBLE_VERSES[topic] || BIBLE_VERSES.love;
-                const randomVerse = verses[Math.floor(Math.random() * verses.length)];
-                upd('bibleVerses', 'currentVerse', randomVerse);
+                // Force re-render by incrementing a timestamp or changing a value
+                const timestamp = Date.now();
+                upd('bibleVerses', 'lastRandomized', timestamp);
               }}
               className="w-full px-3 py-2 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110"
             >
-              🎲 Preview Random Verse
+              🎲 Randomize Verse
             </button>
           </div>
         )}
