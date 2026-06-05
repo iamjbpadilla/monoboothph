@@ -438,7 +438,7 @@ function TemplateBlockEditor() {
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-md-on-surface">Photos to borders</span>
+            <span className="text-sm font-medium text-md-on-surface">Border</span>
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
                 <button
