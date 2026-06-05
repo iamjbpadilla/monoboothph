@@ -26,6 +26,11 @@ export const FONT_OPTIONS = FONT_PAIRS.map(p => ({ name: p.heading, category: p.
 // MD3-compatible primary palette per accent × theme
 // Only primary family is swapped; secondary/tertiary remain at CSS defaults
 export const ACCENT_PALETTES = {
+  slate: {
+    label: 'Slate', swatch: '#64748B',
+    dark:  { primary: '#94A3B8', onPrimary: '#FFFFFF', primaryContainer: '#475569', onPrimaryContainer: '#E2E8F0' },
+    light: { primary: '#64748B', onPrimary: '#FFFFFF', primaryContainer: '#E2E8F0', onPrimaryContainer: '#1E293B' },
+  },
   purple: {
     label: 'Purple', swatch: '#9C27B0',
     dark:  { primary: '#E040FB', onPrimary: '#4A0072', primaryContainer: '#6A1B9A', onPrimaryContainer: '#F3E5F5' },

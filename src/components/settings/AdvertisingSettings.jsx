@@ -6,6 +6,8 @@ import ConfirmDialog from '../ConfirmDialog.jsx';
 import { Play, X } from 'lucide-react';
 
 const BACKGROUND_STYLES = {
+  'solid-slate': 'bg-slate-600',
+  'gradient-slate': 'bg-gradient-to-br from-slate-600 to-slate-700',
   'gradient-purple-pink': 'bg-gradient-to-br from-purple-600 to-pink-500',
   'gradient-blue-cyan': 'bg-gradient-to-br from-blue-600 to-cyan-500',
   'gradient-orange-red': 'bg-gradient-to-br from-orange-600 to-red-500',
@@ -106,7 +108,7 @@ export default function AdvertisingSettings() {
     });
   }
 
-  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['gradient-purple-pink'];
+  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['solid-slate'];
   const title = adConfig.title || 'MONO BOOTH PH';
   const subtitle = adConfig.subtitle || 'Capture Your Best Moments';
   const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';
@@ -561,9 +563,11 @@ export default function AdvertisingSettings() {
           <div>
             <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Background Style</label>
             <StyledSelect
-              value={display.backgroundStyle ?? 'gradient-purple-pink'}
+              value={display.backgroundStyle ?? 'solid-slate'}
               onValueChange={v => updateSettings('general.advertising.display.backgroundStyle', v)}
               options={[
+                { value: 'solid-slate', label: 'Solid Slate' },
+                { value: 'gradient-slate', label: 'Slate Gradient' },
                 { value: 'gradient-purple-pink', label: 'Purple to Pink Gradient' },
                 { value: 'gradient-blue-cyan', label: 'Blue to Cyan Gradient' },
                 { value: 'gradient-orange-red', label: 'Orange to Red Gradient' },
@@ -856,7 +860,7 @@ function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
     return () => clearInterval(timer);
   }, [adDuration, onComplete, useVideoLength]);
 
-  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['gradient-purple-pink'];
+  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['solid-slate'];
   const title = adConfig.title || 'MONO BOOTH PH';
   const subtitle = adConfig.subtitle || 'Capture Your Best Moments';
   const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';

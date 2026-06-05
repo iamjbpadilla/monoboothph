@@ -5,6 +5,8 @@ import QRCode from 'qrcode';
 let fullScreenIndex = 0; // round-robin across all ad screen appearances
 
 const BACKGROUND_STYLES = {
+  'solid-slate': 'bg-slate-600',
+  'gradient-slate': 'bg-gradient-to-br from-slate-600 to-slate-700',
   'gradient-purple-pink': 'bg-gradient-to-br from-purple-600 to-pink-500',
   'gradient-blue-cyan': 'bg-gradient-to-br from-blue-600 to-cyan-500',
   'gradient-orange-red': 'bg-gradient-to-br from-orange-600 to-red-500',
@@ -65,7 +67,7 @@ export default function Advertising({ onComplete }) {
     return () => clearInterval(interval);
   }, [display.showCarousel, adConfig.media]);
 
-  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['gradient-purple-pink'];
+  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['solid-slate'];
   const title = adConfig.title || 'MONO BOOTH PH';
   const subtitle = adConfig.subtitle || 'Capture Your Best Moments';
   const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';

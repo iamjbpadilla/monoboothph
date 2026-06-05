@@ -198,7 +198,7 @@ function PhotoboothApp() {
 
   useEffect(() => {
     logStep('ACCENT', 'Setting accent color:', settings.general.accent);
-    applyAccent(settings.general.accent || 'purple');
+    applyAccent(settings.general.accent || 'slate');
   }, [settings.general.accent]);
 
   // Check permissions and pairing status on mount

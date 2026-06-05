@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { Preferences } from '@capacitor/preferences';
 import { getSupabaseClient, checkSupabaseConnection } from '../lib/supabase';
 
@@ -123,45 +123,42 @@ export default function PairingModal({ onPaired, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-6 animate-in fade-in duration-200">
-      <div className="w-full max-w-sm bg-md-surface rounded-3xl p-6 shadow-2xl">
+    <div className="fixed inset-0 z-[60] bg-gray-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
+      <div className="w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-700 ease-out">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-md-on-surface">Pair with Portal</h2>
-          <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-md-surface-container-high transition-colors">
-            <X size={20} className="text-md-on-surface-variant" />
-          </button>
+        <div className="flex items-center justify-center mb-6">
+          <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
         </div>
         
         {/* Connection Status */}
         <div className="flex items-center justify-center gap-2 mb-4">
           {connectionStatus === 'checking' && (
             <>
-              <div className="w-3 h-3 rounded-full bg-md-outline animate-pulse" />
-              <span className="text-sm text-md-on-surface-variant">Checking connection...</span>
+              <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
+              <span className="text-sm text-gray-500">Checking connection...</span>
             </>
           )}
           {connectionStatus === 'connected' && (
             <>
-              <div className="w-3 h-3 rounded-full bg-md-primary" />
-              <span className="text-sm text-md-primary">Connected to database</span>
+              <div className="w-3 h-3 rounded-full bg-black" />
+              <span className="text-sm text-black font-medium">Connected to database</span>
             </>
           )}
           {connectionStatus === 'error' && (
             <>
-              <div className="w-3 h-3 rounded-full bg-md-error" />
-              <span className="text-sm text-md-error">Database unavailable</span>
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-sm text-red-500">Database unavailable</span>
             </>
           )}
         </div>
         
         {error && (
-          <div className="bg-md-error-container border border-md-error text-md-on-error-container px-4 py-3 rounded-lg mb-4 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
             {error}
           </div>
         )}
 
-        <p className="text-md-on-surface-variant mb-4 text-sm text-center">
+        <p className="text-gray-500 mb-4 text-sm text-center">
           Enter the 6-digit pairing code from the portal
         </p>
 
@@ -172,8 +169,8 @@ export default function PairingModal({ onPaired, onClose }) {
               key={i}
               className={`w-4 h-4 rounded-full border-2 transition-all duration-150 ${
                 i < pairingCode.length
-                  ? 'bg-md-primary border-md-primary'
-                  : 'border-md-outline bg-transparent'
+                  ? 'bg-black border-black'
+                  : 'border-gray-300 bg-transparent'
               }`}
             >
             </div>
@@ -187,7 +184,7 @@ export default function PairingModal({ onPaired, onClose }) {
               key={num}
               type="button"
               onClick={() => handleNumberPad(num.toString())}
-              className="h-14 rounded-2xl text-xl font-medium transition-all active:scale-95 bg-md-surface-container text-md-on-surface hover:bg-md-surface-container-high"
+              className="h-14 rounded-lg text-xl font-medium transition-all duration-300 ease-out active:scale-95 bg-gray-100 text-black hover:bg-gray-200 border-2 border-gray-200"
             >
               {num}
             </button>
@@ -195,14 +192,14 @@ export default function PairingModal({ onPaired, onClose }) {
           <button
             type="button"
             onClick={handleBackspace}
-            className="h-14 rounded-2xl text-xl font-medium transition-all active:scale-95 bg-md-surface-container-high text-md-on-surface hover:bg-md-surface-container-highest"
+            className="h-14 rounded-lg text-xl font-medium transition-all duration-300 ease-out active:scale-95 bg-gray-200 text-black hover:bg-gray-300 border-2 border-gray-300"
           >
             ←
           </button>
           <button
             type="button"
             onClick={() => handleNumberPad('0')}
-            className="h-14 rounded-2xl text-xl font-medium transition-all active:scale-95 bg-md-surface-container text-md-on-surface hover:bg-md-surface-container-high"
+            className="h-14 rounded-lg text-xl font-medium transition-all duration-300 ease-out active:scale-95 bg-gray-100 text-black hover:bg-gray-200 border-2 border-gray-200"
           >
             0
           </button>
@@ -210,32 +207,20 @@ export default function PairingModal({ onPaired, onClose }) {
             type="button"
             onClick={handleSubmit}
             disabled={loading || pairingCode.length !== 6}
-            className="h-14 rounded-2xl text-xl font-medium transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-md-primary text-md-on-primary hover:brightness-110"
+            className="h-14 rounded-lg text-xl font-medium transition-all duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-black text-white hover:opacity-90 border-2 border-black"
           >
             {loading ? '...' : '✓'}
           </button>
         </div>
 
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex-1 px-4 py-3 text-md-on-surface-variant hover:bg-md-surface-container-high rounded-lg transition text-sm font-medium"
-          >
-            Skip
-          </button>
-          <button
-            type="button"
-            onClick={checkConnection}
-            className="flex-1 px-4 py-3 text-md-primary hover:bg-md-primary-container rounded-lg transition text-sm font-medium"
-          >
-            Retry Connection
-          </button>
-        </div>
-
-        <p className="text-xs text-md-outline mt-4 text-center">
-          You can pair later from Settings if you skip now.
-        </p>
+        <button
+          type="button"
+          onClick={checkConnection}
+          className="w-full px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out border-2 border-gray-200 flex items-center justify-center gap-2"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Retry Connection
+        </button>
       </div>
     </div>
   );

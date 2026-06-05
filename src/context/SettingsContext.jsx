@@ -76,7 +76,7 @@ const DEFAULT_SETTINGS = {
     logoBase64: null,
     logoScale: 1.0, // 1.0 = 100%, 1.1 = 110%, 1.2 = 120%, 1.3 = 130%, 1.5 = 150%
     theme: 'light',
-    accent: 'purple',
+    accent: 'slate',
     fontPair: 'modern',
     brandingIcon: null,
     standbyBackground: 'plain', // KEPT for backward compatibility
@@ -104,7 +104,7 @@ const DEFAULT_SETTINGS = {
         showContact: false,
         showQR: true,
         showLogo: false,
-        backgroundStyle: 'gradient-purple-pink'
+        backgroundStyle: 'solid-slate'
       }
     },
     settingsPin: '0000'
@@ -149,7 +149,7 @@ function migrateFromV16(saved) {
         presetId: saved.general.standbyBackground || 'plain',
         imageBase64: saved.general.backgroundImage || null,
         color: '#ffffff',
-        gradientId: 'gradient-purple-pink',
+        gradientId: 'gradient-slate',
         videoBase64: null,
       },
       title: {

@@ -28,6 +28,7 @@ const ICON_MAP = {
 };
 
 const GRADIENT_PRESETS = {
+  'gradient-slate': 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
   'gradient-purple-pink': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   'gradient-blue-cyan': 'linear-gradient(135deg, #667eea 0%, #00d2ff 100%)',
   'gradient-orange-red': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
