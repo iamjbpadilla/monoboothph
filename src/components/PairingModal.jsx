@@ -14,6 +14,16 @@ export default function PairingModal({ onPaired, onClose }) {
     checkConnection();
   }, []);
 
+  // Auto-clear error after 1.2 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError('');
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   async function checkConnection() {
     setConnectionStatus('checking');
     const connected = await checkSupabaseConnection();
@@ -173,7 +183,7 @@ export default function PairingModal({ onPaired, onClose }) {
         </div>
         
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-2">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm text-center transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-2">
             {error}
           </div>
         )}
