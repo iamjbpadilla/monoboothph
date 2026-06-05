@@ -231,14 +231,16 @@ export default function PairingModal({ onPaired, onClose }) {
               </>
             )}
           </div>
-          <button
-            type="button"
-            onClick={checkConnection}
-            className="px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Retry Connection
-          </button>
+          {connectionStatus !== 'connected' && (
+            <button
+              type="button"
+              onClick={checkConnection}
+              className="px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
+            </button>
+          )}
         </div>
       )}
     </div>
