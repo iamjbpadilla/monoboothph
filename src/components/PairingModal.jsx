@@ -144,6 +144,27 @@ export default function PairingModal({ onPaired, onClose }) {
             <p className="text-lg font-medium text-black">Pairing successful!</p>
             <p className="text-sm text-gray-500 mt-2">Setting up your device...</p>
           </div>
+        ) : connectionStatus === 'checking' ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-6" />
+            <p className="text-lg font-medium text-black">Connecting to database...</p>
+          </div>
+        ) : connectionStatus === 'error' ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
+              <RefreshCw className="w-8 h-8 text-red-500" />
+            </div>
+            <p className="text-lg font-medium text-black mb-2">Database unavailable</p>
+            <p className="text-sm text-gray-500 mb-6 text-center">Please check your internet connection and try again</p>
+            <button
+              type="button"
+              onClick={checkConnection}
+              className="px-6 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Connect to Database
+            </button>
+          </div>
         ) : (
           <>
         {/* Header */}
@@ -221,42 +242,6 @@ export default function PairingModal({ onPaired, onClose }) {
           <p className="text-sm font-semibold text-gray-500 tracking-wider">MONO BOOTH PH</p>
           <p className="text-[10px] text-gray-400 tracking-widest uppercase">NO PROOFS? SHOW 'EM THE RECEIPTS!</p>
           <p className="text-[10px] text-gray-400">📍 Kabankalan City & Beyond</p>
-        </div>
-      )}
-
-      {/* Connection Status - Outside card at bottom */}
-      {!pairingSuccess && (
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <div className="flex items-center justify-center gap-2">
-            {connectionStatus === 'checking' && (
-              <>
-                <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
-                <span className="text-sm text-gray-500">Checking connection...</span>
-              </>
-            )}
-            {connectionStatus === 'connected' && (
-              <>
-                <div className="w-3 h-3 rounded-full bg-black" />
-                <span className="text-sm text-black font-medium">Connected to database</span>
-              </>
-            )}
-            {connectionStatus === 'error' && (
-              <>
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="text-sm text-red-500">Database unavailable</span>
-              </>
-            )}
-          </div>
-          {connectionStatus !== 'connected' && (
-            <button
-              type="button"
-              onClick={checkConnection}
-              className="px-4 py-3 text-black font-medium text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 ease-out flex items-center justify-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Retry Connection
-            </button>
-          )}
         </div>
       )}
     </div>
