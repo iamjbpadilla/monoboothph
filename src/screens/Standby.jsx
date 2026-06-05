@@ -85,6 +85,7 @@ function getSetting(settings, newPath, oldPath, defaultValue) {
 export default function Standby({ onStart, onOpenSettings }) {
   const { settings } = useSettings();
   const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const longPressTimerRef = useRef(null);
   const longPressDuration = settings.general.longPressDuration || 3000;
   
@@ -158,6 +159,11 @@ export default function Standby({ onStart, onOpenSettings }) {
   function handleVideoError() {
     console.warn('[Standby] Video background failed, falling back to preset');
     setVideoError(true);
+    setVideoReady(false);
+  }
+
+  function handleVideoReady() {
+    setVideoReady(true);
   }
   
   // Get background style based on type
@@ -219,15 +225,24 @@ export default function Standby({ onStart, onOpenSettings }) {
     >
       {/* Video background */}
       {bgType === 'video' && bgVideoBase64 && !videoError && (
-        <video
-          src={bgVideoBase64}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          onError={handleVideoError}
-        />
+        <>
+          <video
+            src={bgVideoBase64}
+            preload="auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+            onError={handleVideoError}
+            onCanPlay={handleVideoReady}
+            onLoadedData={handleVideoReady}
+          />
+          {/* Loading fallback - black background while video loads */}
+          {!videoReady && (
+            <div className="absolute inset-0 bg-black" />
+          )}
+        </>
       )}
       
       <div className="relative flex flex-col items-center gap-6 p-6 text-center">
