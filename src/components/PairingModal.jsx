@@ -8,6 +8,7 @@ export default function PairingModal({ onPaired, onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('checking'); // checking, connected, error
+  const [pairingSuccess, setPairingSuccess] = useState(false);
 
   useEffect(() => {
     checkConnection();
@@ -99,10 +100,15 @@ export default function PairingModal({ onPaired, onClose }) {
         value: JSON.stringify(pairingData),
       });
 
-      onPaired(pairingData);
+      // Show success loading screen
+      setPairingSuccess(true);
+      setTimeout(() => {
+        onPaired(pairingData);
+      }, 2000);
     } catch (err) {
       console.error('Pairing failed:', err);
       setError(err.message || 'Pairing failed. Please try again.');
+      setPairingCode(''); // Clear input on error
     } finally {
       setLoading(false);
     }
@@ -125,6 +131,14 @@ export default function PairingModal({ onPaired, onClose }) {
   return (
     <div className="fixed inset-0 z-[60] bg-gray-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
       <div className="w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-700 ease-out">
+        {pairingSuccess ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-6" />
+            <p className="text-lg font-medium text-black">Pairing successful!</p>
+            <p className="text-sm text-gray-500 mt-2">Setting up your device...</p>
+          </div>
+        ) : (
+          <>
         {/* Header */}
         <div className="flex items-center justify-center mb-6">
           <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
@@ -153,7 +167,7 @@ export default function PairingModal({ onPaired, onClose }) {
         </div>
         
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-2">
             {error}
           </div>
         )}
@@ -221,6 +235,8 @@ export default function PairingModal({ onPaired, onClose }) {
           <RefreshCw className="w-4 h-4" />
           Retry Connection
         </button>
+        </>
+        )}
       </div>
     </div>
   );
