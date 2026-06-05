@@ -402,8 +402,6 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
     }
   }
 
-  // Strip the trailing elGap — the last enabled block never adds a trailing gap
-  if (contentH > 0) contentH -= elGap;
   const totalHeight = MARGIN + contentH + MARGIN;
 
   // ── Create canvas ─────────────────────────────────────────────────────────
