@@ -252,6 +252,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
   // ── Compute total height (must mirror drawing order exactly) ──────────────
   let contentH = 0;
   let lastEnabledBlock = null;
+  console.log('[canvasCompositor] Starting height calculation');
   for (const key of order) {
     switch (key) {
       case 'header':
@@ -259,15 +260,27 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           lastEnabledBlock = 'header';
           if (blocks.header.image) {
             const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
-            contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
+            const h = Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
+            contentH += h;
+            console.log('[canvasCompositor] header (image):', h, 'total:', contentH);
           } else {
-            contentH += textH(blocks.header.fontSize, elGap);
+            const h1 = textH(blocks.header.fontSize, 0);
+            contentH += h1;
+            console.log('[canvasCompositor] header (title):', h1, 'total:', contentH);
             const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
             const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
             if (subtitleText) {
-              contentH += (blocks.header.titleSubtitleGap || 8);
+              const h2 = (blocks.header.titleSubtitleGap || 8);
+              contentH += h2;
+              console.log('[canvasCompositor] header (subtitle gap):', h2, 'total:', contentH);
               const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
-              contentH += textH(subFontSize, elGap);
+              const h3 = textH(subFontSize, elGap);
+              contentH += h3;
+              console.log('[canvasCompositor] header (subtitle):', h3, 'total:', contentH);
+            } else {
+              const h4 = elGap;
+              contentH += h4;
+              console.log('[canvasCompositor] header (gap):', h4, 'total:', contentH);
             }
           }
         }
@@ -275,43 +288,56 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'dividerBefore':
         if (blocks.divider.enabled) {
           lastEnabledBlock = 'dividerBefore';
-          contentH += dividerH(blocks.divider.thickness, elGap);
+          const h = dividerH(blocks.divider.thickness, elGap);
+          contentH += h;
+          console.log('[canvasCompositor] dividerBefore:', h, 'total:', contentH);
         }
         break;
       case 'photos':
         if (blocks.photos.enabled) {
           lastEnabledBlock = 'photos';
+          let h;
           if (templateKey === '4grid') {
-            contentH += gridH(photoSlotHeight, photoGap, elGap);
+            h = gridH(photoSlotHeight, photoGap, elGap);
           } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
-            contentH += photoSlotHeight * 3 + photoGap * 2 + elGap;
+            h = photoSlotHeight * 3 + photoGap * 2 + elGap;
           } else {
-            contentH += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+            h = photosH(photoSlotHeight, stripCount, photoGap, elGap);
           }
+          contentH += h;
+          console.log('[canvasCompositor] photos:', h, 'total:', contentH);
         }
         break;
       case 'dividerAfter':
         if (blocks.divider.enabled) {
           lastEnabledBlock = 'dividerAfter';
-          contentH += dividerH(blocks.divider.thickness, elGap);
+          const h = dividerH(blocks.divider.thickness, elGap);
+          contentH += h;
+          console.log('[canvasCompositor] dividerAfter:', h, 'total:', contentH);
         }
         break;
       case 'datetime':
         if (blocks.datetime.enabled) {
           lastEnabledBlock = 'datetime';
-          contentH += textH(DATETIME_FONT, elGap);
+          const h = textH(DATETIME_FONT, elGap);
+          contentH += h;
+          console.log('[canvasCompositor] datetime:', h, 'total:', contentH);
         }
         break;
       case 'customText':
         if (blocks.customText.enabled && blocks.customText.content) {
           lastEnabledBlock = 'customText';
-          contentH += textH(blocks.customText.fontSize, elGap);
+          const h = textH(blocks.customText.fontSize, elGap);
+          contentH += h;
+          console.log('[canvasCompositor] customText:', h, 'total:', contentH);
         }
         break;
       case 'receiptItems':
         if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
           lastEnabledBlock = 'receiptItems';
-          contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
+          const h = receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
+          contentH += h;
+          console.log('[canvasCompositor] receiptItems:', h, 'total:', contentH);
         }
         break;
       case 'bibleVerses':
@@ -319,17 +345,24 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           lastEnabledBlock = 'bibleVerses';
           // Estimate wrapped height (assume ~2-3 lines for long verses)
           const estimatedLines = Math.ceil(50 / (blocks.bibleVerses.fontSize || 28)); // rough estimate
-          contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines;
+          const h1 = (blocks.bibleVerses.fontSize || 28) * estimatedLines;
+          contentH += h1;
+          console.log('[canvasCompositor] bibleVerses (text):', h1, 'total:', contentH);
           if (blocks.bibleVerses.showReference) {
-            contentH += (blocks.bibleVerses.fontSize || 28) + elGap;
+            const h2 = (blocks.bibleVerses.fontSize || 28) + elGap;
+            contentH += h2;
+            console.log('[canvasCompositor] bibleVerses (ref):', h2, 'total:', contentH);
           } else {
-            contentH += elGap;
+            const h3 = elGap;
+            contentH += h3;
+            console.log('[canvasCompositor] bibleVerses (gap):', h3, 'total:', contentH);
           }
         }
         break;
       case 'barcode': {
         if (blocks.barcode.enabled) {
           lastEnabledBlock = 'barcode';
+          let h;
           try {
             const JsBarcode = (await import('jsbarcode')).default;
             const tmp = document.createElement('canvas');
@@ -343,10 +376,12 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               fontSize: 22,
               margin: 0,
             });
-            contentH += barcodeH((contentWidth / tmp.width) * tmp.height, elGap);
+            h = barcodeH((contentWidth / tmp.width) * tmp.height, elGap);
           } catch {
-            contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
+            h = barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
           }
+          contentH += h;
+          console.log('[canvasCompositor] barcode:', h, 'total:', contentH);
         }
         break;
       }
@@ -358,10 +393,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImg = await loadImage(blocks.footer.image);
             const fImgWidth = contentWidth * scale;
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
-            contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
+            const h = (blocks.footer.imageTopMargin || 16) + fImgHeight;
+            contentH += h;
+            console.log('[canvasCompositor] footer (image):', h, 'total:', contentH);
           } else {
             // Use fontSize directly since drawText returns fontSize for non-wrapped text
-            contentH += blocks.footer.fontSize;
+            const h = blocks.footer.fontSize;
+            contentH += h;
+            console.log('[canvasCompositor] footer (text):', h, 'total:', contentH);
           }
         }
         break;
@@ -369,9 +408,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
     }
   }
 
+  console.log('[canvasCompositor] Last enabled block:', lastEnabledBlock);
+  console.log('[canvasCompositor] Content height before strip:', contentH);
   // Strip the trailing elGap from the last enabled element so top and bottom margins are equal
   if (lastEnabledBlock !== 'footer' && contentH > 0) contentH -= elGap;
+  console.log('[canvasCompositor] Content height after strip:', contentH);
   const totalHeight = MARGIN + contentH + MARGIN;
+  console.log('[canvasCompositor] Total height:', totalHeight);
 
   // ── Create canvas ─────────────────────────────────────────────────────────
   const canvas = document.createElement('canvas');
