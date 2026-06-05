@@ -7,7 +7,7 @@ import { usbPrint } from '../../lib/printerTransports/usb.js';
 import { wifiPrint } from '../../lib/printerTransports/wifi.js';
 import { playTear } from '../../hooks/useSound.js';
 import ConfirmDialog from '../ConfirmDialog.jsx';
-import { BIBLE_VERSES, TOPIC_LABELS } from '../../lib/bibleVerses.js';
+import { BIBLE_VERSES, BOOK_LABELS } from '../../lib/bibleVerses.js';
 
 const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
@@ -844,14 +844,14 @@ function TemplateBlockEditor() {
         {blocks.bibleVerses.enabled && (
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-md-on-surface-variant mb-2">Topic</label>
+              <label className="block text-xs text-md-on-surface-variant mb-2">Book</label>
               <select
                 value={blocks.bibleVerses.topic}
                 onChange={e => upd('bibleVerses', 'topic', e.target.value)}
                 className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
               >
-                <option value="all">All Topics</option>
-                {Object.entries(TOPIC_LABELS).map(([key, label]) => (
+                <option value="all">All Books</option>
+                {Object.entries(BOOK_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
               </select>

@@ -608,7 +608,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         if (!blocks.bibleVerses.enabled) break;
         
         // Always randomize verse for each render (different for each template preview)
-        const verse = getRandomVerse(blocks.bibleVerses.topic || 'love');
+        const verse = getRandomVerse(blocks.bibleVerses.topic || 'all');
         const fontSize = blocks.bibleVerses.fontSize || 28;
         
         const verseHeight = drawText(ctx, verse.text, x, y, contentWidth, {
