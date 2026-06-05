@@ -860,8 +860,8 @@ function TemplateBlockEditor() {
               <label className="block text-xs text-md-on-surface-variant mb-2">Font Size: {blocks.bibleVerses.fontSize}px</label>
               <input
                 type="range"
-                min="14"
-                max="32"
+                min="18"
+                max="48"
                 value={blocks.bibleVerses.fontSize}
                 onChange={e => upd('bibleVerses', 'fontSize', parseInt(e.target.value))}
                 className="w-full"

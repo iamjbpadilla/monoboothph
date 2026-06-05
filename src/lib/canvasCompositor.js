@@ -240,12 +240,14 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         if (blocks.divider.enabled) contentH += dividerH(blocks.divider.thickness, elGap);
         break;
       case 'photos':
-        if (templateKey === '4grid') {
-          contentH += gridH(photoSlotHeight, photoGap, elGap);
-        } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
-          contentH += photoSlotHeight * 3 + photoGap * 2 + elGap;
-        } else {
-          contentH += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+        if (blocks.photos.enabled) {
+          if (templateKey === '4grid') {
+            contentH += gridH(photoSlotHeight, photoGap, elGap);
+          } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
+            contentH += photoSlotHeight * 3 + photoGap * 2 + elGap;
+          } else {
+            contentH += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+          }
         }
         break;
       case 'dividerAfter':
@@ -299,9 +301,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImg = await loadImage(blocks.footer.image);
             const fImgWidth = contentWidth * scale;
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
-            contentH += fImgHeight + (blocks.footer.imageTopMargin || 16) + elGap;
+            contentH += fImgHeight + (blocks.footer.imageTopMargin || 16);
           } else {
-            contentH += textH(blocks.footer.fontSize, elGap);
+            contentH += textH(blocks.footer.fontSize, 0);
           }
         }
         break;
@@ -373,6 +375,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         break;
       }
       case 'photos': {
+        if (!blocks.photos.enabled) break;
+        
         if (templateKey === '4grid') {
           const imgs = await Promise.all(frames.slice(0, 4).map(f => f ? loadImage(f) : null));
           const slots = [[0,0],[1,0],[0,1],[1,1]];
@@ -553,7 +557,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           fontSize: fontSize,
           alignment: blocks.bibleVerses.alignment || 'center',
           color: '#000000',
-          fontFamily: fontBody,
+          fontFamily: fontHeading,
         });
         y += textH(fontSize, 0);
         
@@ -563,7 +567,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             fontSize: refFontSize,
             alignment: blocks.bibleVerses.alignment || 'center',
             color: '#666666',
-            fontFamily: fontBody,
+            fontFamily: fontHeading,
           });
           y += textH(refFontSize, elGap);
         } else {
@@ -590,7 +594,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           const imgX = x; // Left aligned for full width
           y += (blocks.footer.imageTopMargin || 16); // Add top margin
           ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
-          y += imgHeight + elGap;
+          y += imgHeight;
         } else {
           drawText(ctx, blocks.footer.text, x, y, contentWidth, {
             fontSize: blocks.footer.fontSize,
@@ -598,7 +602,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             color: '#000000',
             fontFamily: fontBody,
           });
-          y += textH(blocks.footer.fontSize, elGap);
+          y += textH(blocks.footer.fontSize, 0);
         }
         break;
       }
