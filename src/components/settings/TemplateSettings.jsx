@@ -642,7 +642,6 @@ function TemplateBlockEditor() {
                   'Cherish this moment',
                   'Making memories',
                   'Picture perfect',
-                  'Snap & Roll',
                   'Strike a pose',
                   'Freeze the moment',
                   'Say cheese!',
