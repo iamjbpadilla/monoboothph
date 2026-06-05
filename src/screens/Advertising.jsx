@@ -23,6 +23,8 @@ export default function Advertising({ onComplete }) {
   const [timeLeft, setTimeLeft] = useState(useVideoLength ? null : adDuration);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function Advertising({ onComplete }) {
   const fsVideos = adConfig.fullScreenVideos || []
   
   // Prioritize video over image if both are enabled
-  if (adConfig.showFullScreenVideo && fsVideos.length > 0) {
+  if (adConfig.showFullScreenVideo && fsVideos.length > 0 && !videoError) {
     const idx = fullScreenIndex % fsVideos.length;
     fullScreenIndex = (fullScreenIndex + 1) % fsVideos.length;
     
@@ -80,16 +82,27 @@ export default function Advertising({ onComplete }) {
         <video
           ref={videoRef}
           src={fsVideos[idx].value}
+          preload="auto"
           autoPlay
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+          onError={() => {
+            console.warn('[Advertising] Video failed to load, falling back');
+            setVideoError(true);
+          }}
+          onCanPlay={() => setVideoReady(true)}
+          onLoadedData={() => setVideoReady(true)}
           onEnded={() => {
             if (useVideoLength) {
               onComplete();
             }
           }}
         />
+        {/* Loading fallback - black background while video loads */}
+        {!videoReady && (
+          <div className="absolute inset-0 bg-black" />
+        )}
         {/* Timer overlay - only show if not using video length */}
         {!useVideoLength && (
           <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
@@ -168,6 +181,7 @@ export default function Advertising({ onComplete }) {
             ) : adConfig.media[currentMediaIndex]?.type === 'video' ? (
               <video 
                 src={adConfig.media[currentMediaIndex].url}
+                preload="auto"
                 autoPlay
                 muted
                 loop
