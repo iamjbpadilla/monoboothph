@@ -358,7 +358,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
             contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
           } else {
-            contentH += textH(blocks.footer.fontSize, 0);
+            // Use fontSize directly since drawText returns fontSize for non-wrapped text
+            contentH += blocks.footer.fontSize;
           }
         }
         break;
@@ -653,13 +654,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
           y += imgHeight;
         } else {
-          drawText(ctx, blocks.footer.text, x, y, contentWidth, {
+          const footerHeight = drawText(ctx, blocks.footer.text, x, y, contentWidth, {
             fontSize: blocks.footer.fontSize,
             alignment: blocks.footer.alignment,
             color: '#000000',
             fontFamily: fontBody,
           });
-          y += textH(blocks.footer.fontSize, 0);
+          y += footerHeight;
         }
         break;
       }
