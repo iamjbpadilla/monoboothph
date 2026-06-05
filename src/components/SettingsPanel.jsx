@@ -45,7 +45,17 @@ export default function SettingsPanel({ currentScreen = 'standby', onOpen }) {
 
   useEffect(() => { if (!isDirty) setPendingClose(false); }, [isDirty]);
 
-  // Handle external open trigger (e.g., long press)
+  // Handle external open trigger via custom event (e.g., long press)
+  useEffect(() => {
+    const handleOpenSettings = () => {
+      playClick();
+      setPinOpen(true);
+    };
+    window.addEventListener('openSettings', handleOpenSettings);
+    return () => window.removeEventListener('openSettings', handleOpenSettings);
+  }, []);
+
+  // Also handle the onOpen callback for compatibility
   useEffect(() => {
     if (onOpen) {
       onOpen(() => {

@@ -89,14 +89,12 @@ export default function Standby({ onStart, onOpenSettings }) {
   const longPressTimerRef = useRef(null);
   const longPressDuration = settings.general.longPressDuration || 3000;
   
-  // Long press handler
+  // Long press handler - dispatch custom event to open settings
   const handleMouseDown = useCallback(() => {
     longPressTimerRef.current = setTimeout(() => {
-      if (onOpenSettings) {
-        onOpenSettings();
-      }
+      window.dispatchEvent(new CustomEvent('openSettings'));
     }, longPressDuration);
-  }, [longPressDuration, onOpenSettings]);
+  }, [longPressDuration]);
   
   const handleMouseUp = useCallback(() => {
     if (longPressTimerRef.current) {
