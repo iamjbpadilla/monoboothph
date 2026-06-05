@@ -8,7 +8,6 @@ import { playTransition } from './hooks/useSound.js';
 import { useDeviceHeartbeat } from './hooks/useDeviceHeartbeat.js';
 import { useDeviceStatusSync } from './hooks/useDeviceStatusSync.js';
 import { logError, logInfo, logStep } from './lib/errorLogger.js';
-import './lib/logger.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import PermissionModal from './components/PermissionModal.jsx';
 import IntroModal from './components/IntroModal.jsx';

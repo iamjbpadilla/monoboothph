@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Preferences } from '@capacitor/preferences';
 import { User, Link2, Unlink, Clock, AlertTriangle, CheckCircle, XCircle, Trash2, ChevronDown, ChevronUp, Download, Upload, Loader2, Lock, AlertCircle, ChevronRight, ExternalLink, Share2, Globe, Printer, Image as ImageIcon, RotateCcw } from 'lucide-react';
-import { getLogs, clearLogs } from '../../lib/logger.js';
 import { getSupabaseClient } from '../../lib/supabase';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { Device } from '@capacitor/device';
@@ -98,8 +97,6 @@ export default function AccountSettings() {
   const [pairingData, setPairingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState(null);
-  const [logs, setLogs] = useState([]);
-  const [showLogs, setShowLogs] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
   const [retrieving, setRetrieving] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
@@ -123,14 +120,6 @@ export default function AccountSettings() {
   useEffect(() => {
     loadPairingData();
     const interval = setInterval(updateTimeRemaining, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Refresh logs every second
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLogs(getLogs());
-    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -927,42 +916,6 @@ export default function AccountSettings() {
             <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-md-surface-container border border-md-outline-variant">
               <span className="text-xs text-md-on-surface-variant">This project</span>
               <span className="text-xs font-semibold text-md-on-surface">Private / MVP — All rights reserved</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Debug Logs Card */}
-      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
-        <div 
-          className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant flex items-center justify-between cursor-pointer"
-          onClick={() => setShowLogs(!showLogs)}
-        >
-          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Debug Logs</span>
-          {showLogs ? <ChevronUp size={16} className="text-md-outline" /> : <ChevronDown size={16} className="text-md-outline" />}
-        </div>
-        {showLogs && (
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-md-on-surface-variant">{logs.length} log entries</span>
-              <button
-                onClick={() => clearLogs()}
-                className="flex items-center gap-1 text-xs text-md-error hover:underline"
-              >
-                <Trash2 size={12} />
-                Clear
-              </button>
-            </div>
-            <div className="bg-md-surface rounded-xl p-3 h-64 overflow-y-auto font-mono text-xs">
-              {logs.length === 0 ? (
-                <p className="text-md-on-surface-variant text-center py-8">No logs yet</p>
-              ) : (
-                logs.map((log, index) => (
-                  <div key={index} className={`mb-1 ${log.type === 'error' ? 'text-md-error' : log.type === 'warn' ? 'text-orange-500' : 'text-md-on-surface'}`}>
-                    <span className="text-md-outline-variant">[{log.timestamp}]</span> {log.message}
-                  </div>
-                ))
-              )}
             </div>
           </div>
         )}
