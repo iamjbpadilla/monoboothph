@@ -571,24 +571,23 @@ function TemplateBlockEditor() {
             </div>
           </div>
           <div className="space-y-2">
-            <PresetSelector
-              label="Format Style"
+            <label className="block text-xs text-md-on-surface-variant mb-2">Format Style</label>
+            <select
               value={blocks.datetime.format}
-              onChange={v => upd('datetime', 'format', v)}
-              presets={[
-                'MMM DD, YYYY HH:mm',
-                'MM/DD/YYYY HH:mm',
-                'DD/MM/YYYY HH:mm',
-                'YYYY-MM-DD HH:mm',
-                'MMM DD, YYYY',
-                'MM/DD/YYYY',
-                'DD/MM/YYYY',
-                'YYYY-MM-DD',
-                'HH:mm',
-                'h:mm A',
-              ]}
-            />
-            <TextInput label="Custom Format" value={blocks.datetime.format} onChange={v => upd('datetime', 'format', v)} placeholder="MMM DD, YYYY HH:mm" />
+              onChange={e => upd('datetime', 'format', e.target.value)}
+              className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
+            >
+              <option value="MMM DD, YYYY HH:mm">Jan 15, 2025 14:30</option>
+              <option value="MM/DD/YYYY HH:mm">01/15/2025 14:30</option>
+              <option value="DD/MM/YYYY HH:mm">15/01/2025 14:30</option>
+              <option value="YYYY-MM-DD HH:mm">2025-01-15 14:30</option>
+              <option value="MMM DD, YYYY">Jan 15, 2025</option>
+              <option value="MM/DD/YYYY">01/15/2025</option>
+              <option value="DD/MM/YYYY">15/01/2025</option>
+              <option value="YYYY-MM-DD">2025-01-15</option>
+              <option value="HH:mm">14:30</option>
+              <option value="h:mm A">2:30 PM</option>
+            </select>
           </div>
         </div>
 
