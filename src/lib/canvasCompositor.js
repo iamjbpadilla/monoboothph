@@ -33,18 +33,18 @@ function loadImage(src) {
 const DATETIME_FONT = 22; // ≈2.7mm at 203 DPI — legible on thermal
 const BARCODE_HEIGHT = 110; // includes text label below bars
 
-// --- height helpers (must exactly match draw helpers below) ---
-function textH(fontSize, gap) { return fontSize + gap; }
-function dividerH(thickness, gap) { return (thickness || 1) + gap; }
-function photosH(slotH, count, photoGap, gap) { return slotH * count + photoGap * Math.max(0, count - 1) + gap; }
-function gridH(slotH, photoGap, gap) { return slotH * 2 + photoGap + gap; }
-function barcodeH(h, gap) { return h + gap; }
-function receiptItemsH(fontSize, items, showTotal, gap) {
+// --- height helpers (each block's content height only, no trailing gap) ---
+function textH(fontSize) { return fontSize; }
+function dividerH(thickness) { return thickness || 1; }
+function photosH(slotH, count, photoGap) { return slotH * count + photoGap * Math.max(0, count - 1); }
+function gridH(slotH, photoGap) { return slotH * 2 + photoGap; }
+function barcodeH(h) { return h; }
+function receiptItemsH(fontSize, items, showTotal) {
   const itemHeight = fontSize + 4;
   const headerHeight = itemHeight; // ITEM / QTY / PRICE header row always drawn
   const itemsHeight = items.length * itemHeight;
   const totalHeight = showTotal ? fontSize + 8 : 0;
-  return headerHeight + itemsHeight + totalHeight + gap;
+  return headerHeight + itemsHeight + totalHeight;
 }
 
 // --- draw helpers ---
@@ -249,76 +249,74 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
   const order = blocks.blockOrder || ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'bibleVerses', 'barcode', 'footer'];
 
-  // ── Compute total height (must mirror drawing order exactly) ──────────────
+  // ── Compute total height (each block reports its own content height only) ──
   let contentH = 0;
-  let lastEnabledBlock = null;
+  let enabledCount = 0;
   for (const key of order) {
     switch (key) {
       case 'header':
         if (blocks.header.enabled) {
-          lastEnabledBlock = 'header';
+          enabledCount++;
           if (blocks.header.image) {
-            const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
-            contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16) + elGap;
+            const scale = (blocks.header.imageScale || 4) / 4;
+            contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16);
           } else {
-            contentH += textH(blocks.header.fontSize, 0);
+            contentH += textH(blocks.header.fontSize);
             const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
             const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
             if (subtitleText) {
               contentH += (blocks.header.titleSubtitleGap || 8);
               const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
-              contentH += textH(subFontSize, elGap);
-            } else {
-              contentH += elGap;
+              contentH += textH(subFontSize);
             }
           }
         }
         break;
       case 'dividerBefore':
         if (blocks.divider.enabled) {
-          lastEnabledBlock = 'dividerBefore';
-          contentH += dividerH(blocks.divider.thickness, elGap);
+          enabledCount++;
+          contentH += dividerH(blocks.divider.thickness);
         }
         break;
       case 'photos':
         if (blocks.photos.enabled) {
-          lastEnabledBlock = 'photos';
+          enabledCount++;
           if (templateKey === '4grid') {
-            contentH += gridH(photoSlotHeight, photoGap, elGap);
+            contentH += gridH(photoSlotHeight, photoGap);
           } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
-            contentH += photoSlotHeight * 3 + photoGap * 2 + elGap;
+            contentH += photoSlotHeight * 3 + photoGap * 2;
           } else {
-            contentH += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+            contentH += photosH(photoSlotHeight, stripCount, photoGap);
           }
         }
         break;
       case 'dividerAfter':
         if (blocks.divider.enabled) {
-          lastEnabledBlock = 'dividerAfter';
-          contentH += dividerH(blocks.divider.thickness, elGap);
+          enabledCount++;
+          contentH += dividerH(blocks.divider.thickness);
         }
         break;
       case 'datetime':
         if (blocks.datetime.enabled) {
-          lastEnabledBlock = 'datetime';
-          contentH += textH(DATETIME_FONT, elGap);
+          enabledCount++;
+          contentH += textH(DATETIME_FONT);
         }
         break;
       case 'customText':
         if (blocks.customText.enabled && blocks.customText.content) {
-          lastEnabledBlock = 'customText';
-          contentH += textH(blocks.customText.fontSize, elGap);
+          enabledCount++;
+          contentH += textH(blocks.customText.fontSize);
         }
         break;
       case 'receiptItems':
         if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
-          lastEnabledBlock = 'receiptItems';
-          contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal, elGap);
+          enabledCount++;
+          contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal);
         }
         break;
       case 'bibleVerses':
         if (blocks.bibleVerses.enabled) {
-          lastEnabledBlock = 'bibleVerses';
+          enabledCount++;
           const fontSize = blocks.bibleVerses.fontSize || 28;
           const book = blocks.bibleVerses.topic || 'all';
 
@@ -354,15 +352,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
           contentH += fontSize * maxLines;
           if (blocks.bibleVerses.showReference) {
-            contentH += fontSize + elGap;
-          } else {
-            contentH += elGap;
+            contentH += fontSize;
           }
         }
         break;
       case 'barcode': {
         if (blocks.barcode.enabled) {
-          lastEnabledBlock = 'barcode';
+          enabledCount++;
           try {
             const JsBarcode = (await import('jsbarcode')).default;
             const tmp = document.createElement('canvas');
@@ -376,16 +372,16 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               fontSize: 22,
               margin: 0,
             });
-            contentH += barcodeH((contentWidth / tmp.width) * tmp.height, elGap);
+            contentH += barcodeH((contentWidth / tmp.width) * tmp.height);
           } catch {
-            contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80, elGap);
+            contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80);
           }
         }
         break;
       }
       case 'footer': {
         if (blocks.footer.enabled) {
-          lastEnabledBlock = 'footer';
+          enabledCount++;
           if (blocks.footer.image) {
             const scale = (blocks.footer.imageScale || 4) / 4;
             const fImg = await loadImage(blocks.footer.image);
@@ -393,7 +389,6 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
             contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
           } else {
-            // Use fontSize directly since drawText returns fontSize for non-wrapped text
             contentH += blocks.footer.fontSize;
           }
         }
@@ -401,6 +396,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       }
     }
   }
+
+  // Add spacing between enabled blocks (gaps go BETWEEN blocks, not after)
+  if (enabledCount > 1) contentH += (enabledCount - 1) * elGap;
 
   const totalHeight = MARGIN + contentH + MARGIN;
 
@@ -430,7 +428,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           const imgX = blocks.header.alignment === 'center' ? x + (contentWidth - imgWidth) / 2 :
                        blocks.header.alignment === 'right' ? x + contentWidth - imgWidth : x;
           ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
-          y += imgHeight + (blocks.header.imageBottomMargin || 16) + elGap;
+          y += imgHeight + (blocks.header.imageBottomMargin || 16);
+          y += elGap;
         } else {
           // Always use home screen title/subtitle (template header custom text is ignored)
           const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
@@ -444,7 +443,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             alignment: blocks.header.alignment,
             fontFamily: fontHeading,
           });
-          y += textH(titleFontSize, 0);
+          y += textH(titleFontSize);
 
           if (subtitleText) {
             y += (blocks.header.titleSubtitleGap || 8);
@@ -456,10 +455,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               color: '#000000',
               fontFamily: fontBody,
             });
-            y += textH(subFontSize, elGap);
-          } else {
-            y += elGap;
+            y += textH(subFontSize);
           }
+          y += elGap;
         }
         break;
       }
@@ -481,7 +479,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
             }
           }
-          y += gridH(photoSlotHeight, photoGap, elGap);
+          y += gridH(photoSlotHeight, photoGap);
+          y += elGap;
         } else if (templateKey === '2x3-landscape') {
           const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
           const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
@@ -497,7 +496,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
             }
           }
-          y += photoSlotHeight * 3 + photoGap * 2 + elGap;
+          y += photoSlotHeight * 3 + photoGap * 2;
+          y += elGap;
         } else if (templateKey === '2x3-portrait') {
           const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
           const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
@@ -513,7 +513,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
             }
           }
-          y += photoSlotHeight * 3 + photoGap * 2 + elGap;
+          y += photoSlotHeight * 3 + photoGap * 2;
+          y += elGap;
         } else {
           for (let i = 0; i < stripCount; i++) {
             const py = y + i * (photoSlotHeight + photoGap);
@@ -526,20 +527,23 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
               ctx.fillRect(x, py, photoSlotWidth, photoSlotHeight);
             }
           }
-          y += photosH(photoSlotHeight, stripCount, photoGap, elGap);
+          y += photosH(photoSlotHeight, stripCount, photoGap);
+          y += elGap;
         }
         break;
       }
       case 'dividerBefore': {
         if (!blocks.divider.enabled) break;
         drawDivider(ctx, x, y, contentWidth, blocks.divider, elGap);
-        y += dividerH(blocks.divider.thickness, elGap);
+        y += dividerH(blocks.divider.thickness);
+        y += elGap;
         break;
       }
       case 'dividerAfter': {
         if (!blocks.divider.enabled) break;
         drawDivider(ctx, x, y, contentWidth, blocks.divider, elGap);
-        y += dividerH(blocks.divider.thickness, elGap);
+        y += dividerH(blocks.divider.thickness);
+        y += elGap;
         break;
       }
       case 'datetime': {
@@ -551,7 +555,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           color: '#000000',
           fontFamily: fontBody,
         });
-        y += textH(DATETIME_FONT, elGap);
+        y += textH(DATETIME_FONT);
+        y += elGap;
         break;
       }
       case 'customText': {
@@ -561,7 +566,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           alignment: blocks.customText.alignment,
           fontFamily: fontBody,
         });
-        y += textH(blocks.customText.fontSize, elGap);
+        y += textH(blocks.customText.fontSize);
+        y += elGap;
         break;
       }
       case 'receiptItems': {
@@ -659,16 +665,16 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             color: '#666666',
             fontFamily: fontHeading,
           });
-          y += fontSize + elGap;
-        } else {
-          y += elGap;
+          y += fontSize;
         }
+        y += elGap;
         break;
       }
       case 'barcode': {
         if (!blocks.barcode.enabled) break;
         const bh = await renderBarcode(ctx, x, y, contentWidth, blocks.barcode);
-        y += barcodeH(bh, elGap);
+        y += barcodeH(bh);
+        y += elGap;
         break;
       }
       case 'footer': {
