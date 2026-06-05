@@ -7,6 +7,7 @@ import { usePrinter } from '../hooks/usePrinter.js';
 import { playSuccess, playError, playClick } from '../hooks/useSound.js';
 import { uploadPhotoToSupabase, generateSessionId } from '../hooks/usePhotoUpload.js';
 import { getSupabaseClient } from '../lib/supabase';
+import { retryAllPendingUploads } from '../hooks/usePendingUploads.js';
 
 function ReceiptQR({ size = 200, sessionId }) {
   const [dataUrl, setDataUrl] = useState(null);
@@ -42,16 +43,42 @@ function ReceiptQR({ size = 200, sessionId }) {
 
 export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
   const { settings } = useSettings();
+  const homeScreen = settings.homeScreen || {};
   const isDark = settings.general.theme === 'dark';
   const { print, status, statusMessage, error, reset } = usePrinter();
   const [countdown, setCountdown] = useState(20);
   const [sessionId, setSessionId] = useState(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadCompleted, setUploadCompleted] = useState(false);
 
   useEffect(() => {
     const newSessionId = generateSessionId();
     setSessionId(newSessionId);
+    setUploadCompleted(false);
     print(imageDataUrl, settings.printer);
   }, []);
+
+  // Track online status
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Auto-retry pending uploads when coming online
+  useEffect(() => {
+    if (isOnline && !uploadCompleted) {
+      retryAllPendingUploads().catch(err => {
+        console.error('Auto-retry failed:', err);
+      });
+    }
+  }, [isOnline, uploadCompleted]);
 
   // Play success/error sounds
   useEffect(() => {
@@ -61,10 +88,18 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
 
   // Upload photo to Supabase after print success
   useEffect(() => {
-    if (status === 'success' && sessionId && imageDataUrl && settings.sharing.enabled) {
-      uploadPhotoToSupabase(imageDataUrl, sessionId).catch(err => {
-        console.error('Photo upload failed:', err);
-      });
+    if (status === 'success' && sessionId && imageDataUrl && settings.sharing.enabled && !isUploading && !uploadCompleted) {
+      setIsUploading(true);
+      uploadPhotoToSupabase(imageDataUrl, sessionId)
+        .then(() => {
+          setUploadCompleted(true);
+        })
+        .catch(err => {
+          console.error('Photo upload failed:', err);
+        })
+        .finally(() => {
+          setIsUploading(false);
+        });
 
       // Increment print counter on server
       (async () => {
@@ -82,7 +117,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
         }
       })();
     }
-  }, [status, sessionId, imageDataUrl, settings.sharing.enabled]);
+  }, [status, sessionId, imageDataUrl, settings.sharing.enabled, isUploading, uploadCompleted]);
 
   // Auto-return home 10 seconds after success
   useEffect(() => {
@@ -98,6 +133,8 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
   function handleRetry() {
     playClick();
     reset();
+    setUploadCompleted(false);
+    setIsUploading(false);
     print(imageDataUrl, settings.printer);
   }
 
@@ -109,16 +146,19 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
 
   const { boothName, eventName } = settings.general;
 
+  const titleText = homeScreen.title?.text || boothName || 'Snap & Roll';
+  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || eventName) : eventName;
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-6 px-8 bg-md-surface">
 
       {/* Booth identity — top */}
       <div className="absolute top-8 flex flex-col items-center gap-0.5">
         <p className="text-base font-semibold text-md-on-surface tracking-wide">
-          {boothName || 'Snap \u0026 Roll'}
+          {titleText}
         </p>
-        {eventName && (
-          <p className="text-xs text-md-on-surface-variant tracking-widest uppercase">{eventName}</p>
+        {subtitleText && (
+          <p className="text-xs text-md-on-surface-variant tracking-widest uppercase">{subtitleText}</p>
         )}
       </div>
 
@@ -130,7 +170,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
             <div className="w-28 h-28 rounded-full border-[5px] border-md-surface-container-highest border-t-md-primary animate-spin" />
             <div className="text-center">
               <p className="text-[32px] leading-10 font-normal text-md-on-surface">
-                {settings.printer.transport === 'simulate' ? 'Simulating…' : 'Printing…'}
+                {settings.printer.transport === 'simulate' ? 'Simulating…' : 'Issuing…'}
               </p>
               <p className="text-lg mt-2 text-md-on-surface-variant">{statusMessage || 'Please wait'}</p>
             </div>
@@ -144,7 +184,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
             </div>
             <div className="text-center">
               <p className="text-[32px] leading-10 font-normal text-md-on-surface">
-                {settings.printer.transport === 'simulate' ? 'Simulated!' : 'Printed!'}
+                {settings.printer.transport === 'simulate' ? 'Simulated!' : 'Issued!'}
               </p>
               {statusMessage && (
                 <p className="text-lg mt-2 text-md-on-surface-variant">{statusMessage}</p>
@@ -159,7 +199,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
               <XCircle size={56} className="text-md-on-error-container" strokeWidth={1.5} />
             </div>
             <div className="text-center">
-              <p className="text-[32px] leading-10 font-normal text-md-on-surface">Print Failed</p>
+              <p className="text-[32px] leading-10 font-normal text-md-on-surface">Issue Failed</p>
               <p className="text-lg mt-2 text-md-error max-w-xs">{error}</p>
             </div>
           </div>
@@ -169,7 +209,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
       {/* QR code or fallback message — success only */}
       {status === 'success' && sessionId && (
         <div className="flex flex-col items-center gap-2">
-          {settings.sharing.enabled ? (
+          {settings.sharing.enabled && isOnline ? (
             <>
               <div className="rounded-2xl overflow-hidden shadow-md border border-md-outline-variant p-1 bg-white">
                 <ReceiptQR size={200} sessionId={sessionId} />
@@ -193,7 +233,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
           className="flex items-center gap-3 bg-md-primary text-md-on-primary font-semibold min-h-[56px] px-12 rounded-full text-base hover:brightness-110 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97] transition-all duration-150 shadow"
         >
           <Home size={22} />
-          Print Another ({countdown})
+          Tear Another ({countdown})
         </button>
       )}
 

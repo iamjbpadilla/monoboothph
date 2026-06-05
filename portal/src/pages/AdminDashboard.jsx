@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { LayoutDashboard, Plus, Images, Smartphone, LogOut, CheckCircle, XCircle, Loader2, Activity, Printer, HelpCircle, Terminal } from 'lucide-react';
+import { LayoutDashboard, Plus, Images, Smartphone, LogOut, CheckCircle, XCircle, Loader2, Activity, Printer, HelpCircle, Terminal, FileText } from 'lucide-react';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -198,6 +198,13 @@ export default function AdminDashboard() {
               >
                 <Terminal className="w-4 h-4" />
                 Logs
+              </button>
+              <button
+                onClick={() => navigate('/admin/changelog')}
+                className="flex items-center gap-2 text-black hover:text-black hover:bg-gray-100 px-3 py-2 transition text-sm"
+              >
+                <FileText className="w-4 h-4" />
+                Changelog
               </button>
               <button
                 onClick={() => navigate('/admin/help')}

@@ -1,4 +1,8 @@
-# Changelog
+import { useEffect, useState } from 'react';
+import { FileText, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const CHANGELOG_CONTENT = `# Changelog
 
 All notable changes to Snap & Roll will be documented in this file.
 
@@ -73,6 +77,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added smooth fade transitions for modals
 - Added staggered animations to modals
 - Enhanced Standby screen entry animation
+- Date/time format options for templates (10 preset formats)
+- Random message feature for custom text (15 preset messages)
+- Expanded accent colors from 19 to 32 with vivid/darker tones
+- 8-column grid layout for accent color selection
+- Home screen title/subtitle display on loading screens (PrintStatus, Capture cleaning)
+- ConfirmDialog for all destructive actions in settings
 
 ### Changed
 - "Print Preview" renamed to "Your Receipt"
@@ -107,6 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Can't touch to start booth after permission granted - removed animation delays blocking interaction
 - Modals reappearing on app launch - simplified animation flow to prevent race conditions
 - Intro modal hanging on "Ready to Start" - added completed state for immediate unmounting
+- Fixed handleDelete in SharingSettings to properly use remove function from usePendingUploads hook
 
 ### Security
 - Native Android code obfuscation enabled via R8/ProGuard
@@ -125,3 +136,126 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sound system with retro vibe
 - Service worker for PWA support
 - Capacitor integration for Android
+`;
+
+export default function Changelog() {
+  const navigate = useNavigate();
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    setContent(CHANGELOG_CONTENT);
+  }, []);
+
+  function parseMarkdown(text) {
+    const lines = text.split('\n');
+    const result = [];
+    let inList = false;
+    let currentSection = null;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Version headers
+      if (line.startsWith('## [')) {
+        if (inList) {
+          inList = false;
+          result.push({ type: 'listEnd' });
+        }
+        const version = line.match(/\[([^\]]+)\]/)?.[1] || 'Unknown';
+        const date = line.match(/- (.+)$/)?.[1] || '';
+        currentSection = version;
+        result.push({ type: 'version', version, date });
+        continue;
+      }
+
+      // Section headers
+      if (line.startsWith('### ')) {
+        if (inList) {
+          inList = false;
+          result.push({ type: 'listEnd' });
+        }
+        const section = line.replace('### ', '');
+        result.push({ type: 'section', section });
+        continue;
+      }
+
+      // List items
+      if (line.startsWith('- ')) {
+        if (!inList) {
+          inList = true;
+          result.push({ type: 'listStart' });
+        }
+        const item = line.replace('- ', '');
+        result.push({ type: 'item', content: item });
+        continue;
+      }
+
+      // Empty lines
+      if (line.trim() === '') {
+        if (inList) {
+          inList = false;
+          result.push({ type: 'listEnd' });
+        }
+        continue;
+      }
+    }
+
+    if (inList) {
+      result.push({ type: 'listEnd' });
+    }
+
+    return result;
+  }
+
+  const parsed = parseMarkdown(content);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/admin/dashboard')}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>Back to Dashboard</span>
+          </button>
+          <div className="flex items-center gap-3 mb-2">
+            <FileText className="text-blue-600" size={32} />
+            <h1 className="text-3xl font-bold text-gray-900">Changelog</h1>
+          </div>
+          <p className="text-gray-600">All notable changes to Snap & Roll</p>
+        </div>
+
+        {/* Content */}
+        <div className="bg-white rounded-lg shadow-sm p-8 prose prose-sm max-w-none">
+          {parsed.map((item, index) => {
+            switch (item.type) {
+              case 'version':
+                return (
+                  <h2 key={index} className="text-2xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200">
+                    {item.version} {item.date && <span className="text-gray-500 font-normal text-lg ml-2">{item.date}</span>}
+                  </h2>
+                );
+              case 'section':
+                return (
+                  <h3 key={index} className="text-lg font-semibold text-gray-800 mt-6 mb-3">
+                    {item.section}
+                  </h3>
+                );
+              case 'listStart':
+                return <ul key={index} className="list-disc list-inside space-y-1 text-gray-700 ml-4">;
+              case 'listEnd':
+                return </ul>;
+              case 'item':
+                return <li key={index}>{item.content}</li>;
+              default:
+                return null;
+            }
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

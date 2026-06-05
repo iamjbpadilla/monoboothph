@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Camera as CameraIcon, RefreshCw, Printer, RotateCcw } from 'lucide-react';
+import { Camera as CameraIcon, RefreshCw, Printer, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { Camera } from '@capacitor/camera';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { calcCanvasWidth } from '../../lib/canvasCompositor.js';
 import { generateThermalPreview } from '../../lib/escpos.js';
 import { usePrinter } from '../../hooks/usePrinter.js';
+import { playTear } from '../../hooks/useSound.js';
+import ConfirmDialog from '../ConfirmDialog.jsx';
 
 const TRANSPORTS = [
   { value: 'simulate', label: 'Simulate (Test Mode)' },
@@ -56,7 +58,13 @@ export default function PrinterSettings() {
   const [testPhoto, setTestPhoto] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [qualityExpanded, setQualityExpanded] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
   const debounceRef = useRef(null);
+
+  function showConfirm(title, description, onConfirm) {
+    setConfirmDialog({ open: true, title, description, onConfirm });
+  }
 
   const canvasPx = calcCanvasWidth(printer.dpi, printer.paperWidthMm);
 
@@ -130,19 +138,24 @@ export default function PrinterSettings() {
 
   async function handleTestPrint() {
     if (!testPhoto) return;
+    playTear();
     resetPrint();
     await print(testPhoto, printer);
   }
 
   function handleResetQuality() {
-    Object.entries(QUALITY_DEFAULTS).forEach(([k, v]) => updateSettings(`printer.${k}`, v));
+    showConfirm(
+      'Reset Quality Settings',
+      'Reset print quality settings to defaults?',
+      () => Object.entries(QUALITY_DEFAULTS).forEach(([k, v]) => updateSettings(`printer.${k}`, v))
+    );
   }
 
   return (
     <div className="space-y-5">
       {/* Transport */}
       <div>
-        <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Print Transport</label>
+        <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Issue Transport</label>
         <div className="grid grid-cols-1 gap-2">
           {TRANSPORTS.map(t => (
             <button key={t.value} onClick={() => updateSettings('printer.transport', t.value)}
@@ -175,84 +188,61 @@ export default function PrinterSettings() {
         </div>
       )}
 
-      {/* DPI + Paper Width */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Paper DPI</label>
-          <div className="flex flex-col gap-1.5">
-            {DPI_PRESETS.map(d => (
-              <button key={d} onClick={() => updateSettings('printer.dpi', d)}
-                className={`py-2.5 rounded-xl border text-sm transition-colors ${
-                  printer.dpi === d
-                    ? 'bg-md-primary text-md-on-primary border-md-primary'
-                    : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant hover:bg-md-surface-container-high'
-                }`}>{d} DPI</button>
-            ))}
-            <input type="number"
-              value={!DPI_PRESETS.includes(printer.dpi) ? printer.dpi : ''}
-              onChange={e => updateSettings('printer.dpi', Number(e.target.value))}
-              className={`py-2.5 rounded-xl border text-sm text-center focus:outline-none focus:border-md-primary ${
-                !DPI_PRESETS.includes(printer.dpi)
-                  ? 'bg-md-primary text-md-on-primary border-md-primary'
-                  : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant'
-              }`} placeholder="Custom" />
-          </div>
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Paper Width (mm)</label>
-          <input type="number" value={printer.paperWidthMm}
-            onChange={e => updateSettings('printer.paperWidthMm', Number(e.target.value))}
-            className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-3.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary"
-            min={58} max={112} />
-          <p className="text-md-outline text-xs mt-2 leading-relaxed">
-            {canvasPx}px canvas<br/>({printer.paperWidthMm}mm @ {printer.dpi} DPI)
-          </p>
-        </div>
-      </div>
-
       {/* Print Quality */}
       <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-4">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-md-on-surface uppercase tracking-wider">Print Quality</label>
-          <button onClick={handleResetQuality}
-            className="flex items-center gap-1 text-xs text-md-on-surface-variant hover:text-md-primary transition-colors">
-            <RotateCcw size={11} />Reset
-          </button>
-        </div>
+        <button
+          onClick={() => setQualityExpanded(!qualityExpanded)}
+          className="flex items-center justify-between w-full"
+        >
+          <label className="text-xs font-semibold text-md-on-surface uppercase tracking-wider">Issue Quality</label>
+          {qualityExpanded ? <ChevronUp size={16} className="text-md-on-surface-variant" /> : <ChevronDown size={16} className="text-md-on-surface-variant" />}
+        </button>
 
-        {/* Dithering Algorithm */}
-        <div>
-          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Dithering Algorithm</label>
-          <div className="grid grid-cols-3 gap-1.5">
-            {DITHERING_OPTIONS.map(opt => (
-              <button key={opt.value} onClick={() => updateSettings('printer.printDithering', opt.value)}
-                className={`px-2 py-2 rounded-xl border text-center transition-colors ${
-                  printer.printDithering === opt.value
-                    ? 'bg-md-primary text-md-on-primary border-md-primary'
-                    : 'bg-md-surface-container-high border-md-outline-variant text-md-on-surface-variant hover:bg-md-surface-container-highest'
-                }`}>
-                <span className="block text-xs font-medium leading-tight">{opt.label}</span>
-                <span className="block text-[9px] opacity-70 mt-0.5">{opt.desc}</span>
+        {qualityExpanded && (
+          <>
+            <div className="flex items-center justify-between">
+              <div></div>
+              <button onClick={handleResetQuality}
+                className="flex items-center gap-1 text-xs text-md-on-surface-variant hover:text-md-primary transition-colors">
+                <RotateCcw size={11} />Reset
               </button>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <QualitySlider label="Gamma (Skin Tone Boost)" sublabel="Higher = brighter midtones, prevents dark skin tones"
-          value={printer.printGamma ?? 1.2} min={0.8} max={2.0} step={0.1}
-          onChange={v => updateSettings('printer.printGamma', v)} />
+            {/* Dithering Algorithm */}
+            <div>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Dithering Algorithm</label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {DITHERING_OPTIONS.map(opt => (
+                  <button key={opt.value} onClick={() => updateSettings('printer.printDithering', opt.value)}
+                    className={`px-2 py-2 rounded-xl border text-center transition-colors ${
+                      printer.printDithering === opt.value
+                        ? 'bg-md-primary text-md-on-primary border-md-primary'
+                        : 'bg-md-surface-container-high border-md-outline-variant text-md-on-surface-variant hover:bg-md-surface-container-highest'
+                    }`}>
+                    <span className="block text-xs font-medium leading-tight">{opt.label}</span>
+                    <span className="block text-[9px] opacity-70 mt-0.5">{opt.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <QualitySlider label="Brightness"
-          value={printer.printBrightness ?? 0} min={-100} max={100}
-          onChange={v => updateSettings('printer.printBrightness', v)} />
+            <QualitySlider label="Gamma (Skin Tone Boost)" sublabel="Higher = brighter midtones, prevents dark skin tones"
+              value={printer.printGamma ?? 1.2} min={0.8} max={2.0} step={0.1}
+              onChange={v => updateSettings('printer.printGamma', v)} />
 
-        <QualitySlider label="Contrast"
-          value={printer.printContrast ?? 0} min={-100} max={100}
-          onChange={v => updateSettings('printer.printContrast', v)} />
+            <QualitySlider label="Brightness"
+              value={printer.printBrightness ?? 0} min={-100} max={100}
+              onChange={v => updateSettings('printer.printBrightness', v)} />
+
+            <QualitySlider label="Contrast"
+              value={printer.printContrast ?? 0} min={-100} max={100}
+              onChange={v => updateSettings('printer.printContrast', v)} />
+          </>
+        )}
       </div>
 
-      {/* Print Margins (print-only, does not affect on-screen preview) */}
-      <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-4">
+      {/* Print Margins (print-only, does not affect on-screen preview) - HIDDEN */}
+      {/* <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-4">
         <label className="block text-xs font-semibold text-md-on-surface uppercase tracking-wider">Print Margins</label>
         <p className="text-[10px] text-md-outline leading-relaxed">These only affect the printed output. On-screen previews stay unchanged.</p>
 
@@ -286,11 +276,11 @@ export default function PrinterSettings() {
             Bottom = top {multLabel(printer.printBottomMultiplier ?? 1)}
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* Print Quality Tester */}
       <div className="p-3 bg-md-surface-container rounded-xl border border-md-outline-variant space-y-3">
-        <label className="block text-xs font-semibold text-md-on-surface uppercase tracking-wider">Thermal Print Tester</label>
+        <label className="block text-xs font-semibold text-md-on-surface uppercase tracking-wider">Thermal Issue Tester</label>
 
         <div className="flex gap-2">
           <button onClick={handleCapturePhoto}
@@ -341,7 +331,7 @@ export default function PrinterSettings() {
             disabled={printStatus === 'printing'}
             className="w-full flex items-center justify-center gap-2 bg-md-secondary-container border border-md-outline-variant text-md-on-secondary-container rounded-xl py-3 text-sm font-medium hover:brightness-105 transition-all disabled:opacity-50">
             <Printer size={15} />
-            {printStatus === 'printing' ? statusMessage || 'Printing…' : 'Test Print'}
+            {printStatus === 'printing' ? statusMessage || 'Issuing…' : 'Test Issue'}
           </button>
         )}
 
@@ -352,6 +342,17 @@ export default function PrinterSettings() {
           <p className="text-xs text-red-400 text-center">{printError}</p>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        onConfirm={() => {
+          if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+          setConfirmDialog({ ...confirmDialog, open: false });
+        }}
+      />
     </div>
   );
 }

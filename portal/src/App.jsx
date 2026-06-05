@@ -12,6 +12,7 @@ const Help = lazy(() => import('./pages/Help'));
 const Timeline = lazy(() => import('./pages/Timeline'));
 const Marketing = lazy(() => import('./pages/Marketing'));
 const Logs = lazy(() => import('./pages/Logs'));
+const Changelog = lazy(() => import('./pages/Changelog'));
 
 function App() {
   return (
@@ -64,6 +65,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Logs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/changelog"
+            element={
+              <ProtectedRoute>
+                <Changelog />
               </ProtectedRoute>
             }
           />

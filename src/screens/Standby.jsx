@@ -103,21 +103,21 @@ export default function Standby({ onStart }) {
   const titleText = getSetting(settings, 'homeScreen.title.text', 'general.boothName', 'MONO BOOTH PH');
   const titleFont = getSetting(settings, 'homeScreen.title.font', null, 'Inter');
   const titleSize = getSetting(settings, 'homeScreen.title.size', null, 56);
-  const titleColor = getSetting(settings, 'homeScreen.title.color', null, '#000000');
   
   const subtitleEnabled = getSetting(settings, 'homeScreen.subtitle.enabled', null, true);
   const subtitleText = getSetting(settings, 'homeScreen.subtitle.text', 'general.eventName', 'Receipt Photobooth');
   const subtitleFont = getSetting(settings, 'homeScreen.subtitle.font', null, 'Inter');
   const subtitleSize = getSetting(settings, 'homeScreen.subtitle.size', null, 24);
-  const subtitleColor = getSetting(settings, 'homeScreen.subtitle.color', null, '#666666');
   
   // Button with dual-read
   const buttonShape = getSetting(settings, 'homeScreen.button.shape', null, 'pill');
   const buttonScale = getSetting(settings, 'homeScreen.button.scale', null, 1.0);
   const buttonText = getSetting(settings, 'homeScreen.button.text', null, 'Tap to Start');
   const buttonImageBase64 = getSetting(settings, 'homeScreen.button.imageBase64', null, null);
+  const buttonVerticalOffset = getSetting(settings, 'homeScreen.button.verticalOffset', null, 0);
   
   // Logo with dual-read
+  const logoEnabled = getSetting(settings, 'homeScreen.logo.enabled', null, true);
   const logoImageBase64 = getSetting(settings, 'homeScreen.logo.imageBase64', 'general.logoBase64', null);
   const logoScale = getSetting(settings, 'homeScreen.logo.scale', 'general.logoScale', 1.0);
   const logoIconKey = getSetting(settings, 'homeScreen.logo.iconKey', 'general.brandingIcon', null);
@@ -202,7 +202,7 @@ export default function Standby({ onStart }) {
       
       <div className="relative flex flex-col items-center gap-6 p-6 text-center">
         {/* Logo / Icon */}
-        {logoImageBase64 ? (
+        {logoEnabled && (logoImageBase64 ? (
           <img 
             src={logoImageBase64} 
             alt="Logo" 
@@ -223,7 +223,7 @@ export default function Standby({ onStart }) {
           >
             <Camera size={52 * logoScale} className="text-md-on-primary-container" />
           </div>
-        )}
+        ))}
 
         {/* Title block */}
         {titleEnabled && (
@@ -234,7 +234,6 @@ export default function Standby({ onStart }) {
                 fontSize: `${titleSize}px`,
                 lineHeight: `${titleSize * 1.14}px`,
                 fontFamily: titleFont,
-                color: titleColor,
               }}
             >
               {titleText}
@@ -245,7 +244,6 @@ export default function Standby({ onStart }) {
                 style={{ 
                   fontSize: `${subtitleSize}px`,
                   fontFamily: subtitleFont,
-                  color: subtitleColor,
                 }}
               >
                 {subtitleText}
@@ -254,7 +252,7 @@ export default function Standby({ onStart }) {
           </div>
         )}
 
-        {/* Button */}
+        {/* Button - Always below title */}
         {buttonImageBase64 ? (
           <img 
             src={buttonImageBase64} 
@@ -263,6 +261,7 @@ export default function Standby({ onStart }) {
             style={{ 
               width: `${200 * buttonScale}px`,
               height: `${64 * buttonScale}px`,
+              marginTop: `${buttonVerticalOffset}px`,
             }}
           />
         ) : (
@@ -271,6 +270,7 @@ export default function Standby({ onStart }) {
             style={{ 
               transition: 'box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
               transform: `scale(${buttonScale})`,
+              marginTop: `${buttonVerticalOffset}px`,
             }}
           >
             {buttonText}

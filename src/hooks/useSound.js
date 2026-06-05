@@ -187,6 +187,55 @@ export function playError() {
   osc.stop(t + 0.35);
 }
 
+export function playTear() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') ctx.resume();
+  const t = now();
+
+  // Receipt printer printing sound - rapid mechanical clicks
+  const clickCount = 8;
+  for (let i = 0; i < clickCount; i++) {
+    const clickTime = t + (i * 0.04);
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(1200 + Math.random() * 400, clickTime);
+    osc.frequency.exponentialRampToValueAtTime(600, clickTime + 0.015);
+    gain.gain.setValueAtTime(0.04, clickTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, clickTime + 0.015);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(clickTime);
+    osc.stop(clickTime + 0.02);
+  }
+
+  // Paper tear sound - rip/crunch
+  const tearTime = t + 0.35;
+  const bufferSize = ctx.sampleRate * 0.15;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    const env = Math.exp(-i / (bufferSize * 0.3));
+    data[i] = (Math.random() * 2 - 1) * 0.15 * env;
+  }
+  const noise = ctx.createBufferSource();
+  const noiseGain = ctx.createGain();
+  const noiseFilter = ctx.createBiquadFilter();
+  noise.buffer = buffer;
+  noiseFilter.type = 'bandpass';
+  noiseFilter.frequency.setValueAtTime(2000, tearTime);
+  noiseFilter.frequency.exponentialRampToValueAtTime(500, tearTime + 0.15);
+  noiseFilter.Q.setValueAtTime(2, tearTime);
+  noiseGain.gain.setValueAtTime(0, tearTime);
+  noiseGain.gain.linearRampToValueAtTime(0.12, tearTime + 0.02);
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, tearTime + 0.15);
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(ctx.destination);
+  noise.start(tearTime);
+}
+
 // Hook wrapper for components that want sound
 export function useSound() {
   const enabledRef = useRef(true);
@@ -206,6 +255,7 @@ export function useSound() {
     success: playSuccess,
     transition: playTransition,
     error: playError,
+    tear: playTear,
     enabledRef,
   };
 }

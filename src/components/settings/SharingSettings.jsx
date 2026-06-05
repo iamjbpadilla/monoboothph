@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Upload, Cloud, CloudOff, RefreshCw, Trash2, ExternalLink, Copy, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { usePendingUploads } from '../../hooks/usePendingUploads.js';
+import ConfirmDialog from '../ConfirmDialog.jsx';
 
 function Section({ title, children }) {
   return (
@@ -15,9 +16,10 @@ function Section({ title, children }) {
 export default function SharingSettings() {
   const { settings, updateSettings } = useSettings();
   const { sharing } = settings;
-  const { uploads, storageUsage, storageLimit, retry, retryAll, clear } = usePendingUploads();
+  const { uploads, storageUsage, storageLimit, retry, retryAll, clear, remove } = usePendingUploads(sharing.storageLimitMB || 100);
   const [filter, setFilter] = useState('all'); // all, pending, successful, failed
   const [copiedId, setCopiedId] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
 
   // Filter uploads based on status
   const filteredUploads = (uploads || []).filter(u => {
@@ -34,6 +36,10 @@ export default function SharingSettings() {
     setTimeout(() => setCopiedId(null), 2000);
   }
 
+  function showConfirm(title, description, onConfirm) {
+    setConfirmDialog({ open: true, title, description, onConfirm });
+  }
+
   function handleRetry(sessionId) {
     retry(sessionId);
   }
@@ -43,12 +49,21 @@ export default function SharingSettings() {
   }
 
   function handleDelete(sessionId) {
-    // This would need to be implemented in usePendingUploads
-    console.log('Delete:', sessionId);
+    showConfirm(
+      'Delete Upload',
+      'Are you sure you want to delete this upload?',
+      async () => {
+        await remove(sessionId);
+      }
+    );
   }
 
   function handleClearAll() {
-    clear();
+    showConfirm(
+      'Clear All Uploads',
+      'Are you sure you want to clear all uploads?',
+      () => clear()
+    );
   }
 
   return (
@@ -80,19 +95,43 @@ export default function SharingSettings() {
       </Section>
 
       {/* Fallback Message */}
-      <Section title="Offline Fallback Message">
-        <div className="space-y-2">
-          <label className="block text-xs font-medium text-md-on-surface-variant mb-2">
-            Message shown when offline or upload fails
-          </label>
-          <input
-            type="text"
-            value={sharing.fallbackMessage}
-            onChange={e => updateSettings('sharing.fallbackMessage', e.target.value)}
-            className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
-            placeholder="Photo saved locally - will sync when online"
-          />
-          <p className="text-xs text-md-outline">This message replaces the QR code when sharing is disabled or offline.</p>
+      <Section title="Offline Fallback">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between py-3 px-4 bg-md-surface-container border border-md-outline-variant rounded-lg">
+            <div>
+              <div className="text-sm font-medium text-md-on-surface">Show Offline Message</div>
+              <div className="text-xs text-md-on-surface-variant">Display fallback when offline</div>
+            </div>
+            <button
+              role="switch"
+              aria-checked={sharing.offlineFallbackEnabled}
+              onClick={() => updateSettings('sharing.offlineFallbackEnabled', !sharing.offlineFallbackEnabled)}
+              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
+                sharing.offlineFallbackEnabled
+                  ? 'bg-md-primary'
+                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
+              }`}
+            >
+              <span
+                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
+                  sharing.offlineFallbackEnabled ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
+                }`}
+              />
+            </button>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">
+              Message shown when offline or upload fails
+            </label>
+            <input
+              type="text"
+              value={sharing.fallbackMessage}
+              onChange={e => updateSettings('sharing.fallbackMessage', e.target.value)}
+              className="w-full px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
+              placeholder="Photo saved locally - will sync when online"
+            />
+            <p className="text-xs text-md-outline mt-1">This message replaces the QR code when sharing is disabled or offline.</p>
+          </div>
         </div>
       </Section>
 
@@ -133,6 +172,20 @@ export default function SharingSettings() {
               className="w-full"
             />
           </div>
+
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Storage Limit: {sharing.storageLimitMB} MB</label>
+            <input
+              type="range"
+              min="10"
+              max="500"
+              step="10"
+              value={sharing.storageLimitMB}
+              onChange={e => updateSettings('sharing.storageLimitMB', parseInt(e.target.value))}
+              className="w-full"
+            />
+            <p className="text-[10px] text-md-outline mt-1">Maximum storage for pending uploads (10-500 MB)</p>
+          </div>
         </div>
       </Section>
 
@@ -151,6 +204,10 @@ export default function SharingSettings() {
               </div>
             )}
           </div>
+
+          <p className="text-xs text-md-outline">
+            Pending uploads are automatically retried when the device comes online.
+          </p>
 
           {/* Filter Tabs */}
           <div className="flex gap-2">
@@ -214,13 +271,6 @@ export default function SharingSettings() {
                   {/* Actions */}
                   <div className="flex gap-1">
                     <button
-                      onClick={() => handleRetry(upload.sessionId)}
-                      className="p-2 text-md-primary hover:bg-md-primary-container rounded-lg transition-colors"
-                      title="Retry"
-                    >
-                      <RefreshCw size={16} />
-                    </button>
-                    <button
                       onClick={() => handleDelete(upload.sessionId)}
                       className="p-2 text-md-error hover:bg-md-error-container rounded-lg transition-colors"
                       title="Delete"
@@ -236,13 +286,6 @@ export default function SharingSettings() {
           {/* Bulk Actions */}
           {filteredUploads.length > 0 && (
             <div className="flex gap-2">
-              <button
-                onClick={handleRetryAll}
-                className="flex items-center gap-2 px-3 py-2 bg-md-primary text-md-on-primary rounded-lg text-sm font-medium hover:brightness-110 transition-colors"
-              >
-                <RefreshCw size={16} />
-                Retry All
-              </button>
               <button
                 onClick={handleClearAll}
                 className="flex items-center gap-2 px-3 py-2 bg-md-error-container border border-md-error rounded-lg text-sm text-md-on-error hover:brightness-110 transition-colors"
@@ -328,6 +371,17 @@ export default function SharingSettings() {
           )}
         </div>
       </Section>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        onConfirm={() => {
+          if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+          setConfirmDialog({ ...confirmDialog, open: false });
+        }}
+      />
     </div>
   );
 }

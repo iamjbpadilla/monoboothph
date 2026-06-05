@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { RotateCcw, Printer, Download } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
-import { playClick } from '../hooks/useSound.js';
+import { playClick, playTear } from '../hooks/useSound.js';
 import ReceiptCanvas from '../components/ReceiptCanvas.jsx';
 
 const AUTO_PRINT_SECONDS = 10;
@@ -32,6 +32,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
   function handlePrint() {
     if (!canvasRef.current || autoFiredRef.current) return;
     autoFiredRef.current = true;
+    playTear();
     const dataUrl = canvasRef.current.toDataURL('image/png');
     onPrint(dataUrl);
   }
@@ -106,7 +107,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
       <div className="flex items-center h-16 px-2 flex-shrink-0 bg-md-surface">
         <div className="w-12" />
         <div className="flex-1 text-center">
-          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Preview</h2>
+          <h2 className="text-[22px] leading-7 font-normal text-md-on-surface">Your Receipt</h2>
         </div>
         <div className="w-16" />
       </div>
@@ -165,7 +166,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
           className="flex items-center justify-center gap-2 flex-1 py-5 rounded-full font-medium text-base bg-md-primary text-md-on-primary hover:brightness-110 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] transition-all duration-150 shadow"
         >
           <Printer size={20} />
-          Print ({countdown})
+          Tear It ({countdown})
         </button>
       </div>
     </div>

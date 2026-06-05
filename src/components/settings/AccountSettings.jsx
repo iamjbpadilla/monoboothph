@@ -1,10 +1,100 @@
 import { useState, useEffect } from 'react';
 import { Preferences } from '@capacitor/preferences';
-import { User, Link2, Unlink, Clock, AlertTriangle, CheckCircle, XCircle, Trash2, ChevronDown, ChevronUp, Download, Upload, Loader2 } from 'lucide-react';
+import { User, Link2, Unlink, Clock, AlertTriangle, CheckCircle, XCircle, Trash2, ChevronDown, ChevronUp, Download, Upload, Loader2, Lock, AlertCircle, ChevronRight, ExternalLink, Share2, Globe, Printer, Image as ImageIcon, RotateCcw } from 'lucide-react';
 import { getLogs, clearLogs } from '../../lib/logger.js';
 import { getSupabaseClient } from '../../lib/supabase';
+import { useSettings } from '../../context/SettingsContext.jsx';
+import { Device } from '@capacitor/device';
+import ConfirmDialog from '../ConfirmDialog.jsx';
+
+const DEPENDENCIES = [
+  { name: 'React',                      version: '^19.2.6',  license: 'MIT',        note: 'UI framework' },
+  { name: 'React DOM',                  version: '^19.2.6',  license: 'MIT',        note: 'DOM renderer' },
+  { name: 'Vite',                       version: '^8.0.12',  license: 'MIT',        note: 'Build tool & dev server' },
+  { name: '@vitejs/plugin-react',       version: '^6.0.1',   license: 'MIT',        note: 'React fast-refresh' },
+  { name: 'Tailwind CSS',               version: '^4.3.0',   license: 'MIT',        note: 'Utility-first CSS' },
+  { name: '@tailwindcss/vite',          version: '^4.3.0',   license: 'MIT',        note: 'Vite integration' },
+  { name: 'lucide-react',               version: '^1.17.0',  license: 'ISC',        note: 'Icon library' },
+  { name: 'JsBarcode',                  version: '^3.12.3',  license: 'MIT',        note: 'Barcode generation on Canvas' },
+  { name: '@radix-ui/react-dialog',     version: '^1.1.15',  license: 'MIT',        note: 'Accessible dialog primitive' },
+  { name: '@radix-ui/react-label',      version: '^2.1.8',   license: 'MIT',        note: 'Accessible label primitive' },
+  { name: '@radix-ui/react-select',     version: '^2.2.6',   license: 'MIT',        note: 'Accessible select primitive' },
+  { name: '@radix-ui/react-separator', version: '^1.1.8',   license: 'MIT',        note: 'Accessible separator primitive' },
+  { name: '@radix-ui/react-slider',     version: '^1.3.6',   license: 'MIT',        note: 'Accessible slider primitive' },
+  { name: '@radix-ui/react-switch',     version: '^1.2.6',   license: 'MIT',        note: 'Accessible switch primitive' },
+  { name: '@radix-ui/react-tabs',       version: '^1.1.13',  license: 'MIT',        note: 'Accessible tabs primitive' },
+  { name: 'class-variance-authority',   version: '^0.7.1',   license: 'Apache 2.0', note: 'Variant-based class utils' },
+  { name: 'clsx',                       version: '^2.1.1',   license: 'MIT',        note: 'Classname utility' },
+  { name: 'tailwind-merge',             version: '^3.6.0',   license: 'MIT',        note: 'Tailwind class dedup' },
+  { name: 'vite-plugin-pwa',            version: '^1.3.0',   license: 'MIT',        note: 'PWA / service worker' },
+  { name: 'ESLint',                     version: '^10.3.0',  license: 'MIT',        note: 'Linter (dev only)' },
+];
+
+const PLATFORM_APIS = [
+  { name: 'Canvas API',           note: 'Receipt image compositor' },
+  { name: 'MediaDevices / getUserMedia', note: 'Camera capture' },
+  { name: 'ESC/POS Protocol',     note: 'Thermal printer commands' },
+  { name: 'Web Serial / USB OTG', note: 'USB printer transport' },
+  { name: 'Service Worker',       note: 'Offline / PWA caching' },
+];
+
+const LICENSE_BADGE = {
+  MIT:         'bg-blue-500/15 text-blue-400',
+  ISC:         'bg-sky-500/15 text-sky-400',
+  'Apache 2.0':'bg-orange-500/15 text-orange-400',
+};
+
+const CHANGE_TYPE_COLORS = {
+  Added: 'bg-green-500/15 text-green-400',
+  Changed: 'bg-blue-500/15 text-blue-400',
+  Fixed: 'bg-yellow-500/15 text-yellow-400',
+  Security: 'bg-red-500/15 text-red-400',
+};
+
+function parseChangelog(markdown) {
+  const lines = markdown.split('\n');
+  const releases = [];
+  let currentRelease = null;
+  let currentSection = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Version header
+    if (line.startsWith('## [')) {
+      if (currentRelease) {
+        releases.push(currentRelease);
+      }
+      const versionMatch = line.match(/\[([^\]]+)\]/);
+      const dateMatch = line.match(/- (.+)$/);
+      currentRelease = {
+        version: versionMatch ? versionMatch[1] : 'Unknown',
+        date: dateMatch ? dateMatch[1].replace('{date}', new Date().toLocaleDateString()) : 'Unknown',
+        changes: []
+      };
+      currentSection = null;
+    }
+    // Section header
+    else if (line.startsWith('### ')) {
+      currentSection = line.substring(4);
+    }
+    // Change item
+    else if (line.startsWith('- ') && currentRelease) {
+      const text = line.substring(2);
+      const type = currentSection || 'Changed';
+      currentRelease.changes.push({ type, text });
+    }
+  }
+
+  if (currentRelease) {
+    releases.push(currentRelease);
+  }
+
+  return releases;
+}
 
 export default function AccountSettings() {
+  const { settings, updateSettings } = useSettings();
   const [pairingData, setPairingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState(null);
@@ -12,6 +102,23 @@ export default function AccountSettings() {
   const [showLogs, setShowLogs] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
   const [retrieving, setRetrieving] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
+  const [showSecurity, setShowSecurity] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [changelogExpanded, setChangelogExpanded] = useState(false);
+  const [deviceInfo, setDeviceInfo] = useState(null);
+  const [webApisExpanded, setWebApisExpanded] = useState(false);
+  const [dependenciesExpanded, setDependenciesExpanded] = useState(false);
+  const [changelogData, setChangelogData] = useState([]);
+  const [localAnalytics, setLocalAnalytics] = useState({ printCount: 0, imageUploads: 0, sessions: 0 });
+
+  // Security state
+  const currentPin = settings.general.settingsPin || '0000';
+  const [currentInput, setCurrentInput] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
+  const [pinStatus, setPinStatus] = useState(null);
+  const [pinStatusMsg, setPinStatusMsg] = useState('');
 
   useEffect(() => {
     loadPairingData();
@@ -25,6 +132,53 @@ export default function AccountSettings() {
       setLogs(getLogs());
     }, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Load device info
+  useEffect(() => {
+    async function loadDeviceInfo() {
+      try {
+        const [id, info, battery] = await Promise.all([
+          Device.getId(),
+          Device.getInfo(),
+          Device.getBatteryInfo(),
+        ]);
+        setDeviceInfo({ ...id, ...info, ...battery });
+      } catch (err) {
+        console.error('Failed to get device info:', err);
+      }
+    }
+    loadDeviceInfo();
+  }, []);
+
+  // Load changelog
+  useEffect(() => {
+    async function loadChangelog() {
+      try {
+        const response = await fetch('/CHANGELOG.md');
+        const markdown = await response.text();
+        const parsed = parseChangelog(markdown);
+        setChangelogData(parsed);
+      } catch (err) {
+        console.error('Failed to load changelog:', err);
+      }
+    }
+    loadChangelog();
+  }, []);
+
+  // Load local analytics
+  useEffect(() => {
+    async function loadLocalAnalytics() {
+      try {
+        const { value } = await Preferences.get({ key: 'snaproll_local_analytics' });
+        if (value) {
+          setLocalAnalytics(JSON.parse(value));
+        }
+      } catch (err) {
+        console.error('Failed to load local analytics:', err);
+      }
+    }
+    loadLocalAnalytics();
   }, []);
 
   async function loadPairingData() {
@@ -81,6 +235,10 @@ export default function AccountSettings() {
     }
   }
 
+  function showConfirm(title, description, onConfirm) {
+    setConfirmDialog({ open: true, title, description, onConfirm });
+  }
+
   function handlePair() {
     // Trigger pairing modal - this will be handled by the parent component
     // For now, we'll dispatch a custom event
@@ -89,7 +247,11 @@ export default function AccountSettings() {
 
   async function handleBackup() {
     if (!pairingData) {
-      alert('Please pair your device first to backup settings to cloud');
+      showConfirm(
+        'Not Paired',
+        'Please pair your device first to backup settings to cloud.',
+        () => {}
+      );
       return;
     }
 
@@ -130,10 +292,18 @@ export default function AccountSettings() {
       if (error) throw error;
 
       console.log('Settings backed up to cloud successfully');
-      alert('Settings backed up to cloud successfully');
+      showConfirm(
+        'Backup Successful',
+        'Settings have been backed up to cloud successfully.',
+        () => {}
+      );
     } catch (err) {
       console.error('Failed to backup settings:', err);
-      alert('Failed to backup settings: ' + err.message);
+      showConfirm(
+        'Backup Failed',
+        'Failed to backup settings: ' + err.message,
+        () => {}
+      );
     } finally {
       setBackingUp(false);
     }
@@ -141,7 +311,11 @@ export default function AccountSettings() {
 
   async function handleRetrieve() {
     if (!pairingData) {
-      alert('Please pair your device first to retrieve settings from cloud');
+      showConfirm(
+        'Not Paired',
+        'Please pair your device first to retrieve settings from cloud.',
+        () => {}
+      );
       return;
     }
 
@@ -162,7 +336,11 @@ export default function AccountSettings() {
       if (error) throw error;
 
       if (!data || !data.settings) {
-        alert('No backup found for this device');
+        showConfirm(
+          'No Backup Found',
+          'No backup found for this device.',
+          () => {}
+        );
         return;
       }
 
@@ -172,16 +350,85 @@ export default function AccountSettings() {
       }
 
       console.log('Settings retrieved from cloud successfully');
-      alert('Settings retrieved from cloud successfully. Reloading...');
+      showConfirm(
+        'Retrieve Successful',
+        'Settings retrieved from cloud successfully. Reloading...',
+        () => {
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      );
       
       // Reload the page to apply changes
-      setTimeout(() => window.location.reload(), 1000);
+      // setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
       console.error('Failed to retrieve settings:', err);
-      alert('Failed to retrieve settings: ' + err.message);
+      showConfirm(
+        'Retrieve Failed',
+        'Failed to retrieve settings: ' + err.message,
+        () => {}
+      );
     } finally {
       setRetrieving(false);
     }
+  }
+
+  function handlePinChange() {
+    setPinStatus(null);
+
+    if (currentInput !== currentPin) {
+      setPinStatus('error');
+      setPinStatusMsg('Current PIN is incorrect');
+      return;
+    }
+
+    if (!/^\d{4}$/.test(newPin)) {
+      setPinStatus('error');
+      setPinStatusMsg('New PIN must be exactly 4 digits');
+      return;
+    }
+
+    if (newPin !== confirmPin) {
+      setPinStatus('error');
+      setPinStatusMsg('New PINs do not match');
+      return;
+    }
+
+    updateSettings('general.settingsPin', newPin);
+    setPinStatus('success');
+    setPinStatusMsg('PIN changed successfully');
+    setCurrentInput('');
+    setNewPin('');
+    setConfirmPin('');
+  }
+
+  async function handleIncrementPrintCount() {
+    const newAnalytics = { ...localAnalytics, printCount: localAnalytics.printCount + 1 };
+    setLocalAnalytics(newAnalytics);
+    await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(newAnalytics) });
+  }
+
+  async function handleIncrementImageUploads() {
+    const newAnalytics = { ...localAnalytics, imageUploads: localAnalytics.imageUploads + 1 };
+    setLocalAnalytics(newAnalytics);
+    await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(newAnalytics) });
+  }
+
+  async function handleIncrementSessions() {
+    const newAnalytics = { ...localAnalytics, sessions: localAnalytics.sessions + 1 };
+    setLocalAnalytics(newAnalytics);
+    await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(newAnalytics) });
+  }
+
+  async function handleResetAnalytics() {
+    showConfirm(
+      'Reset Analytics',
+      'Reset all local analytics to zero?',
+      async () => {
+        const newAnalytics = { printCount: 0, imageUploads: 0, sessions: 0 };
+        setLocalAnalytics(newAnalytics);
+        await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(newAnalytics) });
+      }
+    );
   }
 
   if (loading) {
@@ -288,6 +535,39 @@ export default function AccountSettings() {
         </div>
       </div>
 
+      {/* Local Analytics Card */}
+      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
+        <div className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant flex items-center justify-between">
+          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Local Analytics</span>
+          <button
+            onClick={handleResetAnalytics}
+            className="flex items-center gap-1 text-xs text-md-primary hover:bg-md-primary-container rounded-md px-2 py-1 transition-colors"
+          >
+            <RotateCcw size={12} />
+            Reset
+          </button>
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-md-surface-container-high rounded-xl p-4 text-center">
+              <Printer size={20} className="mx-auto mb-2 text-md-primary" />
+              <p className="text-2xl font-bold text-md-on-surface">{localAnalytics.printCount}</p>
+              <p className="text-xs text-md-on-surface-variant">Prints</p>
+            </div>
+            <div className="bg-md-surface-container-high rounded-xl p-4 text-center">
+              <ImageIcon size={20} className="mx-auto mb-2 text-md-primary" />
+              <p className="text-2xl font-bold text-md-on-surface">{localAnalytics.imageUploads}</p>
+              <p className="text-xs text-md-on-surface-variant">Uploads</p>
+            </div>
+            <div className="bg-md-surface-container-high rounded-xl p-4 text-center">
+              <User size={20} className="mx-auto mb-2 text-md-primary" />
+              <p className="text-2xl font-bold text-md-on-surface">{localAnalytics.sessions}</p>
+              <p className="text-xs text-md-on-surface-variant">Sessions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Info Card */}
       <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
         <div className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant">
@@ -303,6 +583,286 @@ export default function AccountSettings() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Security Card */}
+      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
+        <div 
+          className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant flex items-center justify-between cursor-pointer"
+          onClick={() => setShowSecurity(!showSecurity)}
+        >
+          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Security</span>
+          {showSecurity ? <ChevronUp size={16} className="text-md-outline" /> : <ChevronDown size={16} className="text-md-outline" />}
+        </div>
+        {showSecurity && (
+          <div className="p-4 space-y-5">
+            {/* Current PIN */}
+            <div>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Current PIN</label>
+              <input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={4}
+                value={currentInput}
+                onChange={e => setCurrentInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary tracking-[0.5em] font-mono"
+                placeholder="••••"
+              />
+            </div>
+
+            {/* New PIN */}
+            <div>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">New PIN</label>
+              <input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={4}
+                value={newPin}
+                onChange={e => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary tracking-[0.5em] font-mono"
+                placeholder="••••"
+              />
+            </div>
+
+            {/* Confirm New PIN */}
+            <div>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Confirm New PIN</label>
+              <input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={4}
+                value={confirmPin}
+                onChange={e => setConfirmPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary tracking-[0.5em] font-mono"
+                placeholder="••••"
+              />
+            </div>
+
+            {/* Status */}
+            {pinStatus && (
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm ${
+                pinStatus === 'success'
+                  ? 'bg-green-500/10 text-green-400'
+                  : 'bg-red-500/10 text-red-400'
+              }`}>
+                {pinStatus === 'success' ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
+                {pinStatusMsg}
+              </div>
+            )}
+
+            {/* Save */}
+            <button
+              onClick={handlePinChange}
+              className="w-full flex items-center justify-center gap-2 bg-md-primary text-md-on-primary rounded-xl py-3 text-sm font-medium hover:brightness-110 active:scale-[0.98] transition-all"
+            >
+              <Lock size={14} /> Change PIN
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* About Card */}
+      <div className="rounded-2xl border border-md-outline-variant bg-md-surface-container overflow-hidden">
+        <div 
+          className="px-4 py-3 bg-md-surface-container-high border-b border-md-outline-variant flex items-center justify-between cursor-pointer"
+          onClick={() => setShowAbout(!showAbout)}
+        >
+          <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">About</span>
+          {showAbout ? <ChevronUp size={16} className="text-md-outline" /> : <ChevronDown size={16} className="text-md-outline" />}
+        </div>
+        {showAbout && (
+          <div className="p-4 space-y-4">
+            {/* About Mono Studio */}
+            <div className="rounded-[20px] bg-md-primary-container px-5 py-5 space-y-1">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-md-on-primary-container">MONO BOOTH PH</h2>
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-md-on-primary-container/10 text-md-on-primary-container/70">
+                  v0.1.0-mvp
+                </span>
+              </div>
+              <p className="text-sm text-md-on-primary-container/80">
+                Receipt Photobooth — print memories, one strip at a time.
+              </p>
+              <p className="text-xs text-md-on-primary-container/60 leading-relaxed pt-1">
+                No proof without @monoboothph — show 'em the receipts! 🧾✨
+              </p>
+              <p className="text-xs text-md-on-primary-container/60 leading-relaxed">
+                📍 Kabankalan City & Beyond
+              </p>
+            </div>
+
+            {/* Developer */}
+            <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
+              <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Developer</p>
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-md-secondary-container flex items-center justify-center text-md-on-secondary-container font-semibold text-base select-none">
+                  JP
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-md-on-surface">Jubet M. Padilla</div>
+                  <div className="text-xs text-md-on-surface-variant">Designer &amp; Developer</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Connect */}
+            <div className="rounded-[16px] bg-md-surface-container p-4 space-y-3">
+              <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Connect</p>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="https://instagram.com/monoboothph"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-md-surface-container-high hover:bg-md-surface-container-highest transition-colors"
+                >
+                  <Share2 size={18} className="text-md-on-surface" />
+                  <span className="text-sm text-md-on-surface">@monoboothph</span>
+                  <ExternalLink size={12} className="text-md-outline ml-auto" />
+                </a>
+                <a
+                  href="https://facebook.com/monoboothph"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-md-surface-container-high hover:bg-md-surface-container-highest transition-colors"
+                >
+                  <Globe size={18} className="text-md-on-surface" />
+                  <span className="text-sm text-md-on-surface">MONO BOOTH PH</span>
+                  <ExternalLink size={12} className="text-md-outline ml-auto" />
+                </a>
+              </div>
+            </div>
+
+            {/* Changelog */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setChangelogExpanded(!changelogExpanded)}
+                className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+              >
+                <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Changelog</p>
+                {changelogExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+              </button>
+              {changelogExpanded && (
+                <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+                  {changelogData.map((release) => (
+                    <div key={release.version} className="bg-md-surface-container p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-md-on-surface">{release.version}</span>
+                        <span className="text-xs text-md-on-surface-variant">{release.date}</span>
+                      </div>
+                      <div className="space-y-2">
+                        {release.changes.map((change, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <span className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${CHANGE_TYPE_COLORS[change.type] ?? 'bg-md-surface-container-highest text-md-on-surface-variant'}`}>
+                              {change.type}
+                            </span>
+                            <span className="text-xs text-md-on-surface-variant leading-relaxed">{change.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Device Info */}
+            {deviceInfo && (
+              <div className="rounded-[16px] bg-md-surface-container p-4 space-y-2">
+                <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Device Info</p>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-md-on-surface-variant">Device ID</span>
+                    <span className="text-xs font-mono text-md-on-surface">{deviceInfo.identifier || 'N/A'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-md-on-surface-variant">Model</span>
+                    <span className="text-xs text-md-on-surface">{deviceInfo.model || 'N/A'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-md-on-surface-variant">Platform</span>
+                    <span className="text-xs text-md-on-surface">{deviceInfo.platform || 'N/A'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-md-on-surface-variant">OS Version</span>
+                    <span className="text-xs text-md-on-surface">{deviceInfo.osVersion || 'N/A'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-md-on-surface-variant">Manufacturer</span>
+                    <span className="text-xs text-md-on-surface">{deviceInfo.manufacturer || 'N/A'}</span>
+                  </div>
+                  {deviceInfo.batteryLevel !== undefined && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-md-on-surface-variant">Battery</span>
+                      <span className="text-xs text-md-on-surface">{Math.round(deviceInfo.batteryLevel * 100)}%</span>
+                    </div>
+                  )}
+                  {deviceInfo.isCharging !== undefined && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-md-on-surface-variant">Charging</span>
+                      <span className="text-xs text-md-on-surface">{deviceInfo.isCharging ? 'Yes' : 'No'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Web Platform APIs */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setWebApisExpanded(!webApisExpanded)}
+                className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+              >
+                <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Web Platform APIs</p>
+                {webApisExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+              </button>
+              {webApisExpanded && (
+                <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+                  {PLATFORM_APIS.map(a => (
+                    <div key={a.name} className="flex items-center justify-between px-4 py-3 bg-md-surface-container">
+                      <span className="text-sm text-md-on-surface font-medium">{a.name}</span>
+                      <span className="text-xs text-md-on-surface-variant ml-2 text-right">{a.note}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Open-source dependencies */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setDependenciesExpanded(!dependenciesExpanded)}
+                className="w-full flex items-center justify-between p-4 rounded-xl bg-md-surface-container border border-md-outline-variant hover:bg-md-surface-container-high transition-colors"
+              >
+                <p className="text-xs font-medium uppercase tracking-widest text-md-on-surface-variant">Open-Source Dependencies</p>
+                {dependenciesExpanded ? <ChevronDown className="w-4 h-4 text-md-on-surface-variant" /> : <ChevronRight className="w-4 h-4 text-md-on-surface-variant" />}
+              </button>
+              {dependenciesExpanded && (
+                <div className="rounded-xl overflow-hidden border border-md-outline-variant divide-y divide-md-outline-variant">
+                  {DEPENDENCIES.map(d => (
+                    <div key={d.name} className="flex items-start justify-between px-4 py-3 bg-md-surface-container gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm text-md-on-surface font-medium truncate">{d.name}</div>
+                        <div className="text-xs text-md-on-surface-variant">{d.version} · {d.note}</div>
+                      </div>
+                      <span className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${LICENSE_BADGE[d.license] ?? 'bg-md-surface-container-highest text-md-on-surface-variant'}`}>
+                        {d.license}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* App license */}
+            <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-md-surface-container border border-md-outline-variant">
+              <span className="text-xs text-md-on-surface-variant">This project</span>
+              <span className="text-xs font-semibold text-md-on-surface">Private / MVP — All rights reserved</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Debug Logs Card */}
@@ -340,6 +900,15 @@ export default function AccountSettings() {
           </div>
         )}
       </div>
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        onConfirm={() => {
+          if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+        }}
+      />
     </div>
   );
 }

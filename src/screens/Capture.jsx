@@ -105,6 +105,7 @@ const POSE_SUGGESTIONS = [
 
 export default function Capture({ templateKey, onComplete, onBack }) {
   const { settings } = useSettings();
+  const homeScreen = settings.homeScreen || {};
   const { camera, capture: capSettings } = settings;
   const isDark = settings.general.theme === 'dark';
 
@@ -284,9 +285,11 @@ export default function Capture({ templateKey, onComplete, onBack }) {
                   <div className="get-ready-text text-white font-black text-2xl drop-shadow-lg text-center">
                     {shotIndex === 0 ? 'Get Ready!' : `Shot ${shotIndex + 1}`}
                   </div>
-                  <div className="pose-text text-white font-bold text-3xl drop-shadow-lg animate-pulse text-center px-8">
-                    {POSE_SUGGESTIONS[poseIndex]}
-                  </div>
+                  {capSettings.poseSuggestionsEnabled && (
+                    <div className="pose-text text-white font-bold text-3xl drop-shadow-lg animate-pulse text-center px-8">
+                      {POSE_SUGGESTIONS[poseIndex]}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -294,9 +297,21 @@ export default function Capture({ templateKey, onComplete, onBack }) {
               {phase === 'cleaning' && (
                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-4 z-20 overlay-fade-in">
                   <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-                  <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6 transition-opacity duration-300">
-                    {RETAKE_MESSAGES[cleanMsgIndex]}
-                  </p>
+                  {homeScreen.title?.text && (
+                    <p className="text-white font-bold text-2xl drop-shadow-lg text-center px-6">
+                      {homeScreen.title.text}
+                    </p>
+                  )}
+                  {homeScreen.subtitle?.enabled && homeScreen.subtitle?.text && (
+                    <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6">
+                      {homeScreen.subtitle.text}
+                    </p>
+                  )}
+                  {capSettings.retakeMessagesEnabled && (
+                    <p className="text-white font-medium text-lg drop-shadow-lg text-center px-6 transition-opacity duration-300">
+                      {RETAKE_MESSAGES[cleanMsgIndex]}
+                    </p>
+                  )}
                 </div>
               )}
 

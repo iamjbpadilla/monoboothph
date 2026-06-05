@@ -3,7 +3,6 @@ import { Preferences } from '@capacitor/preferences';
 import { uploadPhotoToSupabase } from './usePhotoUpload.js';
 
 const PENDING_UPLOADS_KEY = 'pending_uploads';
-const MAX_STORAGE_MB = 10; // Capacitor Preferences limit
 const MAX_QUEUE_SIZE = 4; // Limit to ~3-4 images to stay under limit
 
 /**
@@ -63,7 +62,7 @@ async function savePendingUploads(uploads) {
 /**
  * Add a failed upload to the pending queue
  */
-export async function addPendingUpload(sessionId, imageDataUrl, error = null) {
+export async function addPendingUpload(sessionId, imageDataUrl, error = null, storageLimitMB = 100) {
   const uploads = await loadPendingUploads();
   
   // Check if already exists
@@ -77,7 +76,7 @@ export async function addPendingUpload(sessionId, imageDataUrl, error = null) {
   const newImageSize = getBase64SizeMB(imageDataUrl);
   const totalAfterAdd = currentUsage + newImageSize;
   
-  if (totalAfterAdd > MAX_STORAGE_MB) {
+  if (totalAfterAdd > storageLimitMB) {
     console.warn('[PendingUploads] Storage limit reached, cannot add upload');
     // Remove oldest upload if queue is full
     if (uploads.length > 0) {
@@ -170,7 +169,7 @@ export async function clearPendingUploads() {
 /**
  * React hook for managing pending uploads
  */
-export function usePendingUploads() {
+export function usePendingUploads(storageLimitMB = 100) {
   const [uploads, setUploads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [storageUsage, setStorageUsage] = useState(0);
@@ -184,9 +183,9 @@ export function usePendingUploads() {
   }, []);
 
   const add = useCallback(async (sessionId, imageDataUrl, error) => {
-    await addPendingUpload(sessionId, imageDataUrl, error);
+    await addPendingUpload(sessionId, imageDataUrl, error, storageLimitMB);
     await load();
-  }, [load]);
+  }, [load, storageLimitMB]);
 
   const remove = useCallback(async (sessionId) => {
     await removePendingUpload(sessionId);
@@ -218,7 +217,7 @@ export function usePendingUploads() {
     uploads,
     loading,
     storageUsage,
-    storageLimit: MAX_STORAGE_MB,
+    storageLimit: storageLimitMB,
     add,
     remove,
     retry,

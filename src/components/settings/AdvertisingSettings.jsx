@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import QRCode from 'qrcode';
 import StyledSelect from '../StyledSelect.jsx';
+import ConfirmDialog from '../ConfirmDialog.jsx';
 
 const BACKGROUND_STYLES = {
   'gradient-purple-pink': 'bg-gradient-to-br from-purple-600 to-pink-500',
@@ -35,6 +36,11 @@ export default function AdvertisingSettings() {
   const adConfig = general.advertising || {};
   const display = adConfig.display || {};
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
+
+  function showConfirm(title, description, onConfirm) {
+    setConfirmDialog({ open: true, title, description, onConfirm });
+  }
 
   // Full-screen image upload handler
   function handleFullScreenUpload(e) {
@@ -148,10 +154,14 @@ export default function AdvertisingSettings() {
                     <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-md-outline-variant">
                       <img src={img.value} alt={`Full ${idx + 1}`} className="w-full h-full object-cover" />
                       <button
-                        onClick={() => {
-                          const updated = adConfig.fullScreenImages.filter((_, i) => i !== idx);
-                          updateSettings('general.advertising.fullScreenImages', updated);
-                        }}
+                        onClick={() => showConfirm(
+                          'Remove Image',
+                          'Are you sure you want to remove this image?',
+                          () => {
+                            const updated = adConfig.fullScreenImages.filter((_, i) => i !== idx);
+                            updateSettings('general.advertising.fullScreenImages', updated);
+                          }
+                        )}
                         className="absolute top-1 right-1 p-1 rounded-full bg-md-error-container/80 text-md-on-error-container hover:bg-md-error-container transition-colors"
                       >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,10 +324,14 @@ export default function AdvertisingSettings() {
                 <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-md-outline-variant">
                   <img src={poster.value} alt={`Poster ${idx + 1}`} className="w-full h-full object-cover" />
                   <button
-                    onClick={() => {
-                      const updated = adConfig.posterWall.filter((_, i) => i !== idx);
-                      updateSettings('general.advertising.posterWall', updated);
-                    }}
+                    onClick={() => showConfirm(
+                      'Remove Poster',
+                      'Are you sure you want to remove this poster?',
+                      () => {
+                        const updated = adConfig.posterWall.filter((_, i) => i !== idx);
+                        updateSettings('general.advertising.posterWall', updated);
+                      }
+                    )}
                     className="absolute top-1 right-1 p-1 rounded-full bg-md-error-container/80 text-md-on-error-container hover:bg-md-error-container transition-colors"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -647,6 +661,17 @@ export default function AdvertisingSettings() {
           )}
         </div>
       </Section>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        onConfirm={() => {
+          if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+          setConfirmDialog({ ...confirmDialog, open: false });
+        }}
+      />
     </div>
   );
 }

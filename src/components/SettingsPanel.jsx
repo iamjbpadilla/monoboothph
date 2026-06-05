@@ -2,45 +2,34 @@ import { useState, useEffect } from 'react';
 import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User, Lock, Home, Share2, Aperture } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
-import GeneralSettings from './settings/GeneralSettings.jsx';
-import CameraSettings from './settings/CameraSettings.jsx';
 import PrinterSettings from './settings/PrinterSettings.jsx';
 import TemplateSettings from './settings/TemplateSettings.jsx';
-import AboutSettings from './settings/AboutSettings.jsx';
 import AdvertisingSettings from './settings/AdvertisingSettings.jsx';
 import AccountSettings from './settings/AccountSettings.jsx';
-import SecuritySettings from './settings/SecuritySettings.jsx';
 import PinChallenge from './settings/PinChallenge.jsx';
 import HomeScreenSettings from './settings/HomeScreenSettings.jsx';
 import SharingSettings from './settings/SharingSettings.jsx';
-import CaptureSettings from './settings/CaptureSettings.jsx';
+import PhotoSettings from './settings/PhotoSettings.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 
 const TABS = [
-  { key: 'homeScreen',   label: 'Home Screen',   icon: Home },
-  { key: 'general',      label: 'General',      icon: Sliders },
-  { key: 'camera',       label: 'Camera',       icon: Camera },
-  { key: 'capture',      label: 'Capture',      icon: Aperture },
+  { key: 'homeScreen',   label: 'Home',          icon: Home },
+  { key: 'photo',        label: 'Photo',         icon: Camera },
   { key: 'printer',      label: 'Printer',      icon: Printer },
   { key: 'templates',    label: 'Templates',    icon: Layout },
   { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
   { key: 'sharing',      label: 'Sharing',      icon: Share2 },
-  { key: 'security',     label: 'Security',     icon: Lock },
-  { key: 'about',        label: 'About',        icon: Info },
+  { key: 'account',      label: 'Account',      icon: User },
 ];
 
 const TAB_MAP = {
   homeScreen: HomeScreenSettings,
-  general: GeneralSettings,
+  photo: PhotoSettings,
   advertising: AdvertisingSettings,
-  camera: CameraSettings,
   printer: PrinterSettings,
   templates: TemplateSettings,
-  security: SecuritySettings,
   account: AccountSettings,
-  about: AboutSettings,
-  capture: CaptureSettings,
   sharing: SharingSettings,
 };
 

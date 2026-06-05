@@ -5,6 +5,8 @@ import { compositeReceipt, SLOT_RATIOS } from '../../lib/canvasCompositor.js';
 import { simulatePrint } from '../../lib/printerTransports/simulate.js';
 import { usbPrint } from '../../lib/printerTransports/usb.js';
 import { wifiPrint } from '../../lib/printerTransports/wifi.js';
+import { playTear } from '../../hooks/useSound.js';
+import ConfirmDialog from '../ConfirmDialog.jsx';
 
 const SHOT_COUNTS = { '1strip': 1, '2strip': 2, '3strip': 3, '4grid': 4, '2x3-landscape': 6, '2x3-portrait': 6 };
 
@@ -544,7 +546,26 @@ function TemplateBlockEditor() {
               </button>
             </div>
           </div>
-          <TextInput label="Format" value={blocks.datetime.format} onChange={v => upd('datetime', 'format', v)} placeholder="MMM DD, YYYY HH:mm" />
+          <div className="space-y-2">
+            <PresetSelector
+              label="Format Style"
+              value={blocks.datetime.format}
+              onChange={v => upd('datetime', 'format', v)}
+              presets={[
+                'MMM DD, YYYY HH:mm',
+                'MM/DD/YYYY HH:mm',
+                'DD/MM/YYYY HH:mm',
+                'YYYY-MM-DD HH:mm',
+                'MMM DD, YYYY',
+                'MM/DD/YYYY',
+                'DD/MM/YYYY',
+                'YYYY-MM-DD',
+                'HH:mm',
+                'h:mm A',
+              ]}
+            />
+            <TextInput label="Custom Format" value={blocks.datetime.format} onChange={v => upd('datetime', 'format', v)} placeholder="MMM DD, YYYY HH:mm" />
+          </div>
         </div>
 
         <div className="rounded-lg px-4 py-3 bg-md-surface-container border border-md-outline-variant">
@@ -582,7 +603,35 @@ function TemplateBlockEditor() {
               </button>
             </div>
           </div>
-          <TextInput label="Content" value={blocks.customText.content} onChange={v => upd('customText', 'content', v)} placeholder="#MONOSTUDIOPH" />
+          <div className="space-y-2">
+            <TextInput label="Content" value={blocks.customText.content} onChange={v => upd('customText', 'content', v)} placeholder="#MONOSTUDIOPH" />
+            <button
+              onClick={() => {
+                const randomMessages = [
+                  'No proof without @monoboothph',
+                  'Kabankalan City & Beyond',
+                  'Captured with love',
+                  'Memories made here',
+                  'Smile, you are beautiful',
+                  'Your moment, forever',
+                  'Life is beautiful',
+                  'Cherish this moment',
+                  'Making memories',
+                  'Picture perfect',
+                  'Snap & Roll',
+                  'Strike a pose',
+                  'Freeze the moment',
+                  'Say cheese!',
+                  'Captured in time',
+                ];
+                const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+                upd('customText', 'content', randomMessage);
+              }}
+              className="w-full px-3 py-2 rounded-lg bg-md-primary text-md-on-primary text-xs font-medium hover:brightness-110"
+            >
+              🎲 Random Message
+            </button>
+          </div>
         </div>
       </div>
 
@@ -658,7 +707,11 @@ function TemplateBlockEditor() {
                 🎲 Random Witty Items
               </button>
               <button
-                onClick={() => upd('receiptItems', 'items', [])}
+                onClick={() => showConfirm(
+                  'Clear All Items',
+                  'Are you sure you want to clear all receipt items?',
+                  () => upd('receiptItems', 'items', [])
+                )}
                 className="px-3 py-1.5 rounded-lg bg-md-error-container text-md-on-error-container text-xs font-medium hover:brightness-110"
               >
                 Clear All
@@ -786,6 +839,11 @@ export default function TemplateSettings() {
   const canvasMapRef = useRef({});
   const [printStates, setPrintStates] = useState({});
   const [printAllProgress, setPrintAllProgress] = useState(null); // null | { current, total }
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
+
+  function showConfirm(title, description, onConfirm) {
+    setConfirmDialog({ open: true, title, description, onConfirm });
+  }
 
   async function runPrint(dataUrl) {
     const { transport, wifiIp, wifiPort } = settings.printer;
@@ -800,6 +858,7 @@ export default function TemplateSettings() {
   async function printOne(templateKey) {
     const canvas = canvasMapRef.current[templateKey];
     if (!canvas) return;
+    playTear();
     setPrintStates(s => ({ ...s, [templateKey]: 'printing' }));
     try {
       const dataUrl = canvas.toDataURL('image/png');
@@ -852,7 +911,7 @@ export default function TemplateSettings() {
                 {printAllProgress.current}/{printAllProgress.total}
               </>
             ) : (
-              <><Printer size={13} /> Print All</>  
+              <><Printer size={13} /> Tear All</>  
             )}
           </button>
         </div>
@@ -884,13 +943,24 @@ export default function TemplateSettings() {
                   {pState === 'success'  && <CheckCircle size={13} />}
                   {pState === 'error'    && <XCircle size={13} />}
                   {pState === 'idle' && <Printer size={13} />}
-                  {pState === 'printing' ? 'Printing…' : pState === 'success' ? 'Done' : pState === 'error' ? 'Failed' : 'Print'}
+                  {pState === 'printing' ? 'Issuing…' : pState === 'success' ? 'Done' : pState === 'error' ? 'Failed' : 'Tear'}
                 </button>
               </div>
             );
           })}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        onConfirm={() => {
+          if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+          setConfirmDialog({ ...confirmDialog, open: false });
+        }}
+      />
     </div>
   );
 }

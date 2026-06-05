@@ -23,7 +23,7 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 17, // bumped from 16 for home screen/sharing settings
+  _version: 18, // bumped from 17: moved resolution/mirror to camera, removed flashEffect, added storageLimitMB, changed printer default to usb
   homeScreen: {
     background: {
       type: 'preset', // 'preset' | 'color' | 'gradient' | 'image' | 'video'
@@ -52,6 +52,7 @@ const DEFAULT_SETTINGS = {
       scale: 1.0,
       text: 'Tap to Start',
       imageBase64: null,
+      verticalOffset: 0, // Vertical position offset in pixels (0-100)
     },
     logo: {
       imageBase64: null,
@@ -63,8 +64,10 @@ const DEFAULT_SETTINGS = {
   sharing: {
     enabled: true, // Toggle to disable Supabase upload + QR
     fallbackMessage: 'Photo saved locally - will sync when online',
+    offlineFallbackEnabled: true, // Toggle to show offline fallback message
     autoRetry: true, // Auto-retry when internet returns
     maxRetries: 3, // Max retry attempts before giving up
+    storageLimitMB: 100, // Configurable storage limit for pending uploads
   },
   general: {
     boothName: 'MONO BOOTH PH',
@@ -108,7 +111,7 @@ const DEFAULT_SETTINGS = {
     mirror: true, // KEPT for backward compatibility
   },
   printer: {
-    transport: 'simulate',
+    transport: 'usb',
     wifiIp: '192.168.1.100',
     wifiPort: '9100',
     dpi: 203,
@@ -122,11 +125,8 @@ const DEFAULT_SETTINGS = {
   },
   capture: {
     countdownSeconds: 3,
-    flashEffect: true,
-    poseSuggestionsEnabled: true, // NEW
-    retakeMessagesEnabled: true, // NEW
-    mirror: true, // NEW (moved from camera)
-    resolution: 'fhd', // NEW (moved from camera)
+    poseSuggestionsEnabled: true,
+    retakeMessagesEnabled: true,
   },
   templates: {
     blocks: defaultBlocks(),
@@ -205,6 +205,37 @@ function migrateFromV16(saved) {
   return migrated;
 }
 
+// Migration from v17 to v18
+function migrateFromV17(saved) {
+  const migrated = { ...saved };
+  
+  // Move resolution and mirror from capture back to camera
+  if (migrated.capture.resolution && !migrated.camera.resolution) {
+    migrated.camera.resolution = migrated.capture.resolution;
+  }
+  if (migrated.capture.mirror !== undefined && migrated.camera.mirror === undefined) {
+    migrated.camera.mirror = migrated.capture.mirror;
+  }
+  
+  // Remove flashEffect from capture
+  if (migrated.capture.flashEffect !== undefined) {
+    delete migrated.capture.flashEffect;
+  }
+  
+  // Add storageLimitMB to sharing if not present
+  if (!migrated.sharing.storageLimitMB) {
+    migrated.sharing.storageLimitMB = 100;
+  }
+  
+  // Change printer transport from simulate to usb
+  if (migrated.printer.transport === 'simulate') {
+    migrated.printer.transport = 'usb';
+  }
+  
+  migrated._version = 18;
+  return migrated;
+}
+
 async function loadSettings() {
   try {
     const { value } = await Preferences.get({ key: 'snaproll_settings' });
@@ -215,6 +246,14 @@ async function loadSettings() {
     if (saved._version === 16) {
       console.log('[Settings] Migrating from v16 to v17...');
       saved = migrateFromV16(saved);
+      await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(saved) });
+      console.log('[Settings] Migration complete');
+    }
+    
+    // Migration from v17 to v18
+    if (saved._version === 17) {
+      console.log('[Settings] Migrating from v17 to v18...');
+      saved = migrateFromV17(saved);
       await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(saved) });
       console.log('[Settings] Migration complete');
     }
