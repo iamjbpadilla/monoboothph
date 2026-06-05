@@ -149,7 +149,7 @@ export default function Changelog() {
   function parseMarkdown(text) {
     const lines = text.split('\n');
     const result = [];
-    let inList = false;
+    let currentList = [];
     let currentSection = null;
 
     for (let i = 0; i < lines.length; i++) {
@@ -157,9 +157,9 @@ export default function Changelog() {
 
       // Version headers
       if (line.startsWith('## [')) {
-        if (inList) {
-          inList = false;
-          result.push({ type: 'listEnd' });
+        if (currentList.length > 0) {
+          result.push({ type: 'list', items: currentList });
+          currentList = [];
         }
         const version = line.match(/\[([^\]]+)\]/)?.[1] || 'Unknown';
         const date = line.match(/- (.+)$/)?.[1] || '';
@@ -170,9 +170,9 @@ export default function Changelog() {
 
       // Section headers
       if (line.startsWith('### ')) {
-        if (inList) {
-          inList = false;
-          result.push({ type: 'listEnd' });
+        if (currentList.length > 0) {
+          result.push({ type: 'list', items: currentList });
+          currentList = [];
         }
         const section = line.replace('### ', '');
         result.push({ type: 'section', section });
@@ -181,27 +181,24 @@ export default function Changelog() {
 
       // List items
       if (line.startsWith('- ')) {
-        if (!inList) {
-          inList = true;
-          result.push({ type: 'listStart' });
-        }
         const item = line.replace('- ', '');
-        result.push({ type: 'item', content: item });
+        currentList.push(item);
         continue;
       }
 
-      // Empty lines
+      // Empty lines - end current list
       if (line.trim() === '') {
-        if (inList) {
-          inList = false;
-          result.push({ type: 'listEnd' });
+        if (currentList.length > 0) {
+          result.push({ type: 'list', items: currentList });
+          currentList = [];
         }
         continue;
       }
     }
 
-    if (inList) {
-      result.push({ type: 'listEnd' });
+    // Flush remaining list
+    if (currentList.length > 0) {
+      result.push({ type: 'list', items: currentList });
     }
 
     return result;
@@ -244,12 +241,14 @@ export default function Changelog() {
                     {item.section}
                   </h3>
                 );
-              case 'listStart':
-                return <ul key={index} className="list-disc list-inside space-y-2 text-gray-700 ml-4">;
-              case 'listEnd':
-                return </ul>;
-              case 'item':
-                return <li key={index}>{item.content}</li>;
+              case 'list':
+                return (
+                  <ul key={index} className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                    {item.items.map((listItem, idx) => (
+                      <li key={idx}>{listItem}</li>
+                    ))}
+                  </ul>
+                );
               default:
                 return null;
             }
