@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import QRCode from 'qrcode';
 import StyledSelect from '../StyledSelect.jsx';
 import ConfirmDialog from '../ConfirmDialog.jsx';
+import { Play, X } from 'lucide-react';
 
 const BACKGROUND_STYLES = {
   'gradient-purple-pink': 'bg-gradient-to-br from-purple-600 to-pink-500',
@@ -37,6 +38,7 @@ export default function AdvertisingSettings() {
   const display = adConfig.display || {};
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', description: '', onConfirm: null });
+  const [showPreview, setShowPreview] = useState(false);
 
   function showConfirm(title, description, onConfirm) {
     setConfirmDialog({ open: true, title, description, onConfirm });
@@ -358,6 +360,14 @@ export default function AdvertisingSettings() {
               </p>
             )}
           </div>
+
+          <button
+            onClick={() => setShowPreview(true)}
+            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-md-primary text-md-on-primary rounded-xl text-sm font-medium hover:bg-md-primary-container transition-colors"
+          >
+            <Play size={16} />
+            Preview Ad Full Screen
+          </button>
         </div>
       </Section>
 
@@ -794,6 +804,190 @@ export default function AdvertisingSettings() {
           setConfirmDialog({ ...confirmDialog, open: false });
         }}
       />
+
+      {/* Ad Preview Modal */}
+      {showPreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative w-full h-full bg-black">
+            <button
+              onClick={() => setShowPreview(false)}
+              className="absolute top-4 right-4 z-20 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <X size={24} />
+            </button>
+            <AdvertisingPreview
+              adConfig={adConfig}
+              display={display}
+              adDuration={general.adDuration || 5}
+              onComplete={() => setShowPreview(false)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Preview component that reuses the ad logic
+function AdvertisingPreview({ adConfig, display, adDuration, onComplete }) {
+  const [timeLeft, setTimeLeft] = useState(adDuration === 0 ? null : adDuration);
+  const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(null);
+  const videoRef = useRef(null);
+  const completedRef = useRef(false);
+  const fullScreenIndexRef = useRef(0);
+  const useVideoLength = adDuration === 0;
+
+  useEffect(() => {
+    if (useVideoLength) return;
+    
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          onComplete();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [adDuration, onComplete, useVideoLength]);
+
+  const backgroundClass = BACKGROUND_STYLES[display.backgroundStyle] || BACKGROUND_STYLES['gradient-purple-pink'];
+  const title = adConfig.title || 'MONO BOOTH PH';
+  const subtitle = adConfig.subtitle || 'Capture Your Best Moments';
+  const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';
+  const fsImages = adConfig.fullScreenImages || [];
+  const fsVideos = adConfig.fullScreenVideos || [];
+
+  // Prioritize video over image if both are enabled
+  if (adConfig.showFullScreenVideo && fsVideos.length > 0 && !videoError) {
+    const idx = fullScreenIndexRef.current % fsVideos.length;
+    fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsVideos.length;
+    
+    return (
+      <div className="w-full h-full relative bg-black">
+        <video
+          ref={videoRef}
+          src={fsVideos[idx].value}
+          preload="auto"
+          autoPlay
+          muted
+          loop={false}
+          playsInline
+          controls={false}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+          onError={() => {
+            console.warn('[AdPreview] Video failed to load, falling back');
+            setVideoError(true);
+          }}
+          onCanPlay={() => {
+            setVideoReady(true);
+            if (videoRef.current && videoRef.current.duration) {
+              setVideoDuration(videoRef.current.duration);
+            }
+            if (videoRef.current) {
+              videoRef.current.play().catch(err => console.warn('[AdPreview] Auto-play failed:', err));
+            }
+          }}
+          onLoadedData={() => setVideoReady(true)}
+          onPlay={() => {
+            completedRef.current = false;
+          }}
+          onEnded={() => {
+            if (useVideoLength && !completedRef.current) {
+              completedRef.current = true;
+              onComplete();
+            }
+          }}
+        />
+        {!videoReady && (
+          <div className="absolute inset-0 bg-black z-10" />
+        )}
+        {!useVideoLength && (
+          <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-20">
+            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            <span className="text-sm font-semibold text-white">{timeLeft}s</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+  if (adConfig.showFullScreen && fsImages.length > 0) {
+    const idx = fullScreenIndexRef.current % fsImages.length;
+    fullScreenIndexRef.current = (fullScreenIndexRef.current + 1) % fsImages.length;
+    const mode = adConfig.fullScreenImageMode || 'scale';
+    const objFit = mode === 'fit' ? 'contain' : mode === 'stretch' ? 'fill' : 'cover';
+    return (
+      <div className="w-full h-full relative bg-black">
+        <img
+          src={fsImages[idx].value}
+          alt=""
+          className="w-full h-full"
+          style={{ objectFit: objFit }}
+        />
+        <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-sm font-semibold text-white">{timeLeft}s</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Default content preview
+  return (
+    <div className={`w-full h-full flex flex-col items-center justify-center p-8 ${backgroundClass}`}>
+      <div className="max-w-md w-full text-center space-y-6">
+        {display.showLogo && adConfig.logoImage ? (
+          <img src={adConfig.logoImage} alt="Logo" className="w-20 h-20 mx-auto rounded-full" />
+        ) : display.showLogo && adConfig.logoIcon && (
+          <div className="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center">
+            <span className="text-4xl">📷</span>
+          </div>
+        )}
+        
+        <h1 className="text-4xl font-bold text-white">{title}</h1>
+        <p className="text-xl text-white/90">{subtitle}</p>
+        <p className="text-sm text-white/80 leading-relaxed">{message}</p>
+
+        {display.showCarousel && adConfig.media && adConfig.media.length > 0 && (
+          <div className="w-full max-w-xs mx-auto">
+            {adConfig.media[0]?.type === 'image' ? (
+              <img 
+                src={adConfig.media[0].url} 
+                alt="Carousel" 
+                className="w-full h-48 object-cover rounded-2xl bg-white/20 backdrop-blur-sm"
+              />
+            ) : adConfig.media[0]?.type === 'video' ? (
+              <video 
+                src={adConfig.media[0].url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                className="w-full h-48 object-cover rounded-2xl bg-white/20 backdrop-blur-sm"
+              />
+            ) : null}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-white/70 tracking-widest uppercase">No proof without @monoboothph</p>
+          <p className="text-sm text-white/70">📍 Kabankalan City & Beyond</p>
+        </div>
+      </div>
+      
+      {!useVideoLength && (
+        <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-sm font-semibold text-white">{timeLeft}s</span>
+        </div>
+      )}
     </div>
   );
 }
