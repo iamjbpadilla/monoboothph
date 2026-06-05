@@ -59,6 +59,23 @@ export default function AdvertisingSettings() {
     });
   }
 
+  // Full-screen video upload handler
+  function handleFullScreenVideoUpload(e) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const currentCount = (adConfig.fullScreenVideos || []).length;
+    const remainingSlots = 10 - currentCount;
+    const filesToAdd = files.slice(0, remainingSlots);
+    filesToAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const newVideo = { type: 'upload', value: ev.target.result };
+        updateSettings('general.advertising.fullScreenVideos', [...(adConfig.fullScreenVideos || []), newVideo]);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   useEffect(() => {
     if (display.showQR && adConfig.facebookUsername) {
       const facebookUrl = `https://facebook.com/${adConfig.facebookUsername}`;
@@ -200,6 +217,101 @@ export default function AdvertisingSettings() {
         </div>
       </Section>
 
+      {/* ── Full Screen Video ── */}
+      <Section title="Full Screen Video">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant mb-3">
+            <svg className="w-4 h-4 text-md-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-xs text-md-on-surface-variant leading-relaxed">
+              For best experience, keep videos to 10 seconds or less. Longer videos may impact user experience.
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-medium text-md-on-surface-variant">Enable Full Screen Video</label>
+            <button
+              role="switch"
+              aria-checked={adConfig.showFullScreenVideo ?? false}
+              onClick={() => updateSettings('general.advertising.showFullScreenVideo', !(adConfig.showFullScreenVideo ?? false))}
+              className={`relative inline-flex flex-shrink-0 w-[52px] h-[32px] rounded-full transition-colors duration-200 ${
+                (adConfig.showFullScreenVideo ?? false)
+                  ? 'bg-md-primary'
+                  : 'bg-md-surface-container-highest ring-2 ring-inset ring-md-outline'
+              }`}
+            >
+              <span
+                className={`pointer-events-none absolute top-[4px] left-[4px] w-[24px] h-[24px] rounded-full shadow-md transition-all duration-200 ease-out ${
+                  (adConfig.showFullScreenVideo ?? false) ? 'translate-x-[20px] bg-md-on-primary' : 'translate-x-0 bg-md-on-surface-variant'
+                }`}
+              />
+            </button>
+          </div>
+
+          {adConfig.showFullScreenVideo && (
+            <>
+              {/* URL Input */}
+              <div>
+                <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Video URLs (one per line)</label>
+                <textarea
+                  value={(adConfig.fullScreenVideos || []).filter(p => p.type === 'url').map(p => p.value).join('\n')}
+                  onChange={e => {
+                    const urls = e.target.value.split('\n').filter(u => u.trim());
+                    const uploads = (adConfig.fullScreenVideos || []).filter(p => p.type === 'upload');
+                    const urlVideos = urls.slice(0, 10 - uploads.length).map(url => ({ type: 'url', value: url }));
+                    updateSettings('general.advertising.fullScreenVideos', [...uploads, ...urlVideos]);
+                  }}
+                  className="w-full bg-md-surface-container-high border border-md-outline-variant rounded-xl px-3 py-2.5 text-md-on-surface text-sm focus:outline-none focus:border-md-primary resize-none"
+                  rows={3}
+                  placeholder="https://example.com/video1.mp4&#10;https://example.com/video2.mp4"
+                />
+              </div>
+
+              {/* Upload Button */}
+              <div>
+                <label className="flex flex-col items-center gap-2 py-4 cursor-pointer rounded-xl border border-dashed border-md-outline-variant hover:border-md-outline hover:bg-md-surface-container-high transition-colors">
+                  <svg className="w-6 h-6 text-md-outline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-sm text-md-on-surface-variant">Upload videos</span>
+                  <input type="file" accept="video/*" multiple className="hidden" onChange={handleFullScreenVideoUpload} />
+                </label>
+              </div>
+
+              {/* Video Grid */}
+              {(adConfig.fullScreenVideos || []).length > 0 && (
+                <div className="grid grid-cols-5 gap-2">
+                  {(adConfig.fullScreenVideos || []).map((video, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-md-outline-variant bg-md-surface-container">
+                      <video src={video.value} className="w-full h-full object-cover" muted />
+                      <button
+                        onClick={() => showConfirm(
+                          'Remove Video',
+                          'Are you sure you want to remove this video?',
+                          () => {
+                            const updated = adConfig.fullScreenVideos.filter((_, i) => i !== idx);
+                            updateSettings('general.advertising.fullScreenVideos', updated);
+                          }
+                        )}
+                        className="absolute top-1 right-1 p-1 rounded-full bg-md-error-container/80 text-md-on-error-container hover:bg-md-error-container transition-colors"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                      <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/50 text-white text-[10px]">
+                        {video.type === 'url' ? 'URL' : 'Upload'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-xs text-md-on-surface-variant">{(adConfig.fullScreenVideos || []).length}/10 videos</p>
+            </>
+          )}
+        </div>
+      </Section>
+
       {/* ── Advertising Toggle ── */}
       <Section title="Advertising">
         <div className="space-y-3">
@@ -224,17 +336,27 @@ export default function AdvertisingSettings() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Advertising Duration (seconds)</label>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Advertising Duration</label>
             <StyledSelect
               value={general.adDuration ?? 5}
               onValueChange={v => updateSettings('general.adDuration', parseInt(v))}
               options={[
                 { value: 3, label: '3 seconds' },
                 { value: 5, label: '5 seconds' },
-                { value: 10, label: '10 seconds' }
+                { value: 8, label: '8 seconds' },
+                { value: 10, label: '10 seconds' },
+                { value: 15, label: '15 seconds' },
+                { value: 20, label: '20 seconds' },
+                { value: 30, label: '30 seconds' },
+                { value: 0, label: 'Use video length' }
               ]}
               placeholder="Select duration"
             />
+            {(general.adDuration ?? 5) === 0 && (
+              <p className="text-xs text-md-on-surface-variant mt-2">
+                When using video length, the ad will play for the full duration of the video. Recommended: keep videos under 10 seconds.
+              </p>
+            )}
           </div>
         </div>
       </Section>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import QRCode from 'qrcode';
 
@@ -17,13 +17,17 @@ const BACKGROUND_STYLES = {
 export default function Advertising({ onComplete }) {
   const { settings } = useSettings();
   const adConfig = settings.general.advertising || {};
-  const display = adConfig.display || {};
+  const display = adConfig.display || {}
   const adDuration = settings.general.adDuration || 5;
-  const [timeLeft, setTimeLeft] = useState(adDuration);
+  const useVideoLength = adDuration === 0;
+  const [timeLeft, setTimeLeft] = useState(useVideoLength ? null : adDuration);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const videoRef = useRef(null);
 
   useEffect(() => {
+    if (useVideoLength) return; // Don't use timer when using video length
+    
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -36,7 +40,7 @@ export default function Advertising({ onComplete }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [adDuration, onComplete]);
+  }, [adDuration, onComplete, useVideoLength]);
 
   useEffect(() => {
     if (display.showQR && adConfig.facebookUrl) {
@@ -63,7 +67,40 @@ export default function Advertising({ onComplete }) {
   const message = adConfig.message || 'Professional photobooth services for all your special occasions. Weddings, birthdays, corporate events, and more!';
 
   // ── Full Screen Image Mode ──
-  const fsImages = adConfig.fullScreenImages || [];
+  const fsImages = adConfig.fullScreenImages || []
+  const fsVideos = adConfig.fullScreenVideos || []
+  
+  // Prioritize video over image if both are enabled
+  if (adConfig.showFullScreenVideo && fsVideos.length > 0) {
+    const idx = fullScreenIndex % fsVideos.length;
+    fullScreenIndex = (fullScreenIndex + 1) % fsVideos.length;
+    
+    return (
+      <div className="w-full h-full relative bg-black page-content-enter">
+        <video
+          ref={videoRef}
+          src={fsVideos[idx].value}
+          autoPlay
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          onEnded={() => {
+            if (useVideoLength) {
+              onComplete();
+            }
+          }}
+        />
+        {/* Timer overlay - only show if not using video length */}
+        {!useVideoLength && (
+          <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
+            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            <span className="text-sm font-semibold text-white">{timeLeft}s</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+  
   if (adConfig.showFullScreen && fsImages.length > 0) {
     const idx = fullScreenIndex % fsImages.length;
     fullScreenIndex = (fullScreenIndex + 1) % fsImages.length;
@@ -88,13 +125,15 @@ export default function Advertising({ onComplete }) {
 
   return (
     <div className={`w-full h-full flex flex-col items-center justify-center ${backgroundClass} page-content-enter relative`}>
-      {/* Timer display */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
-        <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-        <span className="text-sm font-semibold text-white">
-          {timeLeft}s
-        </span>
-      </div>
+      {/* Timer display - only show if not using video length */}
+      {!useVideoLength && (
+        <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-sm font-semibold text-white">
+            {timeLeft}s
+          </span>
+        </div>
+      )}
 
       <div className="flex flex-col items-center gap-6 p-6 text-center max-w-md">
         {/* Logo/Icon - Material Design 8dp grid spacing */}
