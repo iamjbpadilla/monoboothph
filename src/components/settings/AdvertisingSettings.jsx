@@ -811,21 +811,19 @@ export default function AdvertisingSettings() {
 
       {/* Ad Preview Modal */}
       {showPreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="relative w-full h-full bg-black">
-            <button
-              onClick={() => setShowPreview(false)}
-              className="absolute top-4 right-4 z-20 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
-            >
-              <X size={24} />
-            </button>
-            <AdvertisingPreview
-              adConfig={adConfig}
-              display={display}
-              adDuration={general.adDuration || 5}
-              onComplete={() => setShowPreview(false)}
-            />
-          </div>
+        <div className="fixed inset-0 z-50 bg-black">
+          <button
+            onClick={() => setShowPreview(false)}
+            className="absolute top-4 right-4 z-20 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+          >
+            <X size={24} />
+          </button>
+          <AdvertisingPreview
+            adConfig={adConfig}
+            display={display}
+            adDuration={general.adDuration || 5}
+            onComplete={() => setShowPreview(false)}
+          />
         </div>
       )}
     </div>
