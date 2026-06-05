@@ -103,7 +103,7 @@ function drawDivider(ctx, x, y, width, { style = 'solid', thickness = 1, color =
   ctx.setLineDash([]);
 }
 
-async function renderBarcode(ctx, x, y, contentWidth, { value = 'SNAPROLL', type = 'CODE128', showText = true } = {}) {
+async function renderBarcode(ctx, x, y, contentWidth, { value = '', type = 'CODE128', showText = true } = {}) {
   try {
     const JsBarcode = (await import('jsbarcode')).default;
     const tmpCanvas = document.createElement('canvas');
@@ -266,7 +266,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           try {
             const JsBarcode = (await import('jsbarcode')).default;
             const tmp = document.createElement('canvas');
-            JsBarcode(tmp, blocks.barcode.value || 'SNAPROLL', {
+            const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
+            const barcodeValue = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
+            JsBarcode(tmp, blocks.barcode.value || barcodeValue, {
               format: blocks.barcode.type || 'CODE128',
               width: Math.max(2, Math.floor(contentWidth / 50)),
               height: 80,
