@@ -391,6 +391,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           } else {
             contentH += blocks.footer.fontSize;
           }
+          contentH += elGap; // Footer bottom spacing
         }
         break;
       }
@@ -672,7 +673,12 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       }
       case 'barcode': {
         if (!blocks.barcode.enabled) break;
-        const bh = await renderBarcode(ctx, x, y, contentWidth, blocks.barcode);
+        const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
+        const barcodeValue = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
+        const bh = await renderBarcode(ctx, x, y, contentWidth, {
+          ...blocks.barcode,
+          value: blocks.barcode.value || barcodeValue
+        });
         y += barcodeH(bh);
         y += elGap;
         break;
@@ -700,6 +706,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           });
           y += footerHeight;
         }
+        y += elGap; // Footer bottom spacing
         break;
       }
     }
