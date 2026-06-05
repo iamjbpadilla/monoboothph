@@ -79,6 +79,8 @@ export default function GeneralSettings() {
   const { general } = settings;
   const activePair = FONT_PAIRS.find(p => p.id === general.fontPair) ?? FONT_PAIRS[0];
 
+  // Logo upload - MOVED TO HOME SCREEN SETTINGS
+  /*
   function handleLogoUpload(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -89,7 +91,10 @@ export default function GeneralSettings() {
     };
     reader.readAsDataURL(file);
   }
+  */
 
+  // Background image upload - MOVED TO HOME SCREEN SETTINGS
+  /*
   function handleBackgroundImageUpload(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -99,6 +104,7 @@ export default function GeneralSettings() {
     };
     reader.readAsDataURL(file);
   }
+  */
 
   useEffect(() => {
     // Fonts are now loaded locally via @font-face in index.html
@@ -113,7 +119,8 @@ export default function GeneralSettings() {
           <span className="text-[10px] font-medium tracking-widest uppercase text-md-outline">Receipt Preview</span>
         </div>
         <div className="px-5 py-6 text-center">
-          {general.logoBase64 ? (
+          {/* Logo display - MOVED TO HOME SCREEN SETTINGS */}
+          {/* {general.logoBase64 ? (
             <img src={general.logoBase64} alt="Logo" className="h-10 mx-auto mb-3 object-contain" />
           ) : general.brandingIcon ? (
             (() => {
@@ -121,7 +128,7 @@ export default function GeneralSettings() {
               const IconComp = found?.Icon;
               return IconComp ? <IconComp size={40} className="mx-auto mb-3 text-md-primary" /> : null;
             })()
-          ) : null}
+          ) : null} */}
           <p
             className="text-xl font-bold text-md-on-surface"
             style={{ fontFamily: `'${activePair.heading}', sans-serif` }}
@@ -140,8 +147,8 @@ export default function GeneralSettings() {
         </div>
       </div>
 
-      {/* ── Identity ── */}
-      <Section title="Identity">
+      {/* ── Identity ── MOVED TO HOME SCREEN SETTINGS */}
+      {/* <Section title="Identity">
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-md-on-surface-variant mb-1.5">Title</label>
@@ -203,7 +210,7 @@ export default function GeneralSettings() {
             Generate Test Text
           </button>
         </div>
-      </Section>
+      </Section> */}
 
       {/* ── Appearance ── */}
       <Section title="Appearance">
@@ -268,8 +275,8 @@ export default function GeneralSettings() {
           </div>
         </div>
 
-        {/* Standby Background */}
-        <div>
+        {/* Standby Background - MOVED TO HOME SCREEN SETTINGS */}
+        {/* <div>
           <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Standby Background</label>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {Object.values(PAPERBACKGROUNDS).map((bg) => {
@@ -294,10 +301,10 @@ export default function GeneralSettings() {
               );
             })}
           </div>
-        </div>
+        </div> */}
 
-        {/* Background Image Upload */}
-        <div>
+        {/* Background Image Upload - MOVED TO HOME SCREEN SETTINGS */}
+        {/* <div>
           <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Custom Background Image</label>
           <div className="flex items-start gap-2 p-3 rounded-xl bg-md-surface-container-high border border-md-outline-variant mb-3">
             <Info size={16} className="text-md-primary mt-0.5 flex-shrink-0" />
@@ -335,7 +342,7 @@ export default function GeneralSettings() {
               </label>
             )}
           </div>
-        </div>
+        </div> */}
       </Section>
 
       {/* ── Typography ── */}

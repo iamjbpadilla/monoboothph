@@ -72,19 +72,19 @@ export default function CameraSettings() {
 
   // Restart stream when device or resolution changes
   useEffect(() => {
-    startStream(camera.deviceId, camera.resolution, camera.mirror);
+    startStream(camera.deviceId, settings.capture.resolution, settings.capture.mirror);
     return () => {
       streamRef.current?.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     };
-  }, [camera.deviceId, camera.resolution, startStream]);
+  }, [camera.deviceId, settings.capture.resolution, startStream]);
 
   // Mirror toggle without restarting
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.style.transform = camera.mirror ? 'scaleX(-1)' : 'none';
+      videoRef.current.style.transform = settings.capture.mirror ? 'scaleX(-1)' : 'none';
     }
-  }, [camera.mirror]);
+  }, [settings.capture.mirror]);
 
   return (
     <div className="space-y-4">
@@ -107,7 +107,7 @@ export default function CameraSettings() {
             <Camera size={32} className="text-red-400" />
             <p className="text-red-400 text-xs">{previewError}</p>
             <button
-              onClick={() => startStream(camera.deviceId, camera.resolution, camera.mirror)}
+              onClick={() => startStream(camera.deviceId, settings.capture.resolution, settings.capture.mirror)}
               className="mt-1 text-xs text-md-primary underline"
             >
               Retry
@@ -128,8 +128,8 @@ export default function CameraSettings() {
           <button
             onClick={() => {
               updateSettings('camera.deviceId', '');
-              updateSettings('camera.resolution', 'fhd');
-              updateSettings('camera.mirror', false);
+              updateSettings('capture.resolution', 'fhd');
+              updateSettings('capture.mirror', false);
             }}
             className="text-xs text-md-primary hover:text-md-on-primary transition-colors"
           >
@@ -147,8 +147,8 @@ export default function CameraSettings() {
         )}
       </div>
 
-      {/* Resolution */}
-      <div>
+      {/* Resolution - MOVED TO CAPTURE SETTINGS */}
+      {/* <div>
         <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Resolution</label>
         <div className="flex flex-col gap-2">
           {RESOLUTIONS.map(r => (
@@ -165,10 +165,10 @@ export default function CameraSettings() {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      {/* Mirror toggle */}
-      <div className="flex items-center justify-between py-4 px-4 rounded-xl bg-md-surface-container border border-md-outline-variant">
+      {/* Mirror toggle - MOVED TO CAPTURE SETTINGS */}
+      {/* <div className="flex items-center justify-between py-4 px-4 rounded-xl bg-md-surface-container border border-md-outline-variant">
         <div>
           <div className="text-sm font-medium text-md-on-surface">Mirror Preview</div>
           <div className="text-xs text-md-on-surface-variant">Horizontal flip for selfie camera</div>
@@ -189,10 +189,10 @@ export default function CameraSettings() {
             }`}
           />
         </button>
-      </div>
+      </div> */}
 
-      {/* Countdown Timer */}
-      <div className="space-y-3">
+      {/* Countdown Timer - MOVED TO CAPTURE SETTINGS */}
+      {/* <div className="space-y-3">
         <h3 className="text-sm font-semibold text-md-on-surface tracking-wide">Countdown Timer</h3>
         <div className="flex gap-3">
           {COUNTDOWN_OPTIONS.map(sec => {
@@ -212,7 +212,7 @@ export default function CameraSettings() {
             );
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

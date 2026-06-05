@@ -1,5 +1,7 @@
 import { Preferences } from '@capacitor/preferences';
 import { getSupabaseClient } from '../lib/supabase';
+import { addPendingUpload } from './usePendingUploads.js';
+import { logError } from './useLogCapture.js';
 
 /**
  * Upload photo to Supabase Storage and create database record
@@ -50,6 +52,7 @@ export async function uploadPhotoToSupabase(imageDataUrl, sessionId) {
         statusCode: uploadError.statusCode,
         error: uploadError.error
       });
+      logError('Storage upload failed', 'STORAGE_UPLOAD_ERROR', uploadError.message, { sessionId, statusCode: uploadError.statusCode });
       throw new Error(`Storage upload failed: ${uploadError.message}`);
     }
 
@@ -76,6 +79,7 @@ export async function uploadPhotoToSupabase(imageDataUrl, sessionId) {
         code: dbError.code,
         details: dbError.details
       });
+      logError('Database insert failed', 'DB_INSERT_ERROR', dbError.message, { sessionId, code: dbError.code });
       throw new Error(`Database insert failed: ${dbError.message}`);
     }
 
@@ -86,6 +90,13 @@ export async function uploadPhotoToSupabase(imageDataUrl, sessionId) {
       message: error.message,
       stack: error.stack
     });
+    
+    logError('Photo upload failed', 'UPLOAD_FATAL_ERROR', error.message, error.stack, { sessionId });
+    
+    // Save to pending queue on failure
+    console.log('[Photo Upload] Saving to pending queue...');
+    await addPendingUpload(sessionId, imageDataUrl, error);
+    
     throw error;
   }
 }

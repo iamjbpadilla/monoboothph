@@ -1,12 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { Preferences } from '@capacitor/preferences';
 import { getSupabaseClient } from '../lib/supabase';
+import { retryAllPendingUploads } from './usePendingUploads.js';
+import { logError, logWarn, logInfo } from './useLogCapture.js';
 
 export function useDeviceStatusSync() {
   const [isOnline, setIsOnline] = useState(false);
   const [deviceId, setDeviceId] = useState(null);
   const subscriptionRef = useRef(null);
   const deviceIdRef = useRef(null);
+  const wasOfflineRef = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -37,16 +40,34 @@ export function useDeviceStatusSync() {
               table: 'devices',
               filter: `id=eq.${pairing.deviceId}`
             },
-            (payload) => {
+            async (payload) => {
               if (!isMounted) return;
               const newStatus = payload.new.status;
-              setIsOnline(newStatus === 'online');
+              const nowOnline = newStatus === 'online';
+              setIsOnline(nowOnline);
               
               // If device was set to offline server-side, clear local pairing
               if (newStatus === 'offline') {
                 Preferences.remove({ key: 'snaproll_pairing' });
                 window.location.reload();
               }
+              
+              // Auto-retry pending uploads when coming online
+              if (nowOnline && wasOfflineRef.current) {
+                logInfo('Device came online, checking auto-retry');
+                console.log('[DeviceStatusSync] Device came online, checking auto-retry...');
+                const settingsValue = await Preferences.get({ key: 'snaproll_settings' });
+                if (settingsValue.value) {
+                  const settings = JSON.parse(settingsValue.value);
+                  if (settings.sharing?.autoRetry) {
+                    console.log('[DeviceStatusSync] Auto-retry enabled, retrying pending uploads...');
+                    const results = await retryAllPendingUploads();
+                    logInfo(`Auto-retry completed: ${results.length} uploads processed`, { results });
+                  }
+                }
+              }
+              
+              wasOfflineRef.current = !nowOnline;
             }
           )
           .subscribe();
@@ -63,10 +84,13 @@ export function useDeviceStatusSync() {
           .single();
 
         if (device && isMounted) {
-          setIsOnline(device.status === 'online');
+          const nowOnline = device.status === 'online';
+          setIsOnline(nowOnline);
+          wasOfflineRef.current = !nowOnline;
         }
       } catch (err) {
         console.error('Device status sync error:', err);
+        logError('Device status sync error', 'DEVICE_SYNC_ERROR', err.message, err.stack);
       }
     }
 

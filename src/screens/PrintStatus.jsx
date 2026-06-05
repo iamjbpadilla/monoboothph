@@ -61,7 +61,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
 
   // Upload photo to Supabase after print success
   useEffect(() => {
-    if (status === 'success' && sessionId && imageDataUrl) {
+    if (status === 'success' && sessionId && imageDataUrl && settings.sharing.enabled) {
       uploadPhotoToSupabase(imageDataUrl, sessionId).catch(err => {
         console.error('Photo upload failed:', err);
       });
@@ -82,7 +82,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
         }
       })();
     }
-  }, [status, sessionId, imageDataUrl]);
+  }, [status, sessionId, imageDataUrl, settings.sharing.enabled]);
 
   // Auto-return home 10 seconds after success
   useEffect(() => {
@@ -166,13 +166,23 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
         )}
       </div>
 
-      {/* QR code — success only */}
+      {/* QR code or fallback message — success only */}
       {status === 'success' && sessionId && (
         <div className="flex flex-col items-center gap-2">
-          <div className="rounded-2xl overflow-hidden shadow-md border border-md-outline-variant p-1 bg-white">
-            <ReceiptQR size={200} sessionId={sessionId} />
-          </div>
-          <p className="text-[10px] text-md-outline tracking-widest uppercase">Scan for digital copy</p>
+          {settings.sharing.enabled ? (
+            <>
+              <div className="rounded-2xl overflow-hidden shadow-md border border-md-outline-variant p-1 bg-white">
+                <ReceiptQR size={200} sessionId={sessionId} />
+              </div>
+              <p className="text-[10px] text-md-outline tracking-widest uppercase">Scan for digital copy</p>
+            </>
+          ) : (
+            <div className="px-6 py-4 bg-md-surface-container rounded-2xl border border-md-outline-variant">
+              <p className="text-sm text-md-on-surface text-center">
+                {settings.sharing.fallbackMessage || 'Photo saved locally - will sync when online'}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

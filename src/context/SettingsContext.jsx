@@ -23,7 +23,49 @@ function defaultBlocks() {
 }
 
 const DEFAULT_SETTINGS = {
-  _version: 16, // bump to force preferences refresh when defaults change
+  _version: 17, // bumped from 16 for home screen/sharing settings
+  homeScreen: {
+    background: {
+      type: 'preset', // 'preset' | 'color' | 'gradient' | 'image' | 'video'
+      presetId: 'plain',
+      color: '#ffffff',
+      gradientId: 'gradient-purple-pink',
+      imageBase64: null,
+      videoBase64: null,
+    },
+    title: {
+      enabled: true,
+      text: 'MONO BOOTH PH',
+      font: 'Inter',
+      size: 56,
+      color: '#000000',
+    },
+    subtitle: {
+      enabled: true,
+      text: 'Receipt Photobooth',
+      font: 'Inter',
+      size: 24,
+      color: '#666666',
+    },
+    button: {
+      shape: 'pill', // 'pill' | 'rectangle' | 'square'
+      scale: 1.0,
+      text: 'Tap to Start',
+      imageBase64: null,
+    },
+    logo: {
+      imageBase64: null,
+      scale: 1.0,
+      iconKey: null,
+    },
+    presets: [], // Array of { id, name, config, createdAt }
+  },
+  sharing: {
+    enabled: true, // Toggle to disable Supabase upload + QR
+    fallbackMessage: 'Photo saved locally - will sync when online',
+    autoRetry: true, // Auto-retry when internet returns
+    maxRetries: 3, // Max retry attempts before giving up
+  },
   general: {
     boothName: 'MONO BOOTH PH',
     eventName: 'Receipt Photobooth',
@@ -33,8 +75,8 @@ const DEFAULT_SETTINGS = {
     accent: 'purple',
     fontPair: 'modern',
     brandingIcon: null,
-    standbyBackground: 'plain',
-    backgroundImage: null, // Custom background image for standby screen
+    standbyBackground: 'plain', // KEPT for backward compatibility
+    backgroundImage: null, // KEPT for backward compatibility
     showAdvertising: true,
     adDuration: 5,
     advertising: {
@@ -62,8 +104,8 @@ const DEFAULT_SETTINGS = {
   },
   camera: {
     deviceId: '',
-    resolution: 'fhd',
-    mirror: true,
+    resolution: 'fhd', // KEPT for backward compatibility
+    mirror: true, // KEPT for backward compatibility
   },
   printer: {
     transport: 'simulate',
@@ -81,24 +123,112 @@ const DEFAULT_SETTINGS = {
   capture: {
     countdownSeconds: 3,
     flashEffect: true,
+    poseSuggestionsEnabled: true, // NEW
+    retakeMessagesEnabled: true, // NEW
+    mirror: true, // NEW (moved from camera)
+    resolution: 'fhd', // NEW (moved from camera)
   },
   templates: {
     blocks: defaultBlocks(),
   },
 };
 
+// Migration from v16 to v17
+function migrateFromV16(saved) {
+  const migrated = { ...saved };
+  
+  // Migrate home screen fields from general
+  if (!migrated.homeScreen) {
+    migrated.homeScreen = {
+      background: {
+        type: saved.general.backgroundImage ? 'image' : 'preset',
+        presetId: saved.general.standbyBackground || 'plain',
+        imageBase64: saved.general.backgroundImage || null,
+        color: '#ffffff',
+        gradientId: 'gradient-purple-pink',
+        videoBase64: null,
+      },
+      title: {
+        enabled: true,
+        text: saved.general.boothName || 'MONO BOOTH PH',
+        font: 'Inter',
+        size: 56,
+        color: '#000000',
+      },
+      subtitle: {
+        enabled: !!saved.general.eventName,
+        text: saved.general.eventName || '',
+        font: 'Inter',
+        size: 24,
+        color: '#666666',
+      },
+      button: {
+        shape: 'pill',
+        scale: 1.0,
+        text: 'Tap to Start',
+        imageBase64: null,
+      },
+      logo: {
+        imageBase64: saved.general.logoBase64 || null,
+        scale: saved.general.logoScale || 1.0,
+        iconKey: saved.general.brandingIcon || null,
+      },
+      presets: [],
+    };
+  }
+  
+  // Migrate capture fields from camera
+  if (!migrated.capture.poseSuggestionsEnabled) {
+    migrated.capture.poseSuggestionsEnabled = true;
+  }
+  if (!migrated.capture.retakeMessagesEnabled) {
+    migrated.capture.retakeMessagesEnabled = true;
+  }
+  if (migrated.camera.resolution && !migrated.capture.resolution) {
+    migrated.capture.resolution = migrated.camera.resolution;
+  }
+  if (migrated.camera.mirror !== undefined && migrated.capture.mirror === undefined) {
+    migrated.capture.mirror = migrated.camera.mirror;
+  }
+  
+  // Add sharing section if not present
+  if (!migrated.sharing) {
+    migrated.sharing = {
+      enabled: true,
+      fallbackMessage: 'Photo saved locally - will sync when online',
+      autoRetry: true,
+      maxRetries: 3,
+    };
+  }
+  
+  migrated._version = 17;
+  return migrated;
+}
+
 async function loadSettings() {
   try {
     const { value } = await Preferences.get({ key: 'snaproll_settings' });
     if (!value) return DEFAULT_SETTINGS;
-    const saved = JSON.parse(value);
+    let saved = JSON.parse(value);
+    
+    // Migration from v16 to v17
+    if (saved._version === 16) {
+      console.log('[Settings] Migrating from v16 to v17...');
+      saved = migrateFromV16(saved);
+      await Preferences.set({ key: 'snaproll_settings', value: JSON.stringify(saved) });
+      console.log('[Settings] Migration complete');
+    }
+    
     // Version mismatch → wipe and use fresh defaults
     if (saved._version !== DEFAULT_SETTINGS._version) {
+      console.warn('[Settings] Version mismatch, resetting to defaults');
       await Preferences.remove({ key: 'snaproll_settings' });
       return DEFAULT_SETTINGS;
     }
+    
     return deepMerge(DEFAULT_SETTINGS, saved);
-  } catch {
+  } catch (err) {
+    console.error('[Settings] Error loading settings:', err);
     return DEFAULT_SETTINGS;
   }
 }

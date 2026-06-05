@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User, Lock } from 'lucide-react';
+import { Settings, X, Camera, Printer, Layout, Sliders, RotateCcw, Info, Save, Megaphone, User, Lock, Home, Share2, Aperture } from 'lucide-react';
 import { useSnackbar } from '../context/SnackbarContext.jsx';
 import { playClick } from '../hooks/useSound.js';
 import GeneralSettings from './settings/GeneralSettings.jsx';
@@ -11,29 +11,42 @@ import AdvertisingSettings from './settings/AdvertisingSettings.jsx';
 import AccountSettings from './settings/AccountSettings.jsx';
 import SecuritySettings from './settings/SecuritySettings.jsx';
 import PinChallenge from './settings/PinChallenge.jsx';
+import HomeScreenSettings from './settings/HomeScreenSettings.jsx';
+import SharingSettings from './settings/SharingSettings.jsx';
+import CaptureSettings from './settings/CaptureSettings.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 
 const TABS = [
+  { key: 'homeScreen',   label: 'Home Screen',   icon: Home },
   { key: 'general',      label: 'General',      icon: Sliders },
-  { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
-  { key: 'templates',    label: 'Templates',    icon: Layout },
   { key: 'camera',       label: 'Camera',       icon: Camera },
+  { key: 'capture',      label: 'Capture',      icon: Aperture },
   { key: 'printer',      label: 'Printer',      icon: Printer },
+  { key: 'templates',    label: 'Templates',    icon: Layout },
+  { key: 'advertising',  label: 'Advertising',  icon: Megaphone },
+  { key: 'sharing',      label: 'Sharing',      icon: Share2 },
   { key: 'security',     label: 'Security',     icon: Lock },
-  { key: 'account',      label: 'Account',      icon: User },
   { key: 'about',        label: 'About',        icon: Info },
 ];
 
 const TAB_MAP = {
-  general: GeneralSettings, advertising: AdvertisingSettings, camera: CameraSettings,
-  printer: PrinterSettings, templates: TemplateSettings, security: SecuritySettings,
-  account: AccountSettings, about: AboutSettings,
+  homeScreen: HomeScreenSettings,
+  general: GeneralSettings,
+  advertising: AdvertisingSettings,
+  camera: CameraSettings,
+  printer: PrinterSettings,
+  templates: TemplateSettings,
+  security: SecuritySettings,
+  account: AccountSettings,
+  about: AboutSettings,
+  capture: CaptureSettings,
+  sharing: SharingSettings,
 };
 
 export default function SettingsPanel({ currentScreen = 'standby' }) {
   const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('homeScreen');
   const [pendingClose, setPendingClose] = useState(false);
   const [closing, setClosing] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -129,7 +142,7 @@ export default function SettingsPanel({ currentScreen = 'standby' }) {
             </button>
 
             <div className="flex-1 text-center">
-              <h1 className="text-[22px] leading-7 font-normal text-md-on-surface">Admin Settings</h1>
+              <h1 className="text-[22px] leading-7 font-normal text-md-on-surface">Settings</h1>
             </div>
 
             {/* Save button */}

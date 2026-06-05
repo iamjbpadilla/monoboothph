@@ -11,6 +11,7 @@ const Gallery = lazy(() => import('./pages/Gallery'));
 const Help = lazy(() => import('./pages/Help'));
 const Timeline = lazy(() => import('./pages/Timeline'));
 const Marketing = lazy(() => import('./pages/Marketing'));
+const Logs = lazy(() => import('./pages/Logs'));
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Help />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/logs"
+            element={
+              <ProtectedRoute>
+                <Logs />
               </ProtectedRoute>
             }
           />
