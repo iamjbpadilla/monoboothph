@@ -85,15 +85,25 @@ export default function Advertising({ onComplete }) {
           preload="auto"
           autoPlay
           muted
+          loop={false}
           playsInline
+          controls={false}
           className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
           onError={() => {
             console.warn('[Advertising] Video failed to load, falling back');
             setVideoError(true);
           }}
-          onCanPlay={() => setVideoReady(true)}
+          onCanPlay={() => {
+            setVideoReady(true);
+            // Ensure video plays when ready
+            if (videoRef.current) {
+              videoRef.current.play().catch(err => console.warn('[Advertising] Auto-play failed:', err));
+            }
+          }}
           onLoadedData={() => setVideoReady(true)}
+          onPlay={() => console.log('[Advertising] Video started playing')}
           onEnded={() => {
+            console.log('[Advertising] Video ended');
             if (useVideoLength) {
               onComplete();
             }
@@ -101,11 +111,11 @@ export default function Advertising({ onComplete }) {
         />
         {/* Loading fallback - black background while video loads */}
         {!videoReady && (
-          <div className="absolute inset-0 bg-black" />
+          <div className="absolute inset-0 bg-black z-10" />
         )}
         {/* Timer overlay - only show if not using video length */}
         {!useVideoLength && (
-          <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-10">
+          <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm z-20">
             <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
             <span className="text-sm font-semibold text-white">{timeLeft}s</span>
           </div>
