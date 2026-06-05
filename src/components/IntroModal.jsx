@@ -120,38 +120,38 @@ export default function IntroModal({ onComplete }) {
 
       <div 
         ref={stepRef}
-        className={`relative bg-white border-2 border-gray-200 rounded-3xl max-w-lg w-full p-10 shadow-lg transition-all duration-700 ${
+        className={`relative bg-white border-2 border-gray-200 rounded-xl max-w-lg w-full p-8 shadow transition-all duration-700 ease-out ${
           isExiting ? 'animate-out slide-out-to-bottom-8 scale-95 opacity-0' : isTransitioning ? 'opacity-0 scale-95' : 'animate-in slide-in-from-bottom-8'
         }`}>
         {/* Icon */}
         <div className="text-center mb-8">
-          <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-700 ${
+          <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-700 ease-out ${
             isTransitioning ? 'scale-0' : 'scale-100'
           }`}>
-            <Icon className={`w-6 h-6 text-white transition-all duration-700 ${
+            <Icon className={`w-6 h-6 text-white transition-all duration-700 ease-out ${
               isTransitioning ? 'scale-0' : 'scale-100'
             }`} />
           </div>
           
           {/* Title */}
-          <h2 className={`text-4xl font-bold text-black mb-2 transition-all duration-700 ${
-            isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+          <h2 className={`text-3xl font-bold text-black mb-2 transition-all duration-700 ease-out ${
+            isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
           }`}>
             {step.title}
           </h2>
           
           {/* Subtitle */}
           {step.subtitle && (
-            <p className={`text-lg text-gray-500 mb-4 tracking-widest uppercase transition-all duration-700 delay-100 ${
-              isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+            <p className={`text-sm text-black font-medium uppercase tracking-wider mb-4 transition-all duration-700 ease-out delay-100 ${
+              isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
             }`}>
               {step.subtitle}
             </p>
           )}
           
           {/* Description */}
-          <p className={`text-gray-500 text-lg leading-relaxed transition-all duration-700 delay-200 ${
-            isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+          <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-700 ease-out delay-200 ${
+            isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
           }`}>
             {step.description}
           </p>
@@ -170,13 +170,13 @@ export default function IntroModal({ onComplete }) {
         )}
 
         {/* Progress dots */}
-        <div className={`flex justify-center gap-2 mb-8 transition-all duration-700 delay-300 ${
+        <div className={`flex justify-center gap-2 mb-8 transition-all duration-700 ease-out delay-300 ${
           isTransitioning ? 'opacity-0' : 'opacity-100'
         }`}>
           {STEPS.map((_, index) => (
             <div
               key={index}
-              className={`h-2 rounded-full transition-all duration-500 ${
+              className={`h-2 rounded-full transition-all duration-500 ease-out ${
                 index === currentStep
                   ? 'w-12 bg-black'
                   : index < currentStep
@@ -189,34 +189,34 @@ export default function IntroModal({ onComplete }) {
 
         {/* Action Button */}
         {isLastStep ? (
-          <div className={`space-y-3 transition-all duration-700 delay-400 ${
+          <div className={`space-y-3 transition-all duration-700 ease-out delay-400 ${
             isTransitioning ? 'opacity-0' : 'opacity-100'
           }`}>
             {permissionStatus === 'denied' ? (
               <button
                 onClick={requestCameraPermission}
                 disabled={requestingPermission}
-                className="w-full py-4 rounded-xl font-semibold bg-black text-white hover:bg-gray-800 transition-all duration-200 active:scale-95 text-lg flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-bold text-sm bg-black text-white hover:opacity-90 transition-all duration-300 ease-out flex items-center justify-center gap-2 border-2 border-black"
               >
                 {requestingPermission ? (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : null}
                 {requestingPermission ? 'Requesting...' : 'Try Again'}
               </button>
             ) : permissionStatus === 'granted' ? (
-              <div className="w-full py-4 rounded-xl font-semibold bg-green-500 text-white text-lg flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5" />
+              <div className="w-full py-3 rounded-lg font-bold text-sm bg-green-500 text-white flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4" />
                 Permission Granted!
               </div>
             ) : (
               <button
                 onClick={requestCameraPermission}
                 disabled={requestingPermission}
-                className="w-full py-4 rounded-xl font-semibold bg-black text-white hover:bg-gray-800 transition-all duration-200 active:scale-95 text-lg flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-bold text-sm bg-black text-white hover:opacity-90 transition-all duration-300 ease-out flex items-center justify-center gap-2 border-2 border-black"
               >
                 {requestingPermission ? (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                ) : <Camera className="w-5 h-5" />}
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : <Camera className="w-4 h-4" />}
                 {requestingPermission ? 'Requesting...' : 'Allow Camera Access'}
               </button>
             )}
@@ -225,21 +225,20 @@ export default function IntroModal({ onComplete }) {
           <button
             onClick={handleNext}
             disabled={isTransitioning}
-            className={`w-full py-4 rounded-xl font-semibold bg-white text-purple-900 hover:bg-white/90 transition-all duration-200 active:scale-95 text-lg flex items-center justify-center gap-2 ${
+            className={`w-full py-3 rounded-lg font-bold text-sm bg-black text-white hover:opacity-90 transition-all duration-300 ease-out flex items-center justify-center gap-2 border-2 border-black ${
               isTransitioning ? 'opacity-50' : 'opacity-100'
             }`}
           >
             Next
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         )}
 
         {/* Footer branding */}
-        <div className={`mt-8 text-center transition-all duration-700 delay-500 ${
+        <div className={`mt-6 text-center transition-all duration-700 ease-out delay-500 ${
           isTransitioning ? 'opacity-0' : 'opacity-100'
         }`}>
-          <p className="text-sm text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>
-          <p className="text-xs text-gray-300 mt-1">📍 Kabankalan City & Beyond</p>
+          <p className="text-xs text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>
         </div>
       </div>
     </div>
