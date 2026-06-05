@@ -523,6 +523,14 @@ export default function HomeScreenSettings() {
           {/* Animation */}
           <div>
             <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Animation</label>
+            {/* Animation Preview */}
+            <div className="mb-3 flex justify-center">
+              <div
+                className={`flex items-center justify-center min-h-[48px] px-8 bg-md-primary text-md-on-primary text-sm font-semibold tracking-wide shadow-lg ${BUTTON_ANIMATIONS[homeScreen.button.animation || 'pulse'] || BUTTON_ANIMATIONS.pulse} ${BUTTON_SHAPES[homeScreen.button.shape] || BUTTON_SHAPES.pill}`}
+              >
+                {homeScreen.button.text || 'Tap to Start'}
+              </div>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {BUTTON_ANIMATIONS.map(anim => (
                 <button
