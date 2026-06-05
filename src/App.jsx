@@ -7,7 +7,6 @@ import { applyAccent, resolveFontPair } from './lib/theme.js';
 import { playTransition } from './hooks/useSound.js';
 import { useDeviceHeartbeat } from './hooks/useDeviceHeartbeat.js';
 import { useDeviceStatusSync } from './hooks/useDeviceStatusSync.js';
-import { logError, logInfo, logStep } from './lib/errorLogger.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import PermissionModal from './components/PermissionModal.jsx';
 import IntroModal from './components/IntroModal.jsx';
@@ -163,8 +162,6 @@ function PhotoboothApp() {
   const theme = settings.general.theme || 'dark';
   const openSettingsRef = useRef(null);
 
-  logStep('INIT', 'PhotoboothApp component mounting');
-
   const { screens, navigateTo } = useScreenStack();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [capturedFrames, setCapturedFrames] = useState([]);
@@ -176,8 +173,6 @@ function PhotoboothApp() {
   const [isPaired, setIsPaired] = useState(false);
   const [showPairingModal, setShowPairingModal] = useState(false);
 
-  logStep('INIT', 'State initialized');
-
   // Start device heartbeat when paired
   useDeviceHeartbeat(isPaired);
 
@@ -185,7 +180,6 @@ function PhotoboothApp() {
   useDeviceStatusSync();
 
   useEffect(() => {
-    logStep('THEME', 'Setting theme to:', theme);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
@@ -196,13 +190,11 @@ function PhotoboothApp() {
   }, [settings.general.fontPair]);
 
   useEffect(() => {
-    logStep('ACCENT', 'Setting accent color:', settings.general.accent);
     applyAccent(settings.general.accent || 'slate');
   }, [settings.general.accent]);
 
   // Check permissions and pairing status on mount
   useEffect(() => {
-    logStep('PERM_CHECK', 'Starting permission check');
     async function checkPermissions() {
       try {
         // Increment local analytics sessions count on app start
@@ -210,9 +202,7 @@ function PhotoboothApp() {
         const analytics = analyticsValue.value ? JSON.parse(analyticsValue.value) : { printCount: 0, imageUploads: 0, sessions: 0 };
         analytics.sessions += 1;
         await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(analytics) });
-        logStep('ANALYTICS', 'Local analytics sessions incremented:', analytics.sessions);
         
-        logStep('PERM_CHECK', 'Fetching preferences');
         const [introValue, permValue, pairingValue] = await Promise.all([
           Preferences.get({ key: 'snaproll_intro_completed' }),
           Preferences.get({ key: 'snaproll-camera-granted' }),
@@ -222,32 +212,25 @@ function PhotoboothApp() {
         const introDone = introValue.value === 'true';
         const permDone = permValue.value === 'true';
 
-        logStep('PERM_CHECK', `Intro done: ${introDone}, Perm done: ${permDone}`);
         setIntroCompleted(introDone);
 
         if (permDone) {
-          logStep('PERM_CHECK', 'Permission already granted from prefs');
           setPermissionGranted(true);
         } else {
           // Check native permissions if not in preferences
-          logStep('PERM_CHECK', 'Checking native camera permissions');
           const result = await Camera.checkPermissions();
-          logStep('PERM_CHECK', `Camera permission: ${result.camera}`);
           if (result.camera === 'granted') {
             setPermissionGranted(true);
           }
         }
 
         // Check pairing status
-        logStep('PAIRING', 'Checking pairing status');
         if (pairingValue.value) {
           const pairing = JSON.parse(pairingValue.value);
           const expiryTime = new Date(pairing.expiresAt).getTime();
           const now = Date.now();
           
-          logStep('PAIRING', `Pairing expires at: ${new Date(expiryTime).toISOString()}`);
           if (now < expiryTime) {
-            logStep('PAIRING', 'Pairing is valid');
             setIsPaired(true);
           } else {
             // Pairing expired, clear it
@@ -256,11 +239,9 @@ function PhotoboothApp() {
           }
         }
 
-        logStep('PERM_CHECK', 'Permission check complete, setting app ready');
         setAppReady(true);
       } catch (err) {
         console.error('Permission check failed:', err);
-        await logError(err, 'PERM_CHECK');
         showSnackbar(`Error: ${err.message}`, 20000);
         setAppReady(true);
       }
@@ -270,7 +251,6 @@ function PhotoboothApp() {
 
   // Periodic check for pairing expiry
   useEffect(() => {
-    logStep('PAIRING_EXPIRY', 'Starting pairing expiry check interval');
     const interval = setInterval(async () => {
       try {
         const pairingValue = await Preferences.get({ key: 'snaproll_pairing' });
@@ -281,14 +261,12 @@ function PhotoboothApp() {
           
           if (now >= expiryTime) {
             // Pairing expired, clear it
-            logStep('PAIRING_EXPIRY', 'Pairing expired, clearing');
             await Preferences.remove({ key: 'snaproll_pairing' });
             setIsPaired(false);
           }
         }
       } catch (err) {
         console.error('Pairing expiry check failed:', err);
-        await logError(err, 'PAIRING_EXPIRY');
         showSnackbar(`Pairing check error: ${err.message}`, 20000);
       }
     }, 60000); // Check every minute
