@@ -938,7 +938,12 @@ function TemplateBlockEditor() {
           </div>
         </div>
         <div className="flex gap-3 items-center">
-          <TextInput label="Value" value={blocks.barcode.value} onChange={v => upd('barcode', 'value', v)} placeholder="Auto uses title" />
+          <TextInput 
+            label="Value" 
+            value={blocks.barcode.value || homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH'} 
+            onChange={v => upd('barcode', 'value', v)} 
+            placeholder="Auto uses title" 
+          />
           <div className="flex items-center gap-2">
             <span className="text-xs text-md-on-surface-variant">Show text</span>
             <Toggle value={blocks.barcode.showText} onChange={v => upd('barcode', 'showText', v)} />
