@@ -269,12 +269,34 @@ function TemplateBlockEditor() {
               onChange={v => updateSettings('homeScreen.title.text', v)}
               placeholder="Custom title"
             />
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-1">Title Size: {homeScreen.title?.size || 56}px</label>
+              <input
+                type="range"
+                min="24"
+                max="80"
+                value={homeScreen.title?.size || 56}
+                onChange={e => updateSettings('homeScreen.title.size', parseInt(e.target.value))}
+                className="w-full"
+              />
+            </div>
             <TextInput
               label="Subtitle"
               value={homeScreen.subtitle?.text || settings.general.eventName || 'Receipt Photobooth'}
               onChange={v => updateSettings('homeScreen.subtitle.text', v)}
               placeholder="Custom subtitle"
             />
+            <div>
+              <label className="block text-xs text-md-on-surface-variant mb-1">Subtitle Size: {homeScreen.subtitle?.size || 24}px</label>
+              <input
+                type="range"
+                min="16"
+                max="48"
+                value={homeScreen.subtitle?.size || 24}
+                onChange={e => updateSettings('homeScreen.subtitle.size', parseInt(e.target.value))}
+                className="w-full"
+              />
+            </div>
             <div>
               <label className="block text-xs text-md-on-surface-variant mb-1">Title-Subtitle Gap (px)</label>
               <input
