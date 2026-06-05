@@ -139,6 +139,11 @@ export default function PairingModal({ onPaired, onClose }) {
           </div>
         ) : (
           <>
+        {/* Branding Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-lg font-bold text-black tracking-widest uppercase">MONO BOOTH PH</h1>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-center mb-6">
           <h2 className="text-2xl font-bold text-black">Pair with Portal</h2>
@@ -203,6 +208,11 @@ export default function PairingModal({ onPaired, onClose }) {
           >
             {loading ? '...' : '✓'}
           </button>
+        </div>
+
+        {/* Branding Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-xs text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>
         </div>
         </>
         )}
