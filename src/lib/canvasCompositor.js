@@ -319,11 +319,42 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'bibleVerses':
         if (blocks.bibleVerses.enabled) {
           lastEnabledBlock = 'bibleVerses';
-          // Estimate wrapped height (assume ~2-3 lines for long verses)
-          const estimatedLines = Math.ceil(50 / (blocks.bibleVerses.fontSize || 28)); // rough estimate
-          contentH += (blocks.bibleVerses.fontSize || 28) * estimatedLines;
+          const fontSize = blocks.bibleVerses.fontSize || 28;
+          const book = blocks.bibleVerses.topic || 'all';
+
+          // Measure actual wrapped text height using temp context
+          const tmp = document.createElement('canvas').getContext('2d');
+          tmp.font = `bold ${fontSize}px '${fontHeading}', sans-serif`;
+
+          // Get all possible verses for the selected book
+          let verses = [];
+          if (book === 'all') {
+            Object.values(BIBLE_VERSES).forEach(v => verses = verses.concat(v));
+          } else {
+            verses = BIBLE_VERSES[book] || [];
+          }
+
+          // Find maximum wrapped line count across all verses
+          let maxLines = 1;
+          for (const verse of verses) {
+            const words = verse.text.split(' ');
+            let line = '';
+            let lines = 1;
+            for (const word of words) {
+              const test = line + (line ? ' ' : '') + word;
+              if (tmp.measureText(test).width > contentWidth && line) {
+                lines++;
+                line = word;
+              } else {
+                line = test;
+              }
+            }
+            maxLines = Math.max(maxLines, lines);
+          }
+
+          contentH += fontSize * maxLines;
           if (blocks.bibleVerses.showReference) {
-            contentH += (blocks.bibleVerses.fontSize || 28) + elGap;
+            contentH += fontSize + elGap;
           } else {
             contentH += elGap;
           }
@@ -371,8 +402,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
     }
   }
 
-  // Strip the trailing elGap from the last enabled element so top and bottom margins are equal
-  if (lastEnabledBlock !== 'footer' && contentH > 0) contentH -= elGap;
+  // Strip the trailing elGap — the last enabled block never adds a trailing gap
+  if (contentH > 0) contentH -= elGap;
   const totalHeight = MARGIN + contentH + MARGIN;
 
   // ── Create canvas ─────────────────────────────────────────────────────────
