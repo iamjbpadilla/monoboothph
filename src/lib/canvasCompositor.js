@@ -213,7 +213,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
   const photoSlotHeight = Math.round(photoSlotWidth * ratio.h / ratio.w);
   const stripCount = templateKey === '1strip' ? 1 : templateKey === '2strip' ? 2 : templateKey === '3strip' ? 3 : templateKey === '2x3-landscape' || templateKey === '2x3-portrait' ? 6 : 3;
 
-  const order = blocks.blockOrder || ['header', 'dividerBefore', 'photos', 'dividerAfter', 'datetime', 'customText', 'barcode', 'footer'];
+  const order = blocks.blockOrder || ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'bibleVerses', 'barcode', 'footer'];
 
   // ── Compute total height (must mirror drawing order exactly) ──────────────
   let contentH = 0;
