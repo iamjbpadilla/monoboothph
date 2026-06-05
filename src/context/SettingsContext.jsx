@@ -53,6 +53,7 @@ const DEFAULT_SETTINGS = {
       text: 'Tap to Start',
       imageBase64: null,
       verticalOffset: 0, // Vertical position offset in pixels (0-100)
+      animation: 'pulse', // Button animation style
     },
     logo: {
       imageBase64: null,

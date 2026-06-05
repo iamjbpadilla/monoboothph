@@ -41,6 +41,26 @@ const BUTTON_SHAPES = {
   square: 'rounded-none',
 };
 
+const BUTTON_ANIMATIONS = {
+  'none': '',
+  'pulse': 'standby-cta-pulse',
+  'pulse-slow': 'standby-cta-pulse-slow',
+  'pulse-fast': 'standby-cta-pulse-fast',
+  'pulse-glow': 'standby-cta-pulse-glow',
+  'pulse-ring': 'standby-cta-pulse-ring',
+  'bounce': 'standby-cta-bounce',
+  'bounce-subtle': 'standby-cta-bounce-subtle',
+  'bounce-elastic': 'standby-cta-bounce-elastic',
+  'shake': 'standby-cta-shake',
+  'wiggle': 'standby-cta-wiggle',
+  'jiggle': 'standby-cta-jiggle',
+  'glow': 'standby-cta-glow',
+  'glow-pulse': 'standby-cta-glow-pulse',
+  'glow-border': 'standby-cta-glow-border',
+  'breathe': 'standby-cta-breathe',
+  'pulse-scale': 'standby-cta-pulse-scale',
+};
+
 function BrandingIcon({ iconKey, size = 52 }) {
   const IconComp = ICON_MAP[iconKey];
   if (!IconComp) return null;
@@ -139,6 +159,7 @@ export default function Standby({ onStart, onOpenSettings }) {
   const buttonText = getSetting(settings, 'homeScreen.button.text', null, 'Tap to Start');
   const buttonImageBase64 = getSetting(settings, 'homeScreen.button.imageBase64', null, null);
   const buttonVerticalOffset = getSetting(settings, 'homeScreen.button.verticalOffset', null, 0);
+  const buttonAnimation = getSetting(settings, 'homeScreen.button.animation', null, 'pulse');
   
   // Logo with dual-read
   const logoEnabled = getSetting(settings, 'homeScreen.logo.enabled', null, true);
@@ -309,7 +330,7 @@ export default function Standby({ onStart, onOpenSettings }) {
           />
         ) : (
           <div
-            className={`flex items-center justify-center min-h-[64px] px-10 bg-md-primary text-md-on-primary text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl active:shadow-md active:scale-[0.97] standby-cta-pulse animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 ${BUTTON_SHAPES[buttonShape] || BUTTON_SHAPES.pill}`}
+            className={`flex items-center justify-center min-h-[64px] px-10 bg-md-primary text-md-on-primary text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl active:shadow-md active:scale-[0.97] ${BUTTON_ANIMATIONS[buttonAnimation] || BUTTON_ANIMATIONS.pulse} animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 ${BUTTON_SHAPES[buttonShape] || BUTTON_SHAPES.pill}`}
             style={{ 
               transition: 'box-shadow 150ms cubic-bezier(0.4, 0.0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
               transform: `scale(${buttonScale}) translateY(${buttonVerticalOffset}px)`,

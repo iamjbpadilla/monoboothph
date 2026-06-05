@@ -36,6 +36,26 @@ const BUTTON_SHAPES = [
   { id: 'square', label: 'Square', class: 'rounded-none' },
 ];
 
+const BUTTON_ANIMATIONS = [
+  { id: 'none', label: 'None', class: '' },
+  { id: 'pulse', label: 'Pulse', class: 'standby-cta-pulse' },
+  { id: 'pulse-slow', label: 'Pulse Slow', class: 'standby-cta-pulse-slow' },
+  { id: 'pulse-fast', label: 'Pulse Fast', class: 'standby-cta-pulse-fast' },
+  { id: 'pulse-glow', label: 'Pulse Glow', class: 'standby-cta-pulse-glow' },
+  { id: 'pulse-ring', label: 'Pulse Ring', class: 'standby-cta-pulse-ring' },
+  { id: 'bounce', label: 'Bounce', class: 'standby-cta-bounce' },
+  { id: 'bounce-subtle', label: 'Bounce Subtle', class: 'standby-cta-bounce-subtle' },
+  { id: 'bounce-elastic', label: 'Bounce Elastic', class: 'standby-cta-bounce-elastic' },
+  { id: 'shake', label: 'Shake', class: 'standby-cta-shake' },
+  { id: 'wiggle', label: 'Wiggle', class: 'standby-cta-wiggle' },
+  { id: 'jiggle', label: 'Jiggle', class: 'standby-cta-jiggle' },
+  { id: 'glow', label: 'Glow', class: 'standby-cta-glow' },
+  { id: 'glow-pulse', label: 'Glow Pulse', class: 'standby-cta-glow-pulse' },
+  { id: 'glow-border', label: 'Glow Border', class: 'standby-cta-glow-border' },
+  { id: 'breathe', label: 'Breathe', class: 'standby-cta-breathe' },
+  { id: 'pulse-scale', label: 'Pulse Scale', class: 'standby-cta-pulse-scale' },
+];
+
 const LOGO_ICONS = [
   { id: 'camera', label: 'Camera', icon: Camera },
   { id: 'photo', label: 'Photo', icon: Image },
@@ -158,7 +178,7 @@ export default function HomeScreenSettings() {
       background: { type: 'color', color: '#ffffff', gradientId: 'gradient-purple-pink', imageBase64: null, videoBase64: null },
       title: { enabled: true, text: 'MONO BOOTH PH', size: 56 },
       subtitle: { enabled: true, text: 'Receipt Photobooth', size: 24 },
-      button: { shape: 'pill', scale: 1.0, text: 'Tap to Start', imageBase64: null, verticalOffset: 0 },
+      button: { shape: 'pill', scale: 1.0, text: 'Tap to Start', imageBase64: null, verticalOffset: 0, animation: 'pulse' },
       logo: { imageBase64: null, scale: 1.0, iconKey: null, enabled: true },
     };
     updateSettings(`homeScreen.${section}`, defaults[section]);
@@ -498,6 +518,26 @@ export default function HomeScreenSettings() {
               ))}
             </div>
             <p className="text-xs text-md-outline mt-1">Move button down from center (0 = centered)</p>
+          </div>
+
+          {/* Animation */}
+          <div>
+            <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Animation</label>
+            <div className="grid grid-cols-3 gap-2">
+              {BUTTON_ANIMATIONS.map(anim => (
+                <button
+                  key={anim.id}
+                  onClick={() => updateSettings('homeScreen.button.animation', anim.id)}
+                  className={`px-3 py-2 text-xs rounded-lg border transition-colors ${
+                    (homeScreen.button.animation || 'pulse') === anim.id
+                      ? 'bg-md-primary text-md-on-primary border-md-primary'
+                      : 'bg-md-surface-container text-md-on-surface-variant border-md-outline-variant hover:bg-md-surface-container-high'
+                  }`}
+                >
+                  {anim.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Text Input */}

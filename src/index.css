@@ -189,6 +189,72 @@ h1, h2, h3, h4, h5, h6 {
   0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
   50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); }
 }
+@keyframes standby-cta-pulse-slow {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); }
+}
+@keyframes standby-cta-pulse-fast {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); }
+}
+@keyframes standby-cta-pulse-glow {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); filter: brightness(1); }
+  50% { transform: scale(1.02); box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22); filter: brightness(1.1); }
+}
+@keyframes standby-cta-pulse-ring {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+@keyframes standby-cta-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes standby-cta-bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes standby-cta-bounce-elastic {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-6px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-3px); }
+}
+@keyframes standby-cta-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+@keyframes standby-cta-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+@keyframes standby-cta-jiggle {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-1px) rotate(-1deg); }
+  75% { transform: translateX(1px) rotate(1deg); }
+}
+@keyframes standby-cta-glow {
+  0%, 100% { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22), 0 0 20px rgba(255,255,255,0.3); }
+}
+@keyframes standby-cta-glow-pulse {
+  0%, 100% { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); filter: brightness(1); }
+  50% { box-shadow: 0 14px 24px -4px rgba(0,0,0,0.22), 0 0 30px rgba(255,255,255,0.5); filter: brightness(1.1); }
+}
+@keyframes standby-cta-glow-border {
+  0%, 100% { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15); }
+  50% { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15), 0 0 0 4px rgba(255,255,255,0.3); }
+}
+@keyframes standby-cta-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes standby-cta-pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
 .standby-icon-float {
   animation: standby-icon-float 4s ease-in-out infinite;
 }
@@ -197,6 +263,51 @@ h1, h2, h3, h4, h5, h6 {
 }
 .standby-cta-pulse {
   animation: standby-cta-pulse 3s ease-in-out infinite;
+}
+.standby-cta-pulse-slow {
+  animation: standby-cta-pulse-slow 5s ease-in-out infinite;
+}
+.standby-cta-pulse-fast {
+  animation: standby-cta-pulse-fast 1.5s ease-in-out infinite;
+}
+.standby-cta-pulse-glow {
+  animation: standby-cta-pulse-glow 3s ease-in-out infinite;
+}
+.standby-cta-pulse-ring {
+  animation: standby-cta-pulse-ring 3s ease-in-out infinite;
+}
+.standby-cta-bounce {
+  animation: standby-cta-bounce 2s ease-in-out infinite;
+}
+.standby-cta-bounce-subtle {
+  animation: standby-cta-bounce-subtle 3s ease-in-out infinite;
+}
+.standby-cta-bounce-elastic {
+  animation: standby-cta-bounce-elastic 2s ease-in-out infinite;
+}
+.standby-cta-shake {
+  animation: standby-cta-shake 3s ease-in-out infinite;
+}
+.standby-cta-wiggle {
+  animation: standby-cta-wiggle 2s ease-in-out infinite;
+}
+.standby-cta-jiggle {
+  animation: standby-cta-jiggle 0.5s ease-in-out infinite;
+}
+.standby-cta-glow {
+  animation: standby-cta-glow 3s ease-in-out infinite;
+}
+.standby-cta-glow-pulse {
+  animation: standby-cta-glow-pulse 3s ease-in-out infinite;
+}
+.standby-cta-glow-border {
+  animation: standby-cta-glow-border 3s ease-in-out infinite;
+}
+.standby-cta-breathe {
+  animation: standby-cta-breathe 4s ease-in-out infinite;
+}
+.standby-cta-pulse-scale {
+  animation: standby-cta-pulse-scale 2s ease-in-out infinite;
 }
 
 /* Get Ready overlay */
