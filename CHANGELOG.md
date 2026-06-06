@@ -35,6 +35,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bible Verses height underestimation (was 2 lines, now measures actual wrapped lines)
 - Empty space from disabled design blocks not hidden properly
 - Canvas height now correctly accommodates all enabled blocks without overflow
+- Subtitle not showing on receipts (was checking home screen enabled toggle)
+- Subtitle not showing on composing/cleaning screens during capture flow
+- Print status showing wrong subtitle when home screen subtitle was disabled
+- Mirror toggle re-randomizing Bible verses and receipt items
+- Mirror toggle remounting entire receipt canvas (now smooth toggle)
+- Ads video duration not functional ("Use video length" option)
+- Footer bottom spacing too large (now balanced with header top)
+- Header title-subtitle gap using hardcoded 8px (now uses element spacing)
+- Button animation preview in Home settings not working
+- Print preview not showing (StrictMode double-run cache issue)
+- Background Color/Gradient options removed, Preset patterns restored
+
+### Changed
+- Show title/subtitle toggle now only affects home screen (not receipts or other screens)
+- ReceiptCanvas now pre-generates design data for consistent normal/mirrored views
+- Home screen background: Color/Gradient removed, Preset (plain/grid/dots/lines) added
+- Button animation preview in settings now actually plays the selected animation
 
 ### Added
 - Monospaced font pairs for ledger aesthetic (IBM Plex Mono, Courier New)
