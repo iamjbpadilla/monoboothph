@@ -284,12 +284,13 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const scale = (blocks.header.imageScale || 4) / 4;
             contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16);
           } else {
-            contentH += textH(blocks.header.fontSize);
             const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
+            const titleFontSize = homeScreen.title?.size || blocks.header.fontSize;
+            contentH += textH(titleFontSize);
             const subtitleText = homeScreen.subtitle?.text || generalSettings.eventName;
             if (subtitleText) {
               contentH += elGap;
-              const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
+              const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(titleFontSize * 0.52));
               contentH += textH(subFontSize);
             }
           }
@@ -332,48 +333,42 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         }
         break;
       case 'receiptItems':
-        if (blocks.receiptItems.enabled && blocks.receiptItems.items.length > 0) {
+        if (blocks.receiptItems.enabled) {
           enabledCount++;
-          contentH += receiptItemsH(blocks.receiptItems.fontSize, blocks.receiptItems.items, blocks.receiptItems.showTotal);
+          // Use pre-generated data, randomize placeholder, or static items
+          let items = designData?.receiptItems;
+          if (!items && blocks.receiptItems.randomize) {
+            items = [{ name: 'x', quantity: 1, price: 0 }, { name: 'x', quantity: 1, price: 0 }, { name: 'x', quantity: 1, price: 0 }];
+          }
+          if (!items) items = blocks.receiptItems.items || [];
+          contentH += receiptItemsH(blocks.receiptItems.fontSize, items, blocks.receiptItems.showTotal);
         }
         break;
       case 'bibleVerses':
         if (blocks.bibleVerses.enabled) {
           enabledCount++;
           const fontSize = blocks.bibleVerses.fontSize || 28;
-          const book = blocks.bibleVerses.topic || 'all';
 
-          // Measure actual wrapped text height using temp context
+          // Use pre-generated verse or generate one on-the-fly, then measure exact wrapped height
+          const verse = designData?.verse || getRandomVerse(blocks.bibleVerses.topic || 'all');
+
           const tmp = document.createElement('canvas').getContext('2d');
           tmp.font = `bold ${fontSize}px '${fontHeading}', sans-serif`;
 
-          // Get all possible verses for the selected book
-          let verses = [];
-          if (book === 'all') {
-            Object.values(BIBLE_VERSES).forEach(v => verses = verses.concat(v));
-          } else {
-            verses = BIBLE_VERSES[book] || [];
-          }
-
-          // Find maximum wrapped line count across all verses
-          let maxLines = 1;
-          for (const verse of verses) {
-            const words = verse.text.split(' ');
-            let line = '';
-            let lines = 1;
-            for (const word of words) {
-              const test = line + (line ? ' ' : '') + word;
-              if (tmp.measureText(test).width > contentWidth && line) {
-                lines++;
-                line = word;
-              } else {
-                line = test;
-              }
+          const words = verse.text.split(' ');
+          let line = '';
+          let lines = 1;
+          for (const word of words) {
+            const test = line + (line ? ' ' : '') + word;
+            if (tmp.measureText(test).width > contentWidth && line) {
+              lines++;
+              line = word;
+            } else {
+              line = test;
             }
-            maxLines = Math.max(maxLines, lines);
           }
 
-          contentH += fontSize * maxLines;
+          contentH += fontSize * lines;
           if (blocks.bibleVerses.showReference) {
             contentH += fontSize;
           }
