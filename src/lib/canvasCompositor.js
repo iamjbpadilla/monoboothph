@@ -34,7 +34,7 @@ const DATETIME_FONT = 22; // ≈2.7mm at 203 DPI — legible on thermal
 const BARCODE_HEIGHT = 110; // includes text label below bars
 
 // --- height helpers (each block's content height only, no trailing gap) ---
-function textH(fontSize) { return fontSize; }
+function textH(fontSize) { return Math.ceil(fontSize * 1.2); }
 function dividerH(thickness) { return thickness || 1; }
 function photosH(slotH, count, photoGap) { return slotH * count + photoGap * Math.max(0, count - 1); }
 function gridH(slotH, photoGap) { return slotH * 2 + photoGap; }
@@ -407,8 +407,10 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
             const fImgHeight = fImgWidth * (fImg.height / fImg.width);
             contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
           } else {
-            contentH += blocks.footer.fontSize;
+            contentH += textH(blocks.footer.fontSize);
           }
+          // Bottom breathing room so footer doesn't sit on canvas edge
+          contentH += Math.max(4, Math.round(elGap / 2));
         }
         break;
       }
@@ -465,7 +467,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
           if (subtitleText) {
             y += elGap;
-            const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
+            const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(titleFontSize * 0.52));
             drawText(ctx, subtitleText, x, y, contentWidth, {
               fontSize: subFontSize,
               bold: false,
@@ -723,6 +725,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           });
           y += footerHeight;
         }
+        // Add bottom breathing room so footer doesn't sit on canvas edge
+        y += Math.max(4, Math.round(elGap / 2));
         break;
       }
     }
