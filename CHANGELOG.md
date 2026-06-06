@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Button animation preview in Home settings not working
 - Print preview not showing (StrictMode double-run cache issue)
 - Background Color/Gradient options removed, Preset patterns restored
+- ReceiptItems height calc not accounting for randomize mode (canvas too short when items array empty)
+- BibleVerses height calc using max across all verses instead of actual chosen verse (overestimated)
+- Header title font size mismatch between height calc and renderer
 
 ### Changed
 - Show title/subtitle toggle now only affects home screen (not receipts or other screens)
