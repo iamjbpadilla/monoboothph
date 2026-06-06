@@ -14,13 +14,17 @@ export default function ReceiptCanvas({ frames, templateKey, templateSettings, g
 
   useEffect(() => {
     let cancelled = false;
+    const cacheKey = mirrorImages ? 'mirrored' : 'normal';
 
-    // If underlying params changed, clear cache and regenerate design data
-    if (paramsRef.current !== paramsKey) {
-      paramsRef.current = paramsKey;
-      cacheRef.current = { normal: null, mirrored: null };
-      const blocks = templateSettings.blocks || templateSettings;
-      dataRef.current = generateDesignData(blocks);
+    // If params changed or cache is empty, re-composite
+    if (paramsRef.current !== paramsKey || !cacheRef.current[cacheKey]) {
+      // Only clear cache and regenerate data when params actually changed
+      if (paramsRef.current !== paramsKey) {
+        paramsRef.current = paramsKey;
+        cacheRef.current = { normal: null, mirrored: null };
+        const blocks = templateSettings.blocks || templateSettings;
+        dataRef.current = generateDesignData(blocks);
+      }
 
       setLoading(true);
       setError(null);
@@ -52,21 +56,18 @@ export default function ReceiptCanvas({ frames, templateKey, templateSettings, g
       return () => { cancelled = true; };
     }
 
-    // Params same — just show the cached canvas for current mirror state
-    const cacheKey = mirrorImages ? 'mirrored' : 'normal';
+    // Params same and cache exists — just show the cached canvas
     const canvas = cacheRef.current[cacheKey];
-    if (canvas) {
-      const container = containerRef.current;
-      if (container) {
-        container.innerHTML = '';
-        canvas.style.width = '100%';
-        canvas.style.height = 'auto';
-        canvas.style.display = 'block';
-        container.appendChild(canvas);
-      }
-      onCanvasReady?.(canvas);
-      setLoading(false);
+    const container = containerRef.current;
+    if (container) {
+      container.innerHTML = '';
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+      canvas.style.display = 'block';
+      container.appendChild(canvas);
     }
+    onCanvasReady?.(canvas);
+    setLoading(false);
   }, [paramsKey, mirrorImages]);
 
   return (
