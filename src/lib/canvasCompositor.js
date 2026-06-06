@@ -217,7 +217,30 @@ function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderC
   }
 }
 
-export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, homeScreenSettings = null, mirrorImages = false) {
+export function generateDesignData(blocks) {
+  const data = {};
+  if (blocks.bibleVerses?.enabled) {
+    data.verse = getRandomVerse(blocks.bibleVerses.topic || 'all');
+  }
+  if (blocks.receiptItems?.enabled && blocks.receiptItems.randomize) {
+    const wittyItems = [
+      { name: 'Good Vibes', quantity: 1, price: 999 },
+      { name: 'Bad Decisions', quantity: 2, price: 0 },
+      { name: 'Y2K Energy', quantity: 1, price: 500 },
+      { name: 'Main Character Energy', quantity: 1, price: 750 },
+      { name: 'Side Quest', quantity: 3, price: 150 },
+      { name: 'Plot Armor', quantity: 1, price: 1000 },
+      { name: 'Emotional Damage', quantity: 1, price: 50 },
+      { name: 'Brain Cells', quantity: 0, price: 0 },
+      { name: 'Social Battery', quantity: 1, price: 25 },
+      { name: 'Serenity', quantity: 1, price: 888 },
+    ];
+    data.receiptItems = wittyItems.sort(() => 0.5 - Math.random()).slice(0, 3);
+  }
+  return data;
+}
+
+export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, homeScreenSettings = null, mirrorImages = false, designData = null) {
   const { dpi, paperWidthMm } = printerSettings;
   const canvasWidth = calcCanvasWidth(dpi, paperWidthMm);
   const contentWidth = canvasWidth - MARGIN * 2;
@@ -577,9 +600,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
         const itemHeight = fontSize + 4;
         const showQty = blocks.receiptItems.showQty !== false;
 
-        // Get items - use random witty items if randomize is enabled
-        let items = blocks.receiptItems.items || [];
-        if (blocks.receiptItems.randomize) {
+        // Get items - use pre-generated data if available, otherwise generate fresh
+        let items = designData?.receiptItems || blocks.receiptItems.items || [];
+        if (!designData?.receiptItems && blocks.receiptItems.randomize) {
           const wittyItems = [
             { name: 'Good Vibes', quantity: 1, price: 999 },
             { name: 'Bad Decisions', quantity: 2, price: 0 },
@@ -644,8 +667,8 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
       case 'bibleVerses': {
         if (!blocks.bibleVerses.enabled) break;
         
-        // Always randomize verse for each render (different for each template preview)
-        const verse = getRandomVerse(blocks.bibleVerses.topic || 'all');
+        // Use pre-generated verse if available, otherwise generate fresh
+        const verse = designData?.verse || getRandomVerse(blocks.bibleVerses.topic || 'all');
         const fontSize = blocks.bibleVerses.fontSize || 28;
         
         const verseHeight = drawText(ctx, verse.text, x, y, contentWidth, {
