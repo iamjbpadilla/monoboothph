@@ -5,12 +5,12 @@ import { Preferences } from '@capacitor/preferences';
 function defaultBlocks() {
   return {
     header:     { enabled: true,  text: '', title: '', subtitle: '', image: null, fontSize: 42, alignment: 'center', bold: true, imageScale: 4, imageBottomMargin: 16, titleSubtitleGap: 8 },
-    photos:     { enabled: true,  borderStyle: 'thin', borderColor: '#000000', gap: 8 },
+    photos:     { enabled: true,  borderStyle: 'solid', borderColor: '#000000', borderThickness: 1, gap: 8 },
     divider:    { enabled: true,  style: 'dashed', thickness: 2, color: '#000000' },
     elementSpacing: 16,
     datetime:   { enabled: true,  format: 'MMM DD, YYYY  HH:mm' },
-    customText: { enabled: false, content: 'MONO BOOTH PH',           fontSize: 28, alignment: 'center' },
-    receiptItems: { enabled: false, items: [
+    customText: { enabled: true, content: 'MONO BOOTH PH',           fontSize: 28, alignment: 'center' },
+    receiptItems: { enabled: true, items: [
       { name: 'Good Vibes', quantity: 1, price: 999 },
       { name: 'Bad Decisions', quantity: 2, price: 0 },
       { name: 'Y2K Energy', quantity: 1, price: 500 }
@@ -260,11 +260,16 @@ function migrateFromV18(saved) {
     migrated.templates.blocks.bibleVerses.enabled = true;
   }
   
+  // Migrate photos borderThickness default if missing
+  if (migrated.templates.blocks.photos && migrated.templates.blocks.photos.borderThickness === undefined) {
+    migrated.templates.blocks.photos.borderThickness = 1;
+  }
+
   // Disable receiptItems by default (previously enabled)
   if (migrated.templates.blocks.receiptItems && migrated.templates.blocks.receiptItems.enabled === true) {
     migrated.templates.blocks.receiptItems.enabled = false;
   }
-  
+
   // Add bibleVerses to blockOrder if not present
   if (migrated.templates.blocks.blockOrder && Array.isArray(migrated.templates.blocks.blockOrder) && !migrated.templates.blocks.blockOrder.includes('bibleVerses')) {
     const barcodeIndex = migrated.templates.blocks.blockOrder.indexOf('barcode');

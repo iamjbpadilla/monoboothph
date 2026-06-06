@@ -101,7 +101,8 @@ const TEMPLATE_TABS = [
   { key: '2x3-portrait', label: 'Tall Order', shots: 6 },
 ];
 
-const BORDER_STYLES = ['none', 'thin', 'thick', 'rounded', 'double', 'dashed', 'dotted'];
+const BORDER_STYLES = ['none', 'solid', 'dashed', 'dotted', 'rounded', 'double', 'zigzag', 'wavy', 'bevel', 'inset', 'scallop', 'stitch', 'chain', 'shadow'];
+const BORDER_THICKNESS_OPTIONS = [1, 2, 4, 8];
 
 function Toggle({ value, onChange }) {
   return (
@@ -462,6 +463,7 @@ function TemplateBlockEditor() {
                   const defs = defaultBlocks();
                   upd('photos', 'borderStyle', defs.photos.borderStyle);
                   upd('photos', 'borderColor', defs.photos.borderColor);
+                  upd('photos', 'borderThickness', defs.photos.borderThickness);
                   upd('photos', 'gap', defs.photos.gap);
                 }}
                 className="text-xs text-md-outline hover:text-md-on-surface-variant"
@@ -471,17 +473,35 @@ function TemplateBlockEditor() {
               </button>
             </div>
           </div>
-          <div className="flex gap-2 mb-3">
-            {BORDER_STYLES.map(s => (
-              <button key={s} onClick={() => upd('photos', 'borderStyle', s)}
-                className={`flex-1 py-3 rounded text-xs capitalize transition-colors min-h-[44px] ${
-                  blocks.photos.borderStyle === s
-                    ? 'bg-md-primary text-md-on-primary'
-                    : 'bg-md-surface-container-high text-md-on-surface-variant hover:bg-md-surface-container-highest'
-                }`}>
-                {s}
-              </button>
-            ))}
+          <div className="mb-2">
+            <span className="text-xs text-md-on-surface-variant mb-1 block">Style</span>
+            <div className="flex gap-2 flex-wrap">
+              {BORDER_STYLES.map(s => (
+                <button key={s} onClick={() => upd('photos', 'borderStyle', s)}
+                  className={`flex-1 py-2 rounded text-xs capitalize transition-colors min-h-[36px] ${
+                    (blocks.photos.borderStyle || 'none') === s
+                      ? 'bg-md-primary text-md-on-primary'
+                      : 'bg-md-surface-container-high text-md-on-surface-variant hover:bg-md-surface-container-highest'
+                  }`}>
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mb-2">
+            <span className="text-xs text-md-on-surface-variant mb-1 block">Thickness</span>
+            <div className="flex gap-2 flex-wrap">
+              {BORDER_THICKNESS_OPTIONS.map(t => (
+                <button key={t} onClick={() => upd('photos', 'borderThickness', t)}
+                  className={`flex-1 py-2 rounded text-xs transition-colors min-h-[36px] ${
+                    (blocks.photos.borderThickness || 1) === t
+                      ? 'bg-md-primary text-md-on-primary'
+                      : 'bg-md-surface-container-high text-md-on-surface-variant hover:bg-md-surface-container-highest'
+                  }`}>
+                  {t}px
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -490,22 +510,6 @@ function TemplateBlockEditor() {
             <span className="text-sm font-medium text-md-on-surface">Divider</span>
             <div className="flex items-center gap-2">
               <Toggle value={blocks.divider.enabled} onChange={v => upd('divider', 'enabled', v)} />
-              <div className="flex gap-1">
-                <button
-                  onClick={() => moveBlock('divider', 'up')}
-                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
-                  title="Move up"
-                >
-                  <ChevronUp size={16} />
-                </button>
-                <button
-                  onClick={() => moveBlock('divider', 'down')}
-                  className="p-1 rounded hover:bg-md-surface-container-high text-md-outline hover:text-md-on-surface-variant transition-colors"
-                  title="Move down"
-                >
-                  <ChevronDown size={16} />
-                </button>
-              </div>
               <button
                 onClick={() => {
                   const defs = defaultBlocks();
@@ -520,7 +524,7 @@ function TemplateBlockEditor() {
               </button>
             </div>
           </div>
-          <div className="flex gap-2 mb-3">
+          <div className="flex gap-2 flex-wrap mb-3">
             {['solid', 'dashed', 'dotted', 'double'].map(s => (
               <button key={s} onClick={() => upd('divider', 'style', s)}
                 className={`flex-1 py-3 rounded text-xs capitalize transition-colors min-h-[44px] ${

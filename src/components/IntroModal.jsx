@@ -72,6 +72,7 @@ export default function IntroModal({ onComplete }) {
       
       if (result.camera === 'granted' || result.camera === 'limited') {
         setPermissionStatus('granted');
+        await Preferences.set({ key: 'snaproll-camera-granted', value: 'true' });
         setTimeout(() => handleComplete(), 800);
       } else {
         setPermissionStatus('denied');

@@ -4,7 +4,7 @@ import { BIBLE_VERSES, getRandomVerse } from './bibleVerses.js';
 // canvasCompositor.js — builds the receipt canvas from frames + settings
 // RULE: 48px minimum margin enforced on all four edges. NO EXCEPTIONS.
 
-const MARGIN = 12;
+export const MARGIN = 12;
 
 // Aspect ratios per template slot
 export const SLOT_RATIOS = {
@@ -20,7 +20,7 @@ export function calcCanvasWidth(dpi, paperWidthMm) {
   return Math.round((dpi * paperWidthMm) / 25.4);
 }
 
-function loadImage(src) {
+export function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -30,16 +30,16 @@ function loadImage(src) {
   });
 }
 
-const DATETIME_FONT = 22; // ≈2.7mm at 203 DPI — legible on thermal
-const BARCODE_HEIGHT = 110; // includes text label below bars
+export const DATETIME_FONT = 22; // ≈2.7mm at 203 DPI — legible on thermal
+export const BARCODE_HEIGHT = 110; // includes text label below bars
 
 // --- height helpers (each block's content height only, no trailing gap) ---
-function textH(fontSize) { return Math.ceil(fontSize * 1.2); }
-function dividerH(thickness) { return thickness || 1; }
-function photosH(slotH, count, photoGap) { return slotH * count + photoGap * Math.max(0, count - 1); }
-function gridH(slotH, photoGap) { return slotH * 2 + photoGap; }
-function barcodeH(h) { return h; }
-function receiptItemsH(fontSize, items, showTotal) {
+export function textH(fontSize) { return Math.ceil(fontSize * 1.2); }
+export function dividerH(thickness) { return thickness || 1; }
+export function photosH(slotH, count, photoGap) { return slotH * count + photoGap * Math.max(0, count - 1); }
+export function gridH(slotH, photoGap) { return slotH * 2 + photoGap; }
+export function barcodeH(h) { return h; }
+export function receiptItemsH(fontSize, items, showTotal) {
   const itemHeight = fontSize + 4;
   const headerHeight = itemHeight; // ITEM / QTY / PRICE header row always drawn
   const itemsHeight = items.length * itemHeight;
@@ -48,7 +48,7 @@ function receiptItemsH(fontSize, items, showTotal) {
 }
 
 // --- draw helpers ---
-function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alignment = 'center', color = '#000000', fontFamily = 'sans-serif', wrap = false } = {}) {
+export function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alignment = 'center', color = '#000000', fontFamily = 'sans-serif', wrap = false } = {}) {
   ctx.font = `${bold ? 'bold' : 'normal'} ${fontSize}px '${fontFamily}', sans-serif`;
   ctx.fillStyle = color;
   ctx.textAlign = alignment;
@@ -92,7 +92,7 @@ function drawText(ctx, text, x, y, maxWidth, { fontSize = 16, bold = false, alig
   }
 }
 
-function formatDate(fmt) {
+export function formatDate(fmt) {
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -109,7 +109,7 @@ function formatDate(fmt) {
     .replace('A', ampm);
 }
 
-function drawDivider(ctx, x, y, width, { style = 'solid', thickness = 1, color = '#cccccc' } = {}, gap) {
+export function drawDivider(ctx, x, y, width, { style = 'solid', thickness = 1, color = '#cccccc' } = {}, gap) {
   ctx.strokeStyle = color;
   ctx.lineWidth = thickness;
   const cy = y + thickness / 2;
@@ -138,7 +138,7 @@ function drawDivider(ctx, x, y, width, { style = 'solid', thickness = 1, color =
   ctx.setLineDash([]);
 }
 
-async function renderBarcode(ctx, x, y, contentWidth, { value = '', type = 'CODE128', showText = true } = {}) {
+export async function renderBarcode(ctx, x, y, contentWidth, { value = '', type = 'CODE128', showText = true } = {}) {
   try {
     const JsBarcode = (await import('jsbarcode')).default;
     const tmpCanvas = document.createElement('canvas');
@@ -162,59 +162,301 @@ async function renderBarcode(ctx, x, y, contentWidth, { value = '', type = 'CODE
   }
 }
 
-function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle, borderColor, mirror = false) {
-  if (borderStyle && borderStyle !== 'none') {
-    const thickness = borderStyle === 'thin' ? 1 : borderStyle === 'thick' ? 4 : 2;
-    const radius = borderStyle === 'rounded' ? 8 : 0;
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = thickness;
-    
-    // Handle dashed/dotted styles
-    if (borderStyle === 'dashed') {
-      ctx.setLineDash([thickness * 4, thickness * 2]);
-    } else if (borderStyle === 'dotted') {
-      ctx.setLineDash([thickness, thickness * 2]);
-    } else {
-      ctx.setLineDash([]);
-    }
-    
-    if (radius > 0) {
+export function drawPhotoWithBorder(ctx, img, x, y, width, height, borderStyle = 'none', borderColor = '#000000', borderThickness = 1, mirror = false) {
+  const t = Number(borderThickness) || 1;
+
+  if (!borderStyle || borderStyle === 'none' || t <= 0) {
+    if (mirror) {
       ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(x, y, width, height, radius);
-      ctx.stroke();
-      ctx.clip();
-      if (mirror) {
-        ctx.translate(x + width, y);
-        ctx.scale(-1, 1);
-        ctx.drawImage(img, 0, 0, width, height);
-      } else {
-        ctx.drawImage(img, x, y, width, height);
-      }
+      ctx.translate(x + width, y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(img, 0, 0, width, height);
       ctx.restore();
-      return;
-    }
-    
-    // Handle double border
-    if (borderStyle === 'double') {
-      ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x + thickness * 1.5, y + thickness * 1.5, width - thickness * 3, height - thickness * 3);
     } else {
-      ctx.strokeRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+      ctx.drawImage(img, x, y, width, height);
     }
-    
+    return;
+  }
+
+  // Content area inset by thickness on all sides
+  const cx = x + t;
+  const cy = y + t;
+  const cw = width - 2 * t;
+  const ch = height - 2 * t;
+
+  // Helper to draw photo content
+  function drawContent(dx, dy, dw, dh) {
+    if (mirror) {
+      ctx.save();
+      ctx.translate(dx + dw, dy);
+      ctx.scale(-1, 1);
+      ctx.drawImage(img, 0, 0, dw, dh);
+      ctx.restore();
+    } else {
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+  }
+
+  if (borderStyle === 'rounded') {
+    const r = Math.min(8, t * 2, cw / 4, ch / 4);
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cw, ch, r);
+    ctx.clip();
+    drawContent(cx, cy, cw, ch);
+    ctx.restore();
+
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.roundRect(x + t/2, y + t/2, width - t, height - t, r + t/2);
+    ctx.stroke();
+    return;
+  }
+
+  if (borderStyle === 'zigzag') {
+    drawContent(cx, cy, cw, ch);
+    const period = Math.max(6, t * 3);
+    const amp = Math.max(3, t * 1.5);
+    const inset = t / 2;
+    const lx = x + inset, rx = x + width - inset;
+    const ty = y + inset, by = y + height - inset;
+
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.lineJoin = 'miter';
+    ctx.beginPath();
+
+    // Top edge
+    let i = 0;
+    for (let px = lx; px <= rx; px += period / 2) {
+      const py = ty + (i % 2 === 0 ? amp : -amp);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+      i++;
+    }
+    // Right edge
+    i = 0;
+    for (let py = ty; py <= by; py += period / 2) {
+      const px = rx + (i % 2 === 0 ? amp : -amp);
+      ctx.lineTo(px, py);
+      i++;
+    }
+    // Bottom edge
+    i = 0;
+    for (let px = rx; px >= lx; px -= period / 2) {
+      const py = by + (i % 2 === 0 ? amp : -amp);
+      ctx.lineTo(px, py);
+      i++;
+    }
+    // Left edge
+    i = 0;
+    for (let py = by; py >= ty; py -= period / 2) {
+      const px = lx + (i % 2 === 0 ? amp : -amp);
+      ctx.lineTo(px, py);
+      i++;
+    }
+    ctx.closePath();
+    ctx.stroke();
+    return;
+  }
+
+  if (borderStyle === 'wavy') {
+    drawContent(cx, cy, cw, ch);
+    const waves = 4;
+    const steps = 24;
+    const amp = Math.max(2, t * 0.8);
+    const inset = t / 2;
+    const lx = x + inset, rx = x + width - inset;
+    const ty = y + inset, by = y + height - inset;
+
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+
+    // Top edge
+    for (let s = 0; s <= steps; s++) {
+      const px = lx + (rx - lx) * s / steps;
+      const py = ty + amp * Math.sin(s * Math.PI * waves / steps);
+      if (s === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    // Right edge
+    for (let s = 0; s <= steps; s++) {
+      const px = rx + amp * Math.sin(s * Math.PI * waves / steps);
+      const py = ty + (by - ty) * s / steps;
+      ctx.lineTo(px, py);
+    }
+    // Bottom edge
+    for (let s = 0; s <= steps; s++) {
+      const px = rx - (rx - lx) * s / steps;
+      const py = by + amp * Math.sin(s * Math.PI * waves / steps);
+      ctx.lineTo(px, py);
+    }
+    // Left edge
+    for (let s = 0; s <= steps; s++) {
+      const px = lx + amp * Math.sin(s * Math.PI * waves / steps);
+      const py = by - (by - ty) * s / steps;
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    return;
+  }
+
+  if (borderStyle === 'bevel') {
+    drawContent(cx, cy, cw, ch);
+    const off = t;
+    // Outer shadow
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.strokeRect(x + off + t/2, y + off + t/2, width - off*2 - t, height - off*2 - t);
+    // Inner highlight
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.strokeRect(x + t/2, y + t/2, width - t, height - t);
+    // Main border
+    ctx.strokeStyle = borderColor;
+    ctx.strokeRect(x + off/2 + t/2, y + off/2 + t/2, width - off - t, height - off - t);
+    return;
+  }
+
+  if (borderStyle === 'inset') {
+    drawContent(cx, cy, cw, ch);
+    const gap = Math.max(2, Math.round(t * 0.8));
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.strokeRect(x + t/2, y + t/2, width - t, height - t);
+    ctx.strokeRect(x + t + gap + t/2, y + t + gap + t/2, width - 2*(t + gap) - t, height - 2*(t + gap) - t);
+    return;
+  }
+
+  if (borderStyle === 'scallop') {
+    drawContent(cx, cy, cw, ch);
+    const sz = Math.max(4, t * 2);
+    const inset = t / 2;
+    const lx = x + inset, rx = x + width - inset;
+    const ty = y + inset, by = y + height - inset;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    // Top
+    for (let px = lx; px <= rx; px += sz) {
+      ctx.arc(px + sz/2, ty, sz/2, Math.PI, 0);
+    }
+    // Right
+    for (let py = ty; py <= by; py += sz) {
+      ctx.arc(rx, py + sz/2, sz/2, -Math.PI/2, Math.PI/2);
+    }
+    // Bottom
+    for (let px = rx; px >= lx; px -= sz) {
+      ctx.arc(px - sz/2, by, sz/2, 0, Math.PI);
+    }
+    // Left
+    for (let py = by; py >= ty; py -= sz) {
+      ctx.arc(lx, py - sz/2, sz/2, Math.PI/2, -Math.PI/2);
+    }
+    ctx.stroke();
+    return;
+  }
+
+  if (borderStyle === 'stitch') {
+    drawContent(cx, cy, cw, ch);
+    const step = Math.max(6, t * 3);
+    const tick = Math.max(3, t * 1.2);
+    const inset = t / 2;
+    const lx = x + inset, rx = x + width - inset;
+    const ty = y + inset, by = y + height - inset;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = Math.max(1, Math.round(t * 0.6));
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    // Draw border line
+    ctx.moveTo(lx, ty); ctx.lineTo(rx, ty);
+    ctx.moveTo(rx, ty); ctx.lineTo(rx, by);
+    ctx.moveTo(rx, by); ctx.lineTo(lx, by);
+    ctx.moveTo(lx, by); ctx.lineTo(lx, ty);
+    ctx.stroke();
+    // Draw stitches
+    ctx.beginPath();
+    for (let px = lx; px < rx; px += step) {
+      ctx.moveTo(px, ty - tick); ctx.lineTo(px, ty + tick);
+      ctx.moveTo(px, by - tick); ctx.lineTo(px, by + tick);
+    }
+    for (let py = ty; py < by; py += step) {
+      ctx.moveTo(lx - tick, py); ctx.lineTo(lx + tick, py);
+      ctx.moveTo(rx - tick, py); ctx.lineTo(rx + tick, py);
+    }
+    ctx.stroke();
+    return;
+  }
+
+  if (borderStyle === 'chain') {
+    drawContent(cx, cy, cw, ch);
+    const linkW = Math.max(6, t * 2.5);
+    const linkH = Math.max(4, t * 1.5);
+    const inset = t / 2;
+    const lx = x + inset, rx = x + width - inset;
+    const ty = y + inset, by = y + height - inset;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = Math.max(1, Math.round(t * 0.5));
+    ctx.setLineDash([]);
+    // Top & Bottom
+    for (let px = lx; px + linkW <= rx; px += linkW) {
+      ctx.strokeRect(px, ty - linkH/2, linkW, linkH);
+      ctx.strokeRect(px, by - linkH/2, linkW, linkH);
+    }
+    // Left & Right
+    for (let py = ty; py + linkW <= by; py += linkW) {
+      ctx.strokeRect(lx - linkH/2, py, linkH, linkW);
+      ctx.strokeRect(rx - linkH/2, py, linkH, linkW);
+    }
+    return;
+  }
+
+  if (borderStyle === 'shadow') {
+    drawContent(cx, cy, cw, ch);
+    const off = Math.max(2, t);
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = t;
+    ctx.setLineDash([]);
+    ctx.strokeRect(x + off + t/2, y + off + t/2, width - off*2 - t, height - off*2 - t);
+    ctx.strokeStyle = borderColor;
+    ctx.strokeRect(x + t/2, y + t/2, width - t, height - t);
+    return;
+  }
+
+  // Standard styles: solid, dashed, dotted, double
+  // Draw photo inset
+  drawContent(cx, cy, cw, ch);
+
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = t;
+
+  if (borderStyle === 'dashed') {
+    ctx.setLineDash([t * 4, t * 2]);
+  } else if (borderStyle === 'dotted') {
+    ctx.setLineDash([t, t * 2]);
+  } else {
     ctx.setLineDash([]);
   }
-  if (mirror) {
-    ctx.save();
-    ctx.translate(x + width, y);
-    ctx.scale(-1, 1);
-    ctx.drawImage(img, 0, 0, width, height);
-    ctx.restore();
+
+  if (borderStyle === 'double') {
+    ctx.strokeRect(x + t/2, y + t/2, width - t, height - t);
+    const inner = Math.max(1, Math.round(t / 3));
+    ctx.lineWidth = inner;
+    ctx.strokeRect(x + t + inner/2, y + t + inner/2, width - 2*t - inner, height - 2*t - inner);
   } else {
-    ctx.drawImage(img, x, y, width, height);
+    ctx.strokeRect(x + t/2, y + t/2, width - t, height - t);
   }
+
+  ctx.setLineDash([]);
 }
 
 export function generateDesignData(blocks) {
@@ -241,6 +483,7 @@ export function generateDesignData(blocks) {
 }
 
 export async function compositeReceipt(frames, templateKey, templateSettings, generalSettings, printerSettings, homeScreenSettings = null, mirrorImages = false, designData = null) {
+  const { createBlock } = await import('./receiptBlocks.js');
   const { dpi, paperWidthMm } = printerSettings;
   const canvasWidth = calcCanvasWidth(dpi, paperWidthMm);
   const contentWidth = canvasWidth - MARGIN * 2;
@@ -260,7 +503,6 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
   } catch { /* fall through to system sans-serif */ }
 
   const photoGap = blocks.photos.gap || 8;
-  const elGap = blocks.elementSpacing || 16;
   const isGrid = templateKey === '4grid' || templateKey === '2x3-landscape' || templateKey === '2x3-portrait';
   const gridCols = templateKey === '4grid' || templateKey === '2x3-portrait' || templateKey === '2x3-landscape' ? 2 : 1;
   const gridRows = templateKey === '4grid' ? 2 : templateKey === '2x3-landscape' || templateKey === '2x3-portrait' ? 3 : 1;
@@ -270,159 +512,68 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
   const photoSlotHeight = Math.round(photoSlotWidth * ratio.h / ratio.w);
   const stripCount = templateKey === '1strip' ? 1 : templateKey === '2strip' ? 2 : templateKey === '3strip' ? 3 : templateKey === '2x3-landscape' || templateKey === '2x3-portrait' ? 6 : 3;
 
+  const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
+  const barcodeValue = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
+
+  // Build shared context object passed to all blocks
+  const shared = {
+    canvasWidth,
+    contentWidth,
+    x,
+    blocks,
+    templateKey,
+    frames,
+    designData,
+    generalSettings,
+    homeScreenSettings,
+    mirrorImages,
+    fontHeading,
+    fontBody,
+    photoSlotWidth,
+    photoSlotHeight,
+    photoGap,
+    gridCols,
+    gridRows,
+    isGrid,
+    stripCount,
+    barcodeValue,
+  };
+
   const order = blocks.blockOrder || ['datetime', 'header', 'dividerBefore', 'photos', 'dividerAfter', 'customText', 'receiptItems', 'bibleVerses', 'barcode', 'footer'];
+  const GAP = blocks.elementSpacing || 16;
 
-  // ── Compute total height (each block reports its own content height only) ──
-  let contentH = 0;
-  let enabledCount = 0;
-  for (const key of order) {
-    switch (key) {
-      case 'header':
-        if (blocks.header.enabled) {
-          enabledCount++;
-          if (blocks.header.image) {
-            const scale = (blocks.header.imageScale || 4) / 4;
-            contentH += Math.min(100, contentWidth * 0.25) * scale + (blocks.header.imageBottomMargin || 16);
-          } else {
-            const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
-            const titleFontSize = homeScreen.title?.size || blocks.header.fontSize;
-            contentH += textH(titleFontSize);
-            const subtitleText = homeScreen.subtitle?.text || generalSettings.eventName;
-            if (subtitleText) {
-              contentH += elGap;
-              const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(titleFontSize * 0.52));
-              contentH += textH(subFontSize);
-            }
-          }
-        }
-        break;
-      case 'dividerBefore':
-        if (blocks.divider.enabled) {
-          enabledCount++;
-          contentH += dividerH(blocks.divider.thickness);
-        }
-        break;
-      case 'photos':
-        if (blocks.photos.enabled) {
-          enabledCount++;
-          if (templateKey === '4grid') {
-            contentH += gridH(photoSlotHeight, photoGap);
-          } else if (templateKey === '2x3-landscape' || templateKey === '2x3-portrait') {
-            contentH += photoSlotHeight * 3 + photoGap * 2;
-          } else {
-            contentH += photosH(photoSlotHeight, stripCount, photoGap);
-          }
-        }
-        break;
-      case 'dividerAfter':
-        if (blocks.divider.enabled) {
-          enabledCount++;
-          contentH += dividerH(blocks.divider.thickness);
-        }
-        break;
-      case 'datetime':
-        if (blocks.datetime.enabled) {
-          enabledCount++;
-          contentH += textH(DATETIME_FONT);
-        }
-        break;
-      case 'customText':
-        if (blocks.customText.enabled && blocks.customText.content) {
-          enabledCount++;
-          contentH += textH(blocks.customText.fontSize);
-        }
-        break;
-      case 'receiptItems':
-        if (blocks.receiptItems.enabled) {
-          enabledCount++;
-          // Use pre-generated data, randomize placeholder, or static items
-          let items = designData?.receiptItems;
-          if (!items && blocks.receiptItems.randomize) {
-            items = [{ name: 'x', quantity: 1, price: 0 }, { name: 'x', quantity: 1, price: 0 }, { name: 'x', quantity: 1, price: 0 }];
-          }
-          if (!items) items = blocks.receiptItems.items || [];
-          contentH += receiptItemsH(blocks.receiptItems.fontSize, items, blocks.receiptItems.showTotal);
-        }
-        break;
-      case 'bibleVerses':
-        if (blocks.bibleVerses.enabled) {
-          enabledCount++;
-          const fontSize = blocks.bibleVerses.fontSize || 28;
+  // ── Build enabled block list ──
+  const blockList = order
+    .map(id => createBlock(id, shared))
+    .filter(Boolean);
 
-          // Use pre-generated verse or generate one on-the-fly, then measure exact wrapped height
-          const verse = designData?.verse || getRandomVerse(blocks.bibleVerses.topic || 'all');
-
-          const tmp = document.createElement('canvas').getContext('2d');
-          tmp.font = `bold ${fontSize}px '${fontHeading}', sans-serif`;
-
-          const words = verse.text.split(' ');
-          let line = '';
-          let lines = 1;
-          for (const word of words) {
-            const test = line + (line ? ' ' : '') + word;
-            if (tmp.measureText(test).width > contentWidth && line) {
-              lines++;
-              line = word;
-            } else {
-              line = test;
-            }
-          }
-
-          contentH += fontSize * lines;
-          if (blocks.bibleVerses.showReference) {
-            contentH += fontSize;
-          }
-        }
-        break;
-      case 'barcode': {
-        if (blocks.barcode.enabled) {
-          enabledCount++;
-          try {
-            const JsBarcode = (await import('jsbarcode')).default;
-            const tmp = document.createElement('canvas');
-            const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
-            const barcodeValue = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
-            JsBarcode(tmp, blocks.barcode.value || barcodeValue, {
-              format: blocks.barcode.type || 'CODE128',
-              width: Math.max(2, Math.floor(contentWidth / 50)),
-              height: 80,
-              displayValue: blocks.barcode.showText !== false,
-              fontSize: 22,
-              margin: 0,
-            });
-            contentH += barcodeH((contentWidth / tmp.width) * tmp.height);
-          } catch {
-            contentH += barcodeH(blocks.barcode.showText !== false ? BARCODE_HEIGHT : 80);
-          }
-        }
-        break;
-      }
-      case 'footer': {
-        if (blocks.footer.enabled) {
-          enabledCount++;
-          if (blocks.footer.image) {
-            const scale = (blocks.footer.imageScale || 4) / 4;
-            const fImg = await loadImage(blocks.footer.image);
-            const fImgWidth = contentWidth * scale;
-            const fImgHeight = fImgWidth * (fImg.height / fImg.width);
-            contentH += (blocks.footer.imageTopMargin || 16) + fImgHeight;
-          } else {
-            contentH += textH(blocks.footer.fontSize);
-          }
-          // Bottom breathing room so footer doesn't sit on canvas edge
-          contentH += Math.max(4, Math.round(elGap / 2));
-        }
-        break;
-      }
-    }
+  // ── Measure pass ──
+  for (const block of blockList) {
+    block._height = await block.measure(shared);
   }
 
-  // Add spacing between enabled blocks (gaps go BETWEEN blocks, not after)
-  if (enabledCount > 1) contentH += (enabledCount - 1) * elGap;
+  // Filter out 0-height (disabled) blocks
+  const enabledBlocks = blockList.filter(b => b._height > 0);
 
-  const totalHeight = MARGIN + contentH + MARGIN;
+  // ── Render to temp canvas (large height) ──
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = canvasWidth;
+  tmpCanvas.height = 5000; // Large enough for any receipt
+  const tmpCtx = tmpCanvas.getContext('2d');
 
-  // ── Create canvas ─────────────────────────────────────────────────────────
+  tmpCtx.fillStyle = blocks.backgroundColor || '#ffffff';
+  tmpCtx.fillRect(0, 0, canvasWidth, tmpCanvas.height);
+
+  let currentY = MARGIN;
+  for (let i = 0; i < enabledBlocks.length; i++) {
+    const block = enabledBlocks[i];
+    const h = await block.render(tmpCtx, currentY, shared);
+    currentY += h;
+    if (i < enabledBlocks.length - 1) currentY += GAP;
+  }
+
+  // ── Create final canvas with exact height from rendered content ──
+  const totalHeight = currentY + MARGIN;
   const canvas = document.createElement('canvas');
   canvas.width = canvasWidth;
   canvas.height = totalHeight;
@@ -430,307 +581,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
 
   ctx.fillStyle = blocks.backgroundColor || '#ffffff';
   ctx.fillRect(0, 0, canvasWidth, totalHeight);
-
-  let y = MARGIN;
-
-  for (const key of order) {
-    switch (key) {
-      case 'header': {
-        if (!blocks.header.enabled) break;
-
-        // If image is uploaded, draw it instead of text
-        if (blocks.header.image) {
-          const img = await loadImage(blocks.header.image);
-          const scale = (blocks.header.imageScale || 4) / 4; // 1-8 scale, default 4
-          const baseHeight = Math.min(100, contentWidth * 0.25);
-          const imgHeight = baseHeight * scale;
-          const imgWidth = imgHeight * (img.width / img.height);
-          const imgX = blocks.header.alignment === 'center' ? x + (contentWidth - imgWidth) / 2 :
-                       blocks.header.alignment === 'right' ? x + contentWidth - imgWidth : x;
-          ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
-          y += imgHeight + (blocks.header.imageBottomMargin || 16);
-          y += elGap;
-        } else {
-          // Always use home screen title/subtitle (template header custom text is ignored)
-          const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
-          const titleText = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
-          const subtitleText = homeScreen.subtitle?.text || generalSettings.eventName;
-
-          const titleFontSize = homeScreen.title?.size || blocks.header.fontSize;
-          drawText(ctx, titleText, x, y, contentWidth, {
-            fontSize: titleFontSize,
-            bold: blocks.header.bold,
-            alignment: blocks.header.alignment,
-            fontFamily: fontHeading,
-          });
-          y += textH(titleFontSize);
-
-          if (subtitleText) {
-            y += elGap;
-            const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(titleFontSize * 0.52));
-            drawText(ctx, subtitleText, x, y, contentWidth, {
-              fontSize: subFontSize,
-              bold: false,
-              alignment: blocks.header.alignment,
-              color: '#000000',
-              fontFamily: fontBody,
-            });
-            y += textH(subFontSize);
-          }
-          y += elGap;
-        }
-        break;
-      }
-      case 'photos': {
-        if (!blocks.photos.enabled) break;
-        
-        if (templateKey === '4grid') {
-          const imgs = await Promise.all(frames.slice(0, 4).map(f => f ? loadImage(f) : null));
-          const slots = [[0,0],[1,0],[0,1],[1,1]];
-          for (let i = 0; i < 4; i++) {
-            const [col, row] = slots[i];
-            const px = x + col * (photoSlotWidth + photoGap);
-            const py = y + row * (photoSlotHeight + photoGap);
-            if (imgs[i]) {
-              drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
-            } else {
-              ctx.fillStyle = '#e8e8e8';
-              ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
-            }
-          }
-          y += gridH(photoSlotHeight, photoGap);
-          y += elGap;
-        } else if (templateKey === '2x3-landscape') {
-          const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
-          const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
-          for (let i = 0; i < 6; i++) {
-            const [col, row] = slots[i];
-            const px = x + col * (photoSlotWidth + photoGap);
-            const py = y + row * (photoSlotHeight + photoGap);
-            if (imgs[i]) {
-              drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
-            } else {
-              ctx.fillStyle = '#e8e8e8';
-              ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
-            }
-          }
-          y += photoSlotHeight * 3 + photoGap * 2;
-          y += elGap;
-        } else if (templateKey === '2x3-portrait') {
-          const imgs = await Promise.all(frames.slice(0, 6).map(f => f ? loadImage(f) : null));
-          const slots = [[0,0],[1,0],[0,1],[1,1],[0,2],[1,2]];
-          for (let i = 0; i < 6; i++) {
-            const [col, row] = slots[i];
-            const px = x + col * (photoSlotWidth + photoGap);
-            const py = y + row * (photoSlotHeight + photoGap);
-            if (imgs[i]) {
-              drawPhotoWithBorder(ctx, imgs[i], px, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
-            } else {
-              ctx.fillStyle = '#e8e8e8';
-              ctx.fillRect(px, py, photoSlotWidth, photoSlotHeight);
-            }
-          }
-          y += photoSlotHeight * 3 + photoGap * 2;
-          y += elGap;
-        } else {
-          for (let i = 0; i < stripCount; i++) {
-            const py = y + i * (photoSlotHeight + photoGap);
-            if (frames[i]) {
-              const img = await loadImage(frames[i]);
-              drawPhotoWithBorder(ctx, img, x, py, photoSlotWidth, photoSlotHeight,
-                blocks.photos.borderStyle, blocks.photos.borderColor, mirrorImages);
-            } else {
-              ctx.fillStyle = '#e8e8e8';
-              ctx.fillRect(x, py, photoSlotWidth, photoSlotHeight);
-            }
-          }
-          y += photosH(photoSlotHeight, stripCount, photoGap);
-          y += elGap;
-        }
-        break;
-      }
-      case 'dividerBefore': {
-        if (!blocks.divider.enabled) break;
-        drawDivider(ctx, x, y, contentWidth, blocks.divider, elGap);
-        y += dividerH(blocks.divider.thickness);
-        y += elGap;
-        break;
-      }
-      case 'dividerAfter': {
-        if (!blocks.divider.enabled) break;
-        drawDivider(ctx, x, y, contentWidth, blocks.divider, elGap);
-        y += dividerH(blocks.divider.thickness);
-        y += elGap;
-        break;
-      }
-      case 'datetime': {
-        if (!blocks.datetime.enabled) break;
-        const dateStr = formatDate(blocks.datetime.format || 'MMM DD, YYYY HH:mm');
-        drawText(ctx, dateStr, x, y, contentWidth, {
-          fontSize: DATETIME_FONT,
-          alignment: 'center',
-          color: '#000000',
-          fontFamily: fontBody,
-        });
-        y += textH(DATETIME_FONT);
-        y += elGap;
-        break;
-      }
-      case 'customText': {
-        if (!blocks.customText.enabled || !blocks.customText.content) break;
-        drawText(ctx, blocks.customText.content, x, y, contentWidth, {
-          fontSize: blocks.customText.fontSize,
-          alignment: blocks.customText.alignment,
-          fontFamily: fontBody,
-        });
-        y += textH(blocks.customText.fontSize);
-        y += elGap;
-        break;
-      }
-      case 'receiptItems': {
-        if (!blocks.receiptItems.enabled) break;
-
-        const fontSize = blocks.receiptItems.fontSize || 20;
-        const itemHeight = fontSize + 4;
-        const showQty = blocks.receiptItems.showQty !== false;
-
-        // Get items - use pre-generated data if available, otherwise generate fresh
-        let items = designData?.receiptItems || blocks.receiptItems.items || [];
-        if (!designData?.receiptItems && blocks.receiptItems.randomize) {
-          const wittyItems = [
-            { name: 'Good Vibes', quantity: 1, price: 999 },
-            { name: 'Bad Decisions', quantity: 2, price: 0 },
-            { name: 'Y2K Energy', quantity: 1, price: 500 },
-            { name: 'Main Character Energy', quantity: 1, price: 750 },
-            { name: 'Side Quest', quantity: 3, price: 150 },
-            { name: 'Plot Armor', quantity: 1, price: 1000 },
-            { name: 'Emotional Damage', quantity: 1, price: 50 },
-            { name: 'Brain Cells', quantity: 0, price: 0 },
-            { name: 'Social Battery', quantity: 1, price: 25 },
-            { name: 'Serenity', quantity: 1, price: 888 },
-          ];
-          items = wittyItems.sort(() => 0.5 - Math.random()).slice(0, 3);
-        }
-
-        if (!items.length) break;
-
-        // Draw table header
-        ctx.font = `bold ${fontSize}px '${fontBody}', sans-serif`;
-        ctx.fillStyle = '#000000';
-        ctx.textAlign = 'left';
-        ctx.fillText('ITEM', x, y + fontSize);
-        if (showQty) {
-          ctx.textAlign = 'right';
-          ctx.fillText('QTY', x + contentWidth * 0.6, y + fontSize);
-        }
-        ctx.textAlign = 'right';
-        ctx.fillText('PRICE', x + contentWidth, y + fontSize);
-        y += itemHeight;
-
-        // Draw items
-        ctx.font = `normal ${fontSize}px '${fontBody}', sans-serif`;
-        let total = 0;
-        for (const item of items) {
-          ctx.textAlign = 'left';
-          ctx.fillText(item.name || '', x, y + fontSize);
-          if (showQty) {
-            ctx.textAlign = 'right';
-            ctx.fillText(String(item.quantity || 1), x + contentWidth * 0.6, y + fontSize);
-          }
-          ctx.textAlign = 'right';
-          const price = parseFloat(item.price) || 0;
-          ctx.fillText(`₱${price.toFixed(2)}`, x + contentWidth, y + fontSize);
-          total += price * (item.quantity || 1);
-          y += itemHeight;
-        }
-
-        // Draw total line
-        if (blocks.receiptItems.showTotal) {
-          ctx.font = `bold ${fontSize}px '${fontBody}', sans-serif`;
-          ctx.fillStyle = '#000000';
-          ctx.textAlign = 'left';
-          ctx.fillText('TOTAL', x, y + fontSize + 4);
-          ctx.textAlign = 'right';
-          ctx.fillText(`₱${total.toFixed(2)}`, x + contentWidth, y + fontSize + 4);
-          y += fontSize + 8;
-        }
-
-        y += elGap;
-        break;
-      }
-      case 'bibleVerses': {
-        if (!blocks.bibleVerses.enabled) break;
-        
-        // Use pre-generated verse if available, otherwise generate fresh
-        const verse = designData?.verse || getRandomVerse(blocks.bibleVerses.topic || 'all');
-        const fontSize = blocks.bibleVerses.fontSize || 28;
-        
-        const verseHeight = drawText(ctx, verse.text, x, y, contentWidth, {
-          fontSize: fontSize,
-          bold: true,
-          alignment: blocks.bibleVerses.alignment || 'center',
-          color: '#000000',
-          fontFamily: fontHeading,
-          wrap: true,
-        });
-        y += verseHeight;
-        
-        if (blocks.bibleVerses.showReference) {
-          drawText(ctx, verse.reference, x, y, contentWidth, {
-            fontSize: fontSize,
-            alignment: blocks.bibleVerses.alignment || 'center',
-            color: '#666666',
-            fontFamily: fontHeading,
-          });
-          y += fontSize;
-        }
-        y += elGap;
-        break;
-      }
-      case 'barcode': {
-        if (!blocks.barcode.enabled) break;
-        const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
-        const barcodeValue = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
-        const bh = await renderBarcode(ctx, x, y, contentWidth, {
-          ...blocks.barcode,
-          value: blocks.barcode.value || barcodeValue
-        });
-        y += barcodeH(bh);
-        y += elGap;
-        break;
-      }
-      case 'footer': {
-        if (!blocks.footer.enabled) break;
-        
-        // If image is uploaded, draw it instead of text
-        if (blocks.footer.image) {
-          const img = await loadImage(blocks.footer.image);
-          const scale = (blocks.footer.imageScale || 4) / 4; // 1-8 scale, default 4
-          const baseWidth = contentWidth; // Full width
-          const imgWidth = baseWidth * scale;
-          const imgHeight = imgWidth * (img.height / img.width);
-          const imgX = x; // Left aligned for full width
-          y += (blocks.footer.imageTopMargin || 16); // Add top margin
-          ctx.drawImage(img, imgX, y, imgWidth, imgHeight);
-          y += imgHeight;
-        } else {
-          const footerHeight = drawText(ctx, blocks.footer.text, x, y, contentWidth, {
-            fontSize: blocks.footer.fontSize,
-            alignment: blocks.footer.alignment,
-            color: '#000000',
-            fontFamily: fontBody,
-          });
-          y += footerHeight;
-        }
-        // Add bottom breathing room so footer doesn't sit on canvas edge
-        y += Math.max(4, Math.round(elGap / 2));
-        break;
-      }
-    }
-  }
+  ctx.drawImage(tmpCanvas, 0, 0);
 
   return canvas;
 }

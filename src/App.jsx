@@ -8,7 +8,6 @@ import { playTransition } from './hooks/useSound.js';
 import { useDeviceHeartbeat } from './hooks/useDeviceHeartbeat.js';
 import { useDeviceStatusSync } from './hooks/useDeviceStatusSync.js';
 import SettingsPanel from './components/SettingsPanel.jsx';
-import PermissionModal from './components/PermissionModal.jsx';
 import IntroModal from './components/IntroModal.jsx';
 import PairingModal from './components/PairingModal.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
@@ -401,13 +400,7 @@ function PhotoboothApp() {
 
       <SettingsPanel currentScreen={screens[screens.length - 1]?.name} onOpen={(fn) => { openSettingsRef.current = fn; }} />
       <IntroModal onComplete={() => setIntroCompleted(true)} />
-      {introCompleted && !permissionGranted && (
-        <PermissionModal
-          onPermissionGranted={() => setPermissionGranted(true)}
-          onPermissionDenied={() => setPermissionGranted(false)}
-        />
-      )}
-      {introCompleted && permissionGranted && !isPaired && screens[screens.length - 1]?.name === 'standby' && showPairingModal && (
+      {introCompleted && !isPaired && screens[screens.length - 1]?.name === 'standby' && showPairingModal && (
         <PairingModal onPaired={handlePaired} onClose={handlePairingClose} />
       )}
     </div>
