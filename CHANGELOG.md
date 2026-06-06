@@ -49,6 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ReceiptItems height calc not accounting for randomize mode (canvas too short when items array empty)
 - BibleVerses height calc using max across all verses instead of actual chosen verse (overestimated)
 - Header title font size mismatch between height calc and renderer
+- Footer text trimmed/cut off at bottom (textH() didn't account for descenders, no footer bottom breathing room)
+- Subtitle font size mismatch in renderer using blocks.header.fontSize instead of titleFontSize
 
 ### Changed
 - Show title/subtitle toggle now only affects home screen (not receipts or other screens)
