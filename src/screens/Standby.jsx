@@ -201,17 +201,7 @@ export default function Standby({ onStart, onOpenSettings }) {
         backgroundRepeat: 'no-repeat',
       };
     }
-    if (bgType === 'color') {
-      return {
-        backgroundColor: bgColor,
-      };
-    }
-    if (bgType === 'gradient' && GRADIENT_PRESETS[bgGradientId]) {
-      return {
-        background: GRADIENT_PRESETS[bgGradientId],
-      };
-    }
-    // Default to preset
+    // Default to preset (includes legacy color/gradient fallback)
     return {};
   }
   
@@ -222,11 +212,11 @@ export default function Standby({ onStart, onOpenSettings }) {
     if (bgType === 'image' && bgImageBase64) {
       return 'bg-md-surface';
     }
-    if (bgType === 'color' || bgType === 'gradient') {
-      return 'bg-md-surface';
+    if (bgType === 'preset') {
+      return background.className || 'bg-md-surface';
     }
-    // Default to preset
-    return background.className || 'bg-md-surface';
+    // Default fallback
+    return 'bg-md-surface';
   }
 
   return (

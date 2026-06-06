@@ -34,7 +34,7 @@ function CleaningScreen({ onDone }) {
   const { settings } = useSettings();
   const homeScreen = settings.homeScreen || {};
   const titleText = homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH';
-  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || settings.general.eventName) : null;
+  const subtitleText = homeScreen.subtitle?.text || settings.general.eventName;
   const [msgIndex, setMsgIndex] = useState(Math.floor(Math.random() * RETAKE_MESSAGES.length));
 
   useEffect(() => {
@@ -79,7 +79,7 @@ function ComposingScreen({ onDone }) {
   const { settings } = useSettings();
   const homeScreen = settings.homeScreen || {};
   const titleText = homeScreen.title?.text || settings.general.boothName || 'MONO BOOTH PH';
-  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || settings.general.eventName) : null;
+  const subtitleText = homeScreen.subtitle?.text || settings.general.eventName;
 
   useEffect(() => {
     const t = setTimeout(onDone, 1600);

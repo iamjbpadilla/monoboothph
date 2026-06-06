@@ -4,32 +4,6 @@ import { useSettings } from '../../context/SettingsContext.jsx';
 import { PAPERBACKGROUNDS, ACCENT_PALETTES, FONT_PAIRS, FONT_OPTIONS } from '../../lib/theme.js';
 import ConfirmDialog from '../ConfirmDialog.jsx';
 
-const GRADIENT_PRESETS = [
-  { id: 'gradient-purple-pink', label: 'Purple Pink', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  { id: 'gradient-blue-cyan', label: 'Blue Cyan', css: 'linear-gradient(135deg, #667eea 0%, #00d2ff 100%)' },
-  { id: 'gradient-orange-red', label: 'Orange Red', css: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-  { id: 'gradient-green-teal', label: 'Green Teal', css: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-  { id: 'gradient-sunset', label: 'Sunset', css: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
-  { id: 'gradient-ocean', label: 'Ocean', css: 'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)' },
-  { id: 'gradient-sunset-2', label: 'Sunset 2', css: 'linear-gradient(135deg, #ff512f 0%, #dd2476 100%)' },
-  { id: 'gradient-forest', label: 'Forest', css: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)' },
-  { id: 'gradient-midnight', label: 'Midnight', css: 'linear-gradient(135deg, #232526 0%, #414345 100%)' },
-  { id: 'gradient-royal', label: 'Royal', css: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)' },
-];
-
-const COLOR_PRESETS = [
-  { id: 'color-white', label: 'White', color: '#ffffff' },
-  { id: 'color-black', label: 'Black', color: '#000000' },
-  { id: 'color-gray', label: 'Gray', color: '#6b7280' },
-  { id: 'color-red', label: 'Red', color: '#ef4444' },
-  { id: 'color-orange', label: 'Orange', color: '#f97316' },
-  { id: 'color-yellow', label: 'Yellow', color: '#eab308' },
-  { id: 'color-green', label: 'Green', color: '#22c55e' },
-  { id: 'color-blue', label: 'Blue', color: '#3b82f6' },
-  { id: 'color-purple', label: 'Purple', color: '#a855f7' },
-  { id: 'color-pink', label: 'Pink', color: '#ec4899' },
-];
-
 const BUTTON_SHAPES = [
   { id: 'pill', label: 'Pill', class: 'rounded-full' },
   { id: 'rectangle', label: 'Rectangle', class: 'rounded-lg' },
@@ -175,7 +149,7 @@ export default function HomeScreenSettings() {
 
   function resetSection(section) {
     const defaults = {
-      background: { type: 'color', color: '#ffffff', gradientId: 'gradient-purple-pink', imageBase64: null, videoBase64: null },
+      background: { type: 'preset', presetId: 'plain', imageBase64: null, videoBase64: null },
       title: { enabled: true, text: 'MONO BOOTH PH', size: 56 },
       subtitle: { enabled: true, text: 'Receipt Photobooth', size: 24 },
       button: { shape: 'pill', scale: 1.0, text: 'Tap to Start', imageBase64: null, verticalOffset: 0, animation: 'pulse' },
@@ -316,7 +290,7 @@ export default function HomeScreenSettings() {
           <div>
             <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Background Type</label>
             <div className="flex gap-2">
-              {['color', 'gradient', 'image', 'video'].map(type => (
+              {['preset', 'image', 'video'].map(type => (
                 <button
                   key={type}
                   onClick={() => updateSettings('homeScreen.background.type', type)}
@@ -332,45 +306,23 @@ export default function HomeScreenSettings() {
             </div>
           </div>
 
-          {/* Solid Color */}
-          {homeScreen.background.type === 'color' && (
+          {/* Preset Patterns */}
+          {homeScreen.background.type === 'preset' && (
             <div>
-              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Color</label>
-              <div className="flex gap-2">
-                <input
-                  type="color"
-                  value={homeScreen.background.color || '#ffffff'}
-                  onChange={e => updateSettings('homeScreen.background.color', e.target.value)}
-                  className="w-12 h-12 rounded-lg border border-md-outline-variant cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={homeScreen.background.color || '#ffffff'}
-                  onChange={e => updateSettings('homeScreen.background.color', e.target.value)}
-                  className="flex-1 px-3 py-2 bg-md-surface-container border border-md-outline-variant rounded-lg text-sm"
-                  placeholder="#ffffff"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Gradient */}
-          {homeScreen.background.type === 'gradient' && (
-            <div>
-              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Gradient</label>
+              <label className="block text-xs font-medium text-md-on-surface-variant mb-2">Pattern</label>
               <div className="grid grid-cols-2 gap-2">
-                {GRADIENT_PRESETS.map(grad => (
+                {Object.values(PAPERBACKGROUNDS).map(preset => (
                   <button
-                    key={grad.id}
-                    onClick={() => updateSettings('homeScreen.background.gradientId', grad.id)}
+                    key={preset.id}
+                    onClick={() => updateSettings('homeScreen.background.presetId', preset.id)}
                     className={`h-12 rounded-lg border-2 transition-all ${
-                      homeScreen.background.gradientId === grad.id
+                      homeScreen.background.presetId === preset.id
                         ? 'border-md-primary ring-2 ring-md-primary ring-offset-2'
                         : 'border-md-outline-variant hover:border-md-outline'
                     }`}
-                    style={{ background: grad.css }}
-                    title={grad.label}
-                  />
+                  >
+                    <span className="text-xs">{preset.label}</span>
+                  </button>
                 ))}
               </div>
             </div>

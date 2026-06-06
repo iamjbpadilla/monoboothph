@@ -263,9 +263,9 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           } else {
             contentH += textH(blocks.header.fontSize);
             const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
-            const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
+            const subtitleText = homeScreen.subtitle?.text || generalSettings.eventName;
             if (subtitleText) {
-              contentH += (blocks.header.titleSubtitleGap || 8);
+              contentH += elGap;
               const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
               contentH += textH(subFontSize);
             }
@@ -391,7 +391,6 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           } else {
             contentH += blocks.footer.fontSize;
           }
-          contentH += elGap; // Footer bottom spacing
         }
         break;
       }
@@ -435,7 +434,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           // Always use home screen title/subtitle (template header custom text is ignored)
           const homeScreen = homeScreenSettings || generalSettings.homeScreen || {};
           const titleText = homeScreen.title?.text || generalSettings.boothName || 'MONO BOOTH PH';
-          const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || generalSettings.eventName) : null;
+          const subtitleText = homeScreen.subtitle?.text || generalSettings.eventName;
 
           const titleFontSize = homeScreen.title?.size || blocks.header.fontSize;
           drawText(ctx, titleText, x, y, contentWidth, {
@@ -447,7 +446,7 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           y += textH(titleFontSize);
 
           if (subtitleText) {
-            y += (blocks.header.titleSubtitleGap || 8);
+            y += elGap;
             const subFontSize = homeScreen.subtitle?.size || Math.max(16, Math.round(blocks.header.fontSize * 0.52));
             drawText(ctx, subtitleText, x, y, contentWidth, {
               fontSize: subFontSize,
@@ -706,7 +705,6 @@ export async function compositeReceipt(frames, templateKey, templateSettings, ge
           });
           y += footerHeight;
         }
-        y += elGap; // Footer bottom spacing
         break;
       }
     }

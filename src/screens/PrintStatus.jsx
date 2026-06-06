@@ -147,7 +147,7 @@ export default function PrintStatus({ imageDataUrl, onHome, onRetry }) {
   const { boothName, eventName } = settings.general;
 
   const titleText = homeScreen.title?.text || boothName || 'Snap & Roll';
-  const subtitleText = homeScreen.subtitle?.enabled ? (homeScreen.subtitle?.text || eventName) : eventName;
+  const subtitleText = homeScreen.subtitle?.text || eventName;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-6 px-8 bg-md-surface">

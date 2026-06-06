@@ -13,7 +13,6 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
   const [maxW, setMaxW] = useState('100%');
   const [countdown, setCountdown] = useState(AUTO_PRINT_SECONDS);
   const [mirrorImages, setMirrorImages] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const autoFiredRef = useRef(false);
 
   function handleCanvasReady(canvas) {
@@ -38,9 +37,7 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
   }
 
   function handleMirrorToggle() {
-    setIsTransitioning(true);
     setMirrorImages(prev => !prev);
-    setTimeout(() => setIsTransitioning(false), 300);
   }
 
   function handleDownload() {
@@ -115,21 +112,13 @@ export default function PrintPreview({ templateKey, frames, onPrint, onRetake })
       {/* Receipt preview — scrollable, zoom-to-fit */}
       <div ref={receiptAreaRef} className="flex-1 overflow-auto min-h-0 flex flex-col items-center px-6 py-5 page-content-enter">
         <div
-          className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl mx-auto w-full preview-receipt-enter ${
-            isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
-          }`}
+          className="overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl mx-auto w-full preview-receipt-enter"
           style={{
             maxWidth: maxW,
             background: settings.templates.blocks?.backgroundColor || '#ffffff',
           }}
         >
-          {isTransitioning && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-10">
-              <div className="w-8 h-8 border-2 border-md-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          )}
           <ReceiptCanvas
-            key={mirrorImages ? 'mirrored' : 'normal'}
             frames={frames}
             templateKey={templateKey}
             templateSettings={settings.templates}

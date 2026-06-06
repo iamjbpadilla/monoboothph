@@ -303,7 +303,7 @@ export default function Capture({ templateKey, onComplete, onBack }) {
                         {homeScreen.title.text}
                       </p>
                     )}
-                    {homeScreen.subtitle?.enabled && homeScreen.subtitle?.text && (
+                    {homeScreen.subtitle?.text && (
                       <p className="text-xs text-white/80 tracking-widest uppercase">{homeScreen.subtitle.text}</p>
                     )}
                   </div>

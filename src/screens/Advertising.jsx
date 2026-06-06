@@ -32,13 +32,19 @@ export default function Advertising({ onComplete }) {
   const completedRef = useRef(false);
 
   useEffect(() => {
-    if (useVideoLength) return; // Don't use timer when using video length
+    if (useVideoLength && !videoDuration) return; // Wait for video duration if in video-length mode
+    
+    const duration = useVideoLength ? Math.ceil(videoDuration) : adDuration;
+    setTimeLeft(duration);
     
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          onComplete();
+          if (!completedRef.current) {
+            completedRef.current = true;
+            onComplete();
+          }
           return 0;
         }
         return prev - 1;
@@ -46,7 +52,7 @@ export default function Advertising({ onComplete }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [adDuration, onComplete, useVideoLength]);
+  }, [adDuration, onComplete, useVideoLength, videoDuration]);
 
   useEffect(() => {
     if (display.showQR && adConfig.facebookUrl) {
