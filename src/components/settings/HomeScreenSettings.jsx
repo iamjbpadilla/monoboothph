@@ -10,24 +10,44 @@ const BUTTON_SHAPES = [
   { id: 'square', label: 'Square', class: 'rounded-none' },
 ];
 
-const BUTTON_ANIMATIONS = [
-  { id: 'none', label: 'None', class: '' },
-  { id: 'pulse', label: 'Pulse', class: 'standby-cta-pulse' },
-  { id: 'pulse-slow', label: 'Pulse Slow', class: 'standby-cta-pulse-slow' },
-  { id: 'pulse-fast', label: 'Pulse Fast', class: 'standby-cta-pulse-fast' },
-  { id: 'pulse-glow', label: 'Pulse Glow', class: 'standby-cta-pulse-glow' },
-  { id: 'pulse-ring', label: 'Pulse Ring', class: 'standby-cta-pulse-ring' },
-  { id: 'bounce', label: 'Bounce', class: 'standby-cta-bounce' },
-  { id: 'bounce-subtle', label: 'Bounce Subtle', class: 'standby-cta-bounce-subtle' },
-  { id: 'bounce-elastic', label: 'Bounce Elastic', class: 'standby-cta-bounce-elastic' },
-  { id: 'shake', label: 'Shake', class: 'standby-cta-shake' },
-  { id: 'wiggle', label: 'Wiggle', class: 'standby-cta-wiggle' },
-  { id: 'jiggle', label: 'Jiggle', class: 'standby-cta-jiggle' },
-  { id: 'glow', label: 'Glow', class: 'standby-cta-glow' },
-  { id: 'glow-pulse', label: 'Glow Pulse', class: 'standby-cta-glow-pulse' },
-  { id: 'glow-border', label: 'Glow Border', class: 'standby-cta-glow-border' },
-  { id: 'breathe', label: 'Breathe', class: 'standby-cta-breathe' },
-  { id: 'pulse-scale', label: 'Pulse Scale', class: 'standby-cta-pulse-scale' },
+const BUTTON_ANIMATIONS = {
+  none: '',
+  pulse: 'standby-cta-pulse',
+  'pulse-slow': 'standby-cta-pulse-slow',
+  'pulse-fast': 'standby-cta-pulse-fast',
+  'pulse-glow': 'standby-cta-pulse-glow',
+  'pulse-ring': 'standby-cta-pulse-ring',
+  bounce: 'standby-cta-bounce',
+  'bounce-subtle': 'standby-cta-bounce-subtle',
+  'bounce-elastic': 'standby-cta-bounce-elastic',
+  shake: 'standby-cta-shake',
+  wiggle: 'standby-cta-wiggle',
+  jiggle: 'standby-cta-jiggle',
+  glow: 'standby-cta-glow',
+  'glow-pulse': 'standby-cta-glow-pulse',
+  'glow-border': 'standby-cta-glow-border',
+  breathe: 'standby-cta-breathe',
+  'pulse-scale': 'standby-cta-pulse-scale',
+};
+
+const BUTTON_ANIMATION_LABELS = [
+  { id: 'none', label: 'None' },
+  { id: 'pulse', label: 'Pulse' },
+  { id: 'pulse-slow', label: 'Pulse Slow' },
+  { id: 'pulse-fast', label: 'Pulse Fast' },
+  { id: 'pulse-glow', label: 'Pulse Glow' },
+  { id: 'pulse-ring', label: 'Pulse Ring' },
+  { id: 'bounce', label: 'Bounce' },
+  { id: 'bounce-subtle', label: 'Bounce Subtle' },
+  { id: 'bounce-elastic', label: 'Bounce Elastic' },
+  { id: 'shake', label: 'Shake' },
+  { id: 'wiggle', label: 'Wiggle' },
+  { id: 'jiggle', label: 'Jiggle' },
+  { id: 'glow', label: 'Glow' },
+  { id: 'glow-pulse', label: 'Glow Pulse' },
+  { id: 'glow-border', label: 'Glow Border' },
+  { id: 'breathe', label: 'Breathe' },
+  { id: 'pulse-scale', label: 'Pulse Scale' },
 ];
 
 const LOGO_ICONS = [
@@ -484,7 +504,7 @@ export default function HomeScreenSettings() {
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {BUTTON_ANIMATIONS.map(anim => (
+              {BUTTON_ANIMATION_LABELS.map(anim => (
                 <button
                   key={anim.id}
                   onClick={() => updateSettings('homeScreen.button.animation', anim.id)}
