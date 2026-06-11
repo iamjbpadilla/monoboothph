@@ -12,8 +12,8 @@ import com.momostudioph.receipt.plugins.UsbPrinterPlugin;
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        registerPlugin(UsbPrinterPlugin.class);
         super.onCreate(savedInstanceState);
+        registerPlugin(UsbPrinterPlugin.class);
         enableImmersiveMode();
     }
 

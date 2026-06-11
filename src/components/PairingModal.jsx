@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Preferences } from '@capacitor/preferences';
+import { Capacitor } from '@capacitor/core';
 import { getSupabaseClient, checkSupabaseConnection } from '../lib/supabase';
 
 export default function PairingModal({ onPaired, onClose }) {
@@ -106,10 +107,20 @@ export default function PairingModal({ onPaired, onClose }) {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
       };
 
-      await Preferences.set({
-        key: 'snaproll_pairing',
-        value: JSON.stringify(pairingData),
-      });
+      // Use Preferences on native, localStorage on web
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await Preferences.set({
+            key: 'snaproll_pairing',
+            value: JSON.stringify(pairingData),
+          });
+        } catch (prefError) {
+          console.error('Preferences.set failed, using localStorage fallback:', prefError);
+          localStorage.setItem('snaproll_pairing', JSON.stringify(pairingData));
+        }
+      } else {
+        localStorage.setItem('snaproll_pairing', JSON.stringify(pairingData));
+      }
 
       // Show success loading screen
       setPairingSuccess(true);

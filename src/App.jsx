@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { SettingsProvider, useSettings } from './context/SettingsContext.jsx';
 import { SnackbarProvider, useSnackbar } from './context/SnackbarContext.jsx';
 import { Preferences } from '@capacitor/preferences';
+import { Capacitor } from '@capacitor/core';
 import { Camera } from '@capacitor/camera';
 import { applyAccent, resolveFontPair } from './lib/theme.js';
 import { playTransition } from './hooks/useSound.js';
@@ -196,16 +197,44 @@ function PhotoboothApp() {
   useEffect(() => {
     async function checkPermissions() {
       try {
+        // Helper function to get value with fallback
+        const getPref = async (key) => {
+          if (Capacitor.isNativePlatform()) {
+            try {
+              return await Preferences.get({ key });
+            } catch (e) {
+              console.error(`Preferences.get failed for ${key}, using localStorage:`, e);
+              return { value: localStorage.getItem(key) };
+            }
+          } else {
+            return { value: localStorage.getItem(key) };
+          }
+        };
+
+        // Helper function to set value with fallback
+        const setPref = async (key, value) => {
+          if (Capacitor.isNativePlatform()) {
+            try {
+              await Preferences.set({ key, value });
+            } catch (e) {
+              console.error(`Preferences.set failed for ${key}, using localStorage:`, e);
+              localStorage.setItem(key, value);
+            }
+          } else {
+            localStorage.setItem(key, value);
+          }
+        };
+
         // Increment local analytics sessions count on app start
-        const analyticsValue = await Preferences.get({ key: 'snaproll_local_analytics' });
+        const analyticsValue = await getPref('snaproll_local_analytics');
         const analytics = analyticsValue.value ? JSON.parse(analyticsValue.value) : { printCount: 0, imageUploads: 0, sessions: 0 };
         analytics.sessions += 1;
-        await Preferences.set({ key: 'snaproll_local_analytics', value: JSON.stringify(analytics) });
+        await setPref('snaproll_local_analytics', JSON.stringify(analytics));
         
         const [introValue, permValue, pairingValue] = await Promise.all([
-          Preferences.get({ key: 'snaproll_intro_completed' }),
-          Preferences.get({ key: 'snaproll-camera-granted' }),
-          Preferences.get({ key: 'snaproll_pairing' }),
+          getPref('snaproll_intro_completed'),
+          getPref('snaproll-camera-granted'),
+          getPref('snaproll_pairing'),
         ]);
 
         const introDone = introValue.value === 'true';
@@ -233,7 +262,15 @@ function PhotoboothApp() {
             setIsPaired(true);
           } else {
             // Pairing expired, clear it
-            await Preferences.remove({ key: 'snaproll_pairing' });
+            if (Capacitor.isNativePlatform()) {
+              try {
+                await Preferences.remove({ key: 'snaproll_pairing' });
+              } catch (e) {
+                localStorage.removeItem('snaproll_pairing');
+              }
+            } else {
+              localStorage.removeItem('snaproll_pairing');
+            }
             setIsPaired(false);
           }
         }
@@ -242,7 +279,11 @@ function PhotoboothApp() {
       } catch (err) {
         console.error('Permission check failed:', err);
         showSnackbar(`Error: ${err.message}`, 20000);
+        // Fallback: Set app ready even if Preferences fails to allow pairing modal to show
         setAppReady(true);
+        setIntroCompleted(false); // Force show intro if Preferences fails
+        setPermissionGranted(false);
+        setIsPaired(false);
       }
     }
     checkPermissions();
@@ -273,16 +314,13 @@ function PhotoboothApp() {
     return () => clearInterval(interval);
   }, [showSnackbar]);
 
-  // Show pairing modal when on standby and not paired
+  // Show pairing modal when not paired (after intro completes)
   useEffect(() => {
-    if (!appReady || !introCompleted || !permissionGranted) return;
+    if (!appReady || !introCompleted) return;
     if (isPaired) return;
     
-    const currentScreen = screens[screens.length - 1]?.name;
-    if (currentScreen === 'standby') {
-      setShowPairingModal(true);
-    }
-  }, [appReady, introCompleted, permissionGranted, isPaired, screens]);
+    setShowPairingModal(true);
+  }, [appReady, introCompleted, isPaired]);
 
   function goStandby() {
     setSelectedTemplate(null);
@@ -400,7 +438,7 @@ function PhotoboothApp() {
 
       <SettingsPanel currentScreen={screens[screens.length - 1]?.name} onOpen={(fn) => { openSettingsRef.current = fn; }} />
       <IntroModal onComplete={() => setIntroCompleted(true)} />
-      {introCompleted && !isPaired && screens[screens.length - 1]?.name === 'standby' && showPairingModal && (
+      {introCompleted && !isPaired && showPairingModal && (
         <PairingModal onPaired={handlePaired} onClose={handlePairingClose} />
       )}
     </div>

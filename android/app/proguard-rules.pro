@@ -5,6 +5,11 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
+# Capacitor - Keep all Capacitor classes to prevent minification issues
+-keep class com.getcapacitor.** { *; }
+-keep class com.capacitorjs.** { *; }
+-dontwarn com.getcapacitor.**
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
