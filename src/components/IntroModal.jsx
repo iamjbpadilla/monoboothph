@@ -57,7 +57,7 @@ export default function IntroModal({ onComplete }) {
       setTimeout(() => {
         setCurrentStep(currentStep + 1);
         setIsTransitioning(false);
-      }, 600);
+      }, 300);
     } else {
       handleComplete();
     }
@@ -73,7 +73,7 @@ export default function IntroModal({ onComplete }) {
       if (result.camera === 'granted' || result.camera === 'limited') {
         setPermissionStatus('granted');
         await Preferences.set({ key: 'snaproll-camera-granted', value: 'true' });
-        setTimeout(() => handleComplete(), 800);
+        setTimeout(() => handleComplete(), 400);
       } else {
         setPermissionStatus('denied');
         setPermissionError('Camera permission is required to use the photobooth. Please grant access to continue.');
@@ -93,7 +93,7 @@ export default function IntroModal({ onComplete }) {
     setTimeout(() => {
       setCompleted(true);
       onComplete();
-    }, 500);
+    }, 300);
   }
 
   if (loading || completed) return null;
@@ -103,7 +103,7 @@ export default function IntroModal({ onComplete }) {
   const isLastStep = currentStep === STEPS.length - 1;
 
   return (
-    <div className={`fixed inset-0 bg-gray-50 flex items-center justify-center z-50 p-4 transition-all duration-700 ${
+    <div className={`fixed inset-0 bg-gray-50 flex items-center justify-center z-50 p-4 transition-all duration-300 ${
       isExiting ? 'animate-out fade-out' : 'animate-in fade-in'
     }`}>
       {/* Close button (only show on first step) */}
@@ -121,21 +121,21 @@ export default function IntroModal({ onComplete }) {
 
       <div 
         ref={stepRef}
-        className={`relative bg-white border-2 border-gray-200 rounded-xl max-w-lg w-full p-8 shadow transition-all duration-700 ease-out ${
+        className={`relative bg-white border-2 border-gray-200 rounded-xl max-w-lg w-full p-8 shadow transition-all duration-300 ease-out ${
           isExiting ? 'animate-out slide-out-to-bottom-8 scale-95 opacity-0' : isTransitioning ? 'opacity-0 scale-95' : 'animate-in slide-in-from-bottom-8'
         }`}>
         {/* Icon */}
         <div className="text-center mb-8">
-          <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-700 ease-out ${
+          <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-300 ease-out ${
             isTransitioning ? 'scale-0' : 'scale-100'
           }`}>
-            <Icon className={`w-6 h-6 text-white transition-all duration-700 ease-out ${
+            <Icon className={`w-6 h-6 text-white transition-all duration-300 ease-out ${
               isTransitioning ? 'scale-0' : 'scale-100'
             }`} />
           </div>
           
           {/* Title */}
-          <h2 className={`text-3xl font-bold text-black mb-2 transition-all duration-700 ease-out ${
+          <h2 className={`text-3xl font-bold text-black mb-2 transition-all duration-300 ease-out ${
             isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
           }`}>
             {step.title}
@@ -143,7 +143,7 @@ export default function IntroModal({ onComplete }) {
           
           {/* Subtitle */}
           {step.subtitle && (
-            <p className={`text-sm text-black font-medium uppercase tracking-wider mb-4 transition-all duration-700 ease-out delay-100 ${
+            <p className={`text-sm text-black font-medium uppercase tracking-wider mb-4 transition-all duration-300 ease-out delay-100 ${
               isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
             }`}>
               {step.subtitle}
@@ -151,7 +151,7 @@ export default function IntroModal({ onComplete }) {
           )}
           
           {/* Description */}
-          <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-700 ease-out delay-200 ${
+          <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-300 ease-out delay-200 ${
             isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'
           }`}>
             {step.description}
@@ -160,7 +160,7 @@ export default function IntroModal({ onComplete }) {
 
         {/* Permission Error */}
         {permissionStatus === 'denied' && permissionError && (
-          <div className={`mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl transition-all duration-500 ${
+          <div className={`mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl transition-all duration-300 ${
             isTransitioning ? 'opacity-0' : 'opacity-100'
           }`}>
             <div className="flex items-start gap-3">
@@ -171,13 +171,13 @@ export default function IntroModal({ onComplete }) {
         )}
 
         {/* Progress dots */}
-        <div className={`flex justify-center gap-2 mb-8 transition-all duration-700 ease-out delay-300 ${
+        <div className={`flex justify-center gap-2 mb-8 transition-all duration-300 ease-out delay-300 ${
           isTransitioning ? 'opacity-0' : 'opacity-100'
         }`}>
           {STEPS.map((_, index) => (
             <div
               key={index}
-              className={`h-2 rounded-full transition-all duration-500 ease-out ${
+              className={`h-2 rounded-full transition-all duration-300 ease-out ${
                 index === currentStep
                   ? 'w-12 bg-black'
                   : index < currentStep
@@ -190,7 +190,7 @@ export default function IntroModal({ onComplete }) {
 
         {/* Action Button */}
         {isLastStep ? (
-          <div className={`space-y-3 transition-all duration-700 ease-out delay-400 ${
+          <div className={`space-y-3 transition-all duration-300 ease-out delay-400 ${
             isTransitioning ? 'opacity-0' : 'opacity-100'
           }`}>
             {permissionStatus === 'denied' ? (
@@ -236,7 +236,7 @@ export default function IntroModal({ onComplete }) {
         )}
 
         {/* Footer branding */}
-        <div className={`mt-6 text-center transition-all duration-700 ease-out delay-500 ${
+        <div className={`mt-6 text-center transition-all duration-300 ease-out delay-500 ${
           isTransitioning ? 'opacity-0' : 'opacity-100'
         }`}>
           <p className="text-xs text-gray-400 tracking-widest uppercase">MONO BOOTH PH</p>

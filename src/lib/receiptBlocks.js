@@ -42,7 +42,7 @@ function createHeaderBlock(shared) {
       }
       let h = textH(titleFontSize);
       if (subtitleText) {
-        h += 12; // title-subtitle internal gap
+        h += (cfg.titleSubtitleGap || 8); // title-subtitle internal gap
         h += textH(subFontSize);
       }
       return h;
@@ -73,7 +73,7 @@ function createHeaderBlock(shared) {
       y += h;
       // Subtitle
       if (subtitleText) {
-        y += 12; // internal gap
+        y += (cfg.titleSubtitleGap || 8); // internal gap
         drawText(ctx, subtitleText, x, y, contentWidth, {
           fontSize: subFontSize,
           bold: false,
@@ -81,7 +81,7 @@ function createHeaderBlock(shared) {
           color: '#000000',
           fontFamily: fontBody,
         });
-        h += 12 + textH(subFontSize);
+        h += (cfg.titleSubtitleGap || 8) + textH(subFontSize);
       }
       return h;
     },

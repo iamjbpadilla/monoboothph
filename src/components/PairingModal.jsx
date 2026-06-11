@@ -9,6 +9,7 @@ export default function PairingModal({ onPaired, onClose }) {
   const [error, setError] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('checking'); // checking, connected, error
   const [pairingSuccess, setPairingSuccess] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     checkConnection();
@@ -124,6 +125,13 @@ export default function PairingModal({ onPaired, onClose }) {
     }
   }
 
+  function handleClose() {
+    setIsExiting(true);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  }
+
   function generateDeviceId() {
     return `dev-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
@@ -139,7 +147,9 @@ export default function PairingModal({ onPaired, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] bg-gray-50 flex flex-col items-center justify-center p-6 animate-in fade-in duration-200">
+    <div className={`fixed inset-0 z-[60] bg-gray-50 flex flex-col items-center justify-center p-6 transition-all duration-300 ${
+      isExiting ? 'animate-out fade-out' : 'animate-in fade-in'
+    }`}>
       {/* Branding Header - Outside card */}
       {!pairingSuccess && (
         <div className="mb-4 text-center">
@@ -147,7 +157,9 @@ export default function PairingModal({ onPaired, onClose }) {
         </div>
       )}
 
-      <div className="w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-700 ease-out">
+      <div className={`w-full max-w-sm bg-white border-2 border-gray-200 rounded-xl p-8 shadow transition-all duration-300 ease-out ${
+        isExiting ? 'animate-out slide-out-to-bottom-8 scale-95 opacity-0' : 'animate-in slide-in-from-bottom-8'
+      }`}>
         {pairingSuccess ? (
           <div className="flex flex-col items-center justify-center py-8">
             <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-6" />
@@ -178,7 +190,9 @@ export default function PairingModal({ onPaired, onClose }) {
         ) : (
           <>
         {/* Header */}
-        <div className="flex items-center justify-center mb-6">
+        <div className={`flex items-center justify-center mb-6 transition-all duration-300 ease-out ${
+          pairingSuccess || connectionStatus === 'connected' ? 'opacity-100' : 'opacity-0'
+        }`}>
           <h2 className="text-2xl font-bold text-black">Connect Your Device</h2>
         </div>
         
@@ -188,12 +202,16 @@ export default function PairingModal({ onPaired, onClose }) {
           </div>
         )}
 
-        <p className="text-gray-500 mb-4 text-sm text-center">
+        <p className={`text-gray-500 mb-4 text-sm text-center transition-all duration-300 ease-out ${
+          pairingSuccess || connectionStatus === 'connected' ? 'opacity-100' : 'opacity-0'
+        }`}>
           Enter the 6-digit pairing code from the portal
         </p>
 
         {/* Pairing Code Display */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className={`flex justify-center gap-2 mb-6 transition-all duration-300 ease-out ${
+          pairingSuccess || connectionStatus === 'connected' ? 'opacity-100' : 'opacity-0'
+        }`}>
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
@@ -208,7 +226,9 @@ export default function PairingModal({ onPaired, onClose }) {
         </div>
 
         {/* Number Pad */}
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className={`grid grid-cols-3 gap-3 mb-4 transition-all duration-300 ease-out ${
+          pairingSuccess || connectionStatus === 'connected' ? 'opacity-100' : 'opacity-0'
+        }`}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
             <button
               key={num}
